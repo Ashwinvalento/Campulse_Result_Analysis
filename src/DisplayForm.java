@@ -25,10 +25,10 @@ public class DisplayForm extends javax.swing.JFrame implements MapInterface {
     ResultSet rs = null;
     Connection con = DBConnect.connection;
     DefaultTableModel model;
-    Statement smt;
     /**
      * Creates new form DisplayForm
      */
+    
     public DisplayForm() {
 
         model = new DefaultTableModel();

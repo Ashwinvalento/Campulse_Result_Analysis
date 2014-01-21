@@ -4,13 +4,13 @@
  * and open the template in the editor.
  */
 
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import net.proteanit.sql.DbUtils;
 import run.DBConnect;
@@ -25,11 +25,12 @@ public class DisplayForm extends javax.swing.JFrame implements MapInterface {
     ResultSet rs = null;
     Connection con = DBConnect.connection;
     DefaultTableModel model;
-
     /**
      * Creates new form DisplayForm
      */
+    
     public DisplayForm() {
+
         model = new DefaultTableModel();
         // StudentMarksTable.setModel(model);
         model.addColumn("SUBJECT");
@@ -42,14 +43,13 @@ public class DisplayForm extends javax.swing.JFrame implements MapInterface {
         StudDetails.addRowSelectionInterval(0, 0);
 //get student names and usn and print table
         if ((rs = getDetails("ALL")) != null) {
-            /*            try {
-             rs.last();
-             StudentNumberInfo.setText(rs.getRow() + " Student Records found");
-             rs.beforeFirst();
-             } catch (SQLException ex) {
-             Logger.getLogger(DisplayForm.class.getName()).log(Level.SEVERE, null, ex);
-             }
-             */
+            try {
+                rs.last();
+                StudentNumberInfo.setText(rs.getRow() + " Student Records found");
+                rs.beforeFirst();
+            } catch (SQLException ex) {
+                Logger.getLogger(DisplayForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
             StudDetails.setModel(DbUtils.resultSetToTableModel(rs));
         }
 
@@ -378,8 +378,7 @@ public class DisplayForm extends javax.swing.JFrame implements MapInterface {
         }
 
         try {
-            // stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            stmt = con.createStatement();
+            stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             rs = stmt.executeQuery(query);
 
         } catch (SQLException ex) {
@@ -431,5 +430,4 @@ public class DisplayForm extends javax.swing.JFrame implements MapInterface {
             System.out.println("Error : " + ex);
         }
     }
-
 }

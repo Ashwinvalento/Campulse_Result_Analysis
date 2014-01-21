@@ -3,7 +3,6 @@
  * and open the template in the editor.
  */
 
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.*;
@@ -17,7 +16,7 @@ import javax.swing.JProgressBar;
  *
  * @author yo boys
  */
-public class resultextractor extends javax.swing.JFrame implements run.MapInterface {
+public class MainForm extends javax.swing.JFrame implements run.MapInterface {
 
     /**
      * Creates new form main
@@ -26,9 +25,9 @@ public class resultextractor extends javax.swing.JFrame implements run.MapInterf
     // public static String outFile;
 
     extractUSN e;
-    public static resultextractor objCopy;
+    public static MainForm objCopy;
 
-    public resultextractor() {
+    public MainForm() {
         run.DBConnect.getConnection();
         initComponents();
         usnProgressBar.hide();
@@ -55,6 +54,7 @@ public class resultextractor extends javax.swing.JFrame implements run.MapInterf
         saveButton = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        B_proxy = new javax.swing.JButton();
         curUsnDownloadLabel = new javax.swing.JLabel();
         usnProgressBar = new javax.swing.JProgressBar(0,100);
 
@@ -95,6 +95,13 @@ public class resultextractor extends javax.swing.JFrame implements run.MapInterf
             }
         });
 
+        B_proxy.setText("Set Proxy");
+        B_proxy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                B_proxyActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -106,13 +113,14 @@ public class resultextractor extends javax.swing.JFrame implements run.MapInterf
                     .addComponent(ipFileLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(submitButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(ipFileButton, javax.swing.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
-                        .addComponent(saveButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(96, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(B_proxy)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
+                        .addComponent(submitButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(ipFileButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
+                        .addComponent(saveButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap(88, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -131,7 +139,9 @@ public class resultextractor extends javax.swing.JFrame implements run.MapInterf
                     .addComponent(jLabel2))
                 .addGap(18, 18, 18)
                 .addComponent(jButton1)
-                .addContainerGap(57, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(B_proxy)
+                .addContainerGap(26, Short.MAX_VALUE))
         );
 
         curUsnDownloadLabel.setText("<Displays the Usn which is downloading>");
@@ -145,7 +155,7 @@ public class resultextractor extends javax.swing.JFrame implements run.MapInterf
                     .addGroup(layout.createSequentialGroup()
                         .addGap(81, 81, 81)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 89, Short.MAX_VALUE))
+                        .addGap(0, 83, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(20, 20, 20)
                         .addComponent(curUsnDownloadLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -158,7 +168,7 @@ public class resultextractor extends javax.swing.JFrame implements run.MapInterf
             .addGroup(layout.createSequentialGroup()
                 .addGap(48, 48, 48)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(usnProgressBar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(curUsnDownloadLabel, javax.swing.GroupLayout.Alignment.TRAILING))
@@ -192,7 +202,7 @@ public class resultextractor extends javax.swing.JFrame implements run.MapInterf
             fc = new JFileChooser(previousDirectory());
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, e);
-            Logger.getLogger(resultextractor.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
         }
         //In response to a button click:
         int returnVal = fc.showOpenDialog(null);
@@ -213,13 +223,13 @@ public class resultextractor extends javax.swing.JFrame implements run.MapInterf
    }//GEN-LAST:event_ipFileButtonActionPerformed
     public void setButtons() {
         saveButton.setEnabled(true);
-        curUsnDownloadLabel.setText("Parsing Completed");
+        curUsnDownloadLabel.setText("Downloading Completed . click on View to see marks");
         saveButton.setFocusable(true);
     }
     private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
         ipFileButton.setEnabled(false);
         submitButton.setEnabled(false);
-        test();
+        updateProgress();
 
     }//GEN-LAST:event_submitButtonActionPerformed
 
@@ -234,6 +244,10 @@ public class resultextractor extends javax.swing.JFrame implements run.MapInterf
             System.out.println(subNamesV.get(i));
         }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void B_proxyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B_proxyActionPerformed
+       new ProxyForm().setVisible(true);
+    }//GEN-LAST:event_B_proxyActionPerformed
 
     /**
      * @param args the command line arguments
@@ -257,16 +271,16 @@ public class resultextractor extends javax.swing.JFrame implements run.MapInterf
             }
         } catch (ClassNotFoundException ex) {
             JOptionPane.showMessageDialog(null, ex);
-            java.util.logging.Logger.getLogger(resultextractor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MainForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
             JOptionPane.showMessageDialog(null, ex);
-            java.util.logging.Logger.getLogger(resultextractor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MainForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
             JOptionPane.showMessageDialog(null, ex);
-            java.util.logging.Logger.getLogger(resultextractor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MainForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             JOptionPane.showMessageDialog(null, ex);
-            java.util.logging.Logger.getLogger(resultextractor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MainForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -276,12 +290,13 @@ public class resultextractor extends javax.swing.JFrame implements run.MapInterf
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                objCopy = new resultextractor();
+                objCopy = new MainForm();
                 objCopy.setVisible(true);
             }
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton B_proxy;
     public static javax.swing.JLabel curUsnDownloadLabel;
     private javax.swing.JButton ipFileButton;
     private javax.swing.JLabel ipFileLabel;
@@ -311,7 +326,7 @@ public class resultextractor extends javax.swing.JFrame implements run.MapInterf
         curUsnDownloadLabel.setText(str);
     }
 
-    private void test() {
+    private void updateProgress() {
         usnProgressBar.show();
         usnProgressBar.setMinimum(1);
         usnProgressBar.setMaximum(extractUSN.usnList.size());

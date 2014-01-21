@@ -3,8 +3,9 @@
  * and open the template in the editor.
  */
 
-
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Properties;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import org.jsoup.Jsoup;
@@ -27,14 +28,37 @@ public class resultFetch implements run.MapInterface {
     String name;
 
     resultFetch(String usn) {
+
+        //get proxy Settings
+        try {
+            String ProxyIP, SecureIP, ProxyPort, SecurePort;
+            Properties prop = new Properties();
+            prop.load(new FileInputStream("config.ini"));
+            ProxyIP = prop.getProperty("HTTPProxy");
+            ProxyPort = prop.getProperty("HTTPPort");
+            SecureIP = prop.getProperty("HTTPSProxy");
+            SecurePort = prop.getProperty("HTTPSPort");
+
+            if (!ProxyIP.equals("")) {
+                System.out.println("Proxy is set to " + ProxyIP + ":" + ProxyPort);
+                System.out.println("Secure Proxy is set to " + SecureIP + ":" + SecurePort);
+                
+                System.setProperty("http.proxyHost", ProxyIP);
+                System.setProperty("http.proxyPort", ProxyPort);
+                System.setProperty("https.proxyHost", SecureIP);
+                System.setProperty("https.proxyPort", SecurePort);
+            }
+
+        } catch (IOException ex) {
+            System.out.println("Can not read config file...");
+        }
         String url = "http://results.vtualerts.com/get_res.php?usn=" + usn;
         Document doc;
 
         try {
-            //System.out.println(url);
+
             doc = Jsoup.connect(url).userAgent("Mozilla").get();
 
-            // System.out.print(doc);
             Element firstTableMarks = doc.select("table:eq(3)").first();
             Element tbody = firstTableMarks.select("tbody").first();
             Element tmtbody = tbody;

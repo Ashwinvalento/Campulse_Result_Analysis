@@ -41,14 +41,14 @@ public class DownloadMarksTask extends SwingWorker<Integer, Integer> {
 
     @Override
     public Integer doInBackground() throws InterruptedException {
-        resultextractor.curUsnDownloadLabel.show();
+        MainForm.curUsnDownloadLabel.show();
         resultFetch r = new resultFetch();
         try {
-            //  BufferedWriter writer = new BufferedWriter(new FileWriter(resultextractor.outFile));
+            //  BufferedWriter writer = new BufferedWriter(new FileWriter(MainForm.outFile));
             for (int i = 0; i < extractUSN.usnList.size(); i++) {
                 int colCount = 1;
                 setProgress(i);
-                resultextractor.setCurStatusLabel("USN " + extractUSN.usnList.get(i) + " is parsed");
+                MainForm.setCurStatusLabel("USN " + extractUSN.usnList.get(i) + " is parsed");
                 System.out.println(extractUSN.usnList.get(i));
 
                 if (r.FetchTheresult(extractUSN.usnList.get(i))) {
@@ -85,8 +85,8 @@ public class DownloadMarksTask extends SwingWorker<Integer, Integer> {
     @Override
     protected void done() {
         //progFrame.setVisible(false); // hide my progress bar JFrame
-        resultextractor.objCopy.setButtons();
-        resultextractor.objCopy.usnProgressBar.hide();
+        MainForm.objCopy.setButtons();
+        MainForm.objCopy.usnProgressBar.hide();
         System.out.println("DONE!!!");
     }
 }

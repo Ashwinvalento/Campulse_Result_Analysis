@@ -6,11 +6,7 @@ package Main;
  */
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.*;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 public class MainForm extends javax.swing.JFrame {
@@ -18,9 +14,11 @@ public class MainForm extends javax.swing.JFrame {
     /**
      * Creates new form main
      */
+    public static Vector<String> usnList = new Vector<String>();
     static Vector<String> subNamesV = new Vector<String>();
     static boolean stopFlag = false;
     String inFile;
+    static int usnCount = 0;
 
     extractUSN e;
     public static MainForm objCopy;
@@ -31,12 +29,9 @@ public class MainForm extends javax.swing.JFrame {
         initComponents();
         usnProgressBar.hide();
         curUsnDownloadLabel.hide();
-        submitButton.setEnabled(false);
         stopbtn.setEnabled(false);
         this.setLocationRelativeTo(null);
-        RB_usn.setSelected(true);
-        ipFileButton.setEnabled(false);
-        
+
     }
 
     /**
@@ -50,37 +45,29 @@ public class MainForm extends javax.swing.JFrame {
 
         BGinput = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
-        ipFileButton = new javax.swing.JButton();
         submitButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         bView = new javax.swing.JButton();
-        B_proxy = new javax.swing.JButton();
         stopbtn = new javax.swing.JButton();
-        Lab_filename = new javax.swing.JLabel();
-        RB_file = new javax.swing.JRadioButton();
-        RB_usn = new javax.swing.JRadioButton();
-        TF_from = new javax.swing.JTextField();
+        B_UsnSelect = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        TF_to = new javax.swing.JTextField();
-        B_ok = new javax.swing.JButton();
         curUsnDownloadLabel = new javax.swing.JLabel();
         usnProgressBar = new javax.swing.JProgressBar(0,100);
         jLabel3 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        TF_usn = new javax.swing.JTextField();
+        B_GetResult = new javax.swing.JButton();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
+        jMenuItem2 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Vtu Marks Downloader");
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        setResizable(false);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Class Result"));
-
-        ipFileButton.setText("Select");
-        ipFileButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ipFileButtonActionPerformed(evt);
-            }
-        });
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), "Class Result", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
 
         submitButton.setText("Start");
         submitButton.addActionListener(new java.awt.event.ActionListener() {
@@ -98,13 +85,6 @@ public class MainForm extends javax.swing.JFrame {
             }
         });
 
-        B_proxy.setText("Set Proxy");
-        B_proxy.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                B_proxyActionPerformed(evt);
-            }
-        });
-
         stopbtn.setText("Stop");
         stopbtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -112,192 +92,146 @@ public class MainForm extends javax.swing.JFrame {
             }
         });
 
-        Lab_filename.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-
-        BGinput.add(RB_file);
-        RB_file.setText("Select the Input File :");
-        RB_file.addActionListener(new java.awt.event.ActionListener() {
+        B_UsnSelect.setText("Select");
+        B_UsnSelect.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                RB_fileActionPerformed(evt);
+                B_UsnSelectActionPerformed(evt);
             }
         });
 
-        BGinput.add(RB_usn);
-        RB_usn.setText("Enter USN range :");
-        RB_usn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                RB_usnActionPerformed(evt);
-            }
-        });
+        jLabel2.setText("SELECT USN List  :");
 
-        TF_from.setText("4PA13CS001");
-        TF_from.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                TF_fromActionPerformed(evt);
-            }
-        });
-
-        jLabel4.setText("to");
-
-        TF_to.setText("4PA13CS055");
-
-        B_ok.setText("OK");
+        jLabel4.setText("View Results :");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(6, 6, 6)
-                .addComponent(RB_usn)
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(B_UsnSelect, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(submitButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(bView, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(28, 28, 28)
-                .addComponent(TF_from, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10)
-                .addComponent(jLabel4)
-                .addGap(4, 4, 4)
-                .addComponent(TF_to, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(6, 6, 6)
-                .addComponent(B_ok))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(6, 6, 6)
-                .addComponent(RB_file)
-                .addGap(12, 12, 12)
-                .addComponent(ipFileButton, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(Lab_filename, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(33, 33, 33)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10)
-                .addComponent(submitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(6, 6, 6)
-                .addComponent(stopbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(147, 147, 147)
-                .addComponent(bView, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(147, 147, 147)
-                .addComponent(B_proxy))
+                .addComponent(stopbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(11, 11, 11)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(RB_usn)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(1, 1, 1)
-                        .addComponent(TF_from, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(4, 4, 4)
-                        .addComponent(jLabel4))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(1, 1, 1)
-                        .addComponent(TF_to, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(B_ok))
-                .addGap(9, 9, 9)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(2, 2, 2)
-                        .addComponent(RB_file))
-                    .addComponent(ipFileButton)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(1, 1, 1)
-                        .addComponent(Lab_filename)))
-                .addGap(13, 13, 13)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(4, 4, 4)
-                        .addComponent(jLabel1))
+                        .addGap(15, 15, 15)
+                        .addComponent(jLabel2))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(B_UsnSelect)))
+                .addGap(10, 10, 10)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
                     .addComponent(submitButton)
                     .addComponent(stopbtn))
                 .addGap(18, 18, 18)
-                .addComponent(bView)
-                .addGap(31, 31, 31)
-                .addComponent(B_proxy))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(bView))
+                .addContainerGap(96, Short.MAX_VALUE))
         );
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 116, 429, -1));
-
         curUsnDownloadLabel.setText("<Displays the Usn which is downloading>");
-        getContentPane().add(curUsnDownloadLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 356, 210, -1));
-        getContentPane().add(usnProgressBar, new org.netbeans.lib.awtextra.AbsoluteConstraints(224, 356, 169, -1));
 
         jLabel3.setText("Enter USN :");
-        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 79, -1, -1));
-        getContentPane().add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(194, 76, 130, -1));
 
-        jButton1.setText("Get Result");
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(356, 75, -1, -1));
+        B_GetResult.setText("Get Result");
+        B_GetResult.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                B_GetResultActionPerformed(evt);
+            }
+        });
+
+        jMenu1.setText("File");
+
+        jMenuItem1.setText("Exit");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem1);
+
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Tools");
+
+        jMenuItem2.setText("Set Proxy");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem2);
+
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(curUsnDownloadLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(usnProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(TF_usn, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(B_GetResult))
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(TF_usn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(B_GetResult)
+                    .addComponent(jLabel3))
+                .addGap(18, 18, 18)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(usnProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(curUsnDownloadLabel))
+                .addContainerGap(14, Short.MAX_VALUE))
+        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    public String previousDirectory() throws IOException {
-        BufferedReader br = null;
-        String line = "";
-        try {
-            br = new BufferedReader(new FileReader(".previouslySelectedDirectory.txt"));
-            line = br.readLine();
-        } catch (Exception e) {
+    private void B_UsnSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B_UsnSelectActionPerformed
 
-            System.out.println("Error: " + e);
-        } finally {
-            if (br != null) {
-                br.close();
-            }
-        }
-        return line;
-    }
-    private void ipFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ipFileButtonActionPerformed
-        extractUSN.usnList.clear();
-        //Create a file chooser
-        JFileChooser fc = null;
-        try {
-            fc = new JFileChooser(previousDirectory());
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, e);
-            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        //In response to a button click:
-        int returnVal = fc.showOpenDialog(null);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = fc.getSelectedFile();
-            Lab_filename.setText(file.getName());
-            //This is where a real application would open the file.
-            inFile = file.getAbsolutePath();
-            saveCurrentDirectory(file.getParentFile().getAbsolutePath());
-            e = new extractUSN(inFile);
-
-            submitButton.setEnabled(true);
-            stopbtn.setEnabled(false);
-        } else {
-            System.out.println("Open command cancelled by user.");
-        }
-
-   }//GEN-LAST:event_ipFileButtonActionPerformed
-
-    private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
-        stopFlag = false;
-        ipFileButton.setEnabled(false);
-        submitButton.setEnabled(false);
-        stopbtn.setEnabled(true);
-        resultFetch r = new resultFetch();
-        r.fetchSubjectNames(extractUSN.usnList.get(0));
-        updateProgress();
-
-    }//GEN-LAST:event_submitButtonActionPerformed
-
-    private void bViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bViewActionPerformed
-        new DisplayForm().setVisible(true);
-    }//GEN-LAST:event_bViewActionPerformed
-
-    private void B_proxyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B_proxyActionPerformed
-        new ProxyForm().setVisible(true);
-    }//GEN-LAST:event_B_proxyActionPerformed
+        EnterUsnForm u = new EnterUsnForm();
+        u.setVisible(true);
+    }//GEN-LAST:event_B_UsnSelectActionPerformed
 
     private void stopbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopbtnActionPerformed
-        ipFileButton.setEnabled(true);
+
         curUsnDownloadLabel.setText("");
         stopFlag = true;
         submitButton.setEnabled(true);
@@ -305,25 +239,38 @@ public class MainForm extends javax.swing.JFrame {
         task.stopFetching();
     }//GEN-LAST:event_stopbtnActionPerformed
 
-    private void TF_fromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TF_fromActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_TF_fromActionPerformed
+    private void bViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bViewActionPerformed
+        new DisplayForm().setVisible(true);
+    }//GEN-LAST:event_bViewActionPerformed
 
-    private void RB_usnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RB_usnActionPerformed
-        TF_from.setEnabled(true);
-        TF_to.setEnabled(true);
-        B_ok.setEnabled(true);
-        
-        ipFileButton.setEnabled(false);
-    }//GEN-LAST:event_RB_usnActionPerformed
+    private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
+        usnProgressBar.setValue(usnProgressBar.getMinimum());
 
-    private void RB_fileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RB_fileActionPerformed
-        TF_from.setEnabled(false);
-        TF_to.setEnabled(false);
-        B_ok.setEnabled(false);
-        
-        ipFileButton.setEnabled(true);
-    }//GEN-LAST:event_RB_fileActionPerformed
+        if (usnList.size() == 0) {
+            JOptionPane.showMessageDialog(null, "Please Add at least 1 USN");
+        } else {
+
+            stopFlag = false;
+            submitButton.setEnabled(false);
+            stopbtn.setEnabled(true);
+            resultFetch r = new resultFetch();
+            //r.fetchSubjectNames(extractUSN.usnList.get(0));
+            r.fetchSubjectNames(usnList.get(0));
+            updateProgress();
+        }
+    }//GEN-LAST:event_submitButtonActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        new ProxyForm().setVisible(true);
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void B_GetResultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B_GetResultActionPerformed
+
+    }//GEN-LAST:event_B_GetResultActionPerformed
 
     /**
      * @param args the command line arguments
@@ -373,38 +320,25 @@ public class MainForm extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup BGinput;
-    private javax.swing.JButton B_ok;
-    private javax.swing.JButton B_proxy;
-    private javax.swing.JLabel Lab_filename;
-    private javax.swing.JRadioButton RB_file;
-    private javax.swing.JRadioButton RB_usn;
-    private javax.swing.JTextField TF_from;
-    private javax.swing.JTextField TF_to;
+    private javax.swing.JButton B_GetResult;
+    private javax.swing.JButton B_UsnSelect;
+    private javax.swing.JTextField TF_usn;
     private javax.swing.JButton bView;
     public static javax.swing.JLabel curUsnDownloadLabel;
-    private javax.swing.JButton ipFileButton;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JButton stopbtn;
     private javax.swing.JButton submitButton;
     public javax.swing.JProgressBar usnProgressBar;
     // End of variables declaration//GEN-END:variables
-
-    private void saveCurrentDirectory(String absolutePath) {
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(".previouslySelectedDirectory.txt"));
-            writer.write(absolutePath);
-            writer.close();
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
-            System.out.println("Error:" + e);
-        }
-    }
 
     public static void setCurStatusLabel(String str) {
         curUsnDownloadLabel.setText(str);
@@ -412,8 +346,10 @@ public class MainForm extends javax.swing.JFrame {
 
     private void updateProgress() {
         usnProgressBar.show();
-        usnProgressBar.setMinimum(1);
-        usnProgressBar.setMaximum(extractUSN.usnList.size());
+        usnProgressBar.setMinimum(0);
+        usnProgressBar.setMaximum(100);
+        //usnProgressBar.setMaximum(extractUSN.usnList.size());
+
         task = new DownloadMarksTask();
         task.addPropertyChangeListener(
                 new PropertyChangeListener() {

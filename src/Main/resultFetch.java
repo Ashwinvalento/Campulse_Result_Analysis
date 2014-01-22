@@ -111,6 +111,7 @@ public class resultFetch {
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e + "fetch the result");
+            System.out.println("Here is the exception");
             MainForm.stopFlag = true;
 
             return false;//if result is not found

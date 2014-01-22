@@ -43,16 +43,16 @@ public class DownloadMarksTask extends SwingWorker<Integer, Integer> {
             stopFetching();
         }
         try {
-            for (int i = 0; i < extractUSN.usnList.size() && MainForm.stopFlag == false; i++) {
+            for (int i = 0; i < MainForm.usnList.size() && MainForm.stopFlag == false; i++) {
                 int colCount = 1;
-                setProgress(i);
-                MainForm.setCurStatusLabel("USN " + extractUSN.usnList.get(i) + " is parsed");
-                System.out.println(extractUSN.usnList.get(i));
+                setProgress((i + 1) * 100 / MainForm.usnList.size());
+                MainForm.setCurStatusLabel("USN " + MainForm.usnList.get(i) + " is parsed");
+                System.out.println(MainForm.usnList.get(i));
 
-                if (r.FetchTheresult(extractUSN.usnList.get(i))) {
+                if (r.FetchTheresult(MainForm.usnList.get(i))) {
                     //display marks
 
-                    pstmt.setString(colCount++, extractUSN.usnList.get(i));
+                    pstmt.setString(colCount++, MainForm.usnList.get(i));
                     pstmt.setString(colCount++, r.name);
                     for (int x = 0; x < 8; x++) {
                         pstmt.setInt(colCount++, r.marks[x][1]);
@@ -69,6 +69,7 @@ public class DownloadMarksTask extends SwingWorker<Integer, Integer> {
         } catch (Exception e) {
             System.out.println("Error:" + e);
             JOptionPane.showMessageDialog(null, e + " Download marks task");
+            System.out.println("Exception is here");
         }
         return 1;
     }

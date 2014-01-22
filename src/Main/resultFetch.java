@@ -1,9 +1,5 @@
 package Main;
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
@@ -19,10 +15,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import run.DBConnect;
 
-/**
- *
- * @author Jickson
- */
 public class resultFetch {
 
     String result;
@@ -54,7 +46,6 @@ public class resultFetch {
             }
         } catch (IOException e) {
             MainForm.stopFlag = true;
-            //e.printStackTrace();
             JOptionPane.showMessageDialog(null, e + "resultfetch");
         }
 
@@ -92,7 +83,6 @@ public class resultFetch {
         String temp;
         Document doc;
         String url = "http://results.vtualerts.com/get_res.php?usn=" + usn;
-        //String url="http://www.example.com";
         try {
             doc = Jsoup.connect(url).userAgent("Mozilla").get();
 

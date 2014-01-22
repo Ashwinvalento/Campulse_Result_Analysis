@@ -15,10 +15,6 @@ import javax.swing.table.DefaultTableModel;
 import net.proteanit.sql.DbUtils;
 import run.DBConnect;
 
-/**
- *
- * @author Ashu
- */
 public class DisplayForm extends javax.swing.JFrame {
 
     ResultSet rs = null;
@@ -31,7 +27,6 @@ public class DisplayForm extends javax.swing.JFrame {
     public DisplayForm() {
 
         model = new DefaultTableModel();
-        // StudentMarksTable.setModel(model);
         model.addColumn("SUBJECT");
         model.addColumn("INTERNAL");
         model.addColumn("EXTERNAL");
@@ -39,23 +34,14 @@ public class DisplayForm extends javax.swing.JFrame {
         model.addColumn("RESULT");
 
         initComponents();
-//get student names and usn and print table
         if ((rs = getDetails("ALL")) != null) {
 
             StudDetails.setModel(DbUtils.resultSetToTableModel(rs));
             StudentNumberInfo.setText(StudDetails.getRowCount() + " Student Records found");
         }
-//--------------------------
-        /*if (!extractUSN.usnList.isEmpty()) {
-         new resultFetch(extractUSN.usnList.get(0));
-         } else {
-         new resultFetch(StudDetails.getValueAt(0, 1).toString());
-         }*/
 
         retrieveSubjectNames();
 
-        //System.out.println("1st USN : "+extractUSN.usnList.get(0).toString() );
-        // fill marks table
         fillMarksTable(StudDetails.getValueAt(0, 1).toString());
 
     }
@@ -290,9 +276,7 @@ public class DisplayForm extends javax.swing.JFrame {
 
     private void ClassComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ClassComboActionPerformed
         ResultSet res;
-        System.out.println("selected item = " + ClassCombo.getSelectedItem().toString());
         if ((res = getDetails(ClassCombo.getSelectedItem().toString())) != null) {
-
             StudDetails.setModel(DbUtils.resultSetToTableModel(res));
             StudentNumberInfo.setText(StudDetails.getRowCount() + " Student Records found");
         }
@@ -312,11 +296,7 @@ public class DisplayForm extends javax.swing.JFrame {
     private void StudDetailsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_StudDetailsMouseClicked
         int selRow = StudDetails.getSelectedRow();
         String usn = (String) StudDetails.getValueAt(selRow, 1);
-        System.out.println("Selected USN is " + usn);
-
         fillMarksTable(usn);
-
-
     }//GEN-LAST:event_StudDetailsMouseClicked
 
     /**
@@ -373,7 +353,6 @@ public class DisplayForm extends javax.swing.JFrame {
         }
 
         try {
-            //stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             stmt = con.createStatement();
             rs = stmt.executeQuery(query);
 
@@ -414,10 +393,6 @@ public class DisplayForm extends javax.swing.JFrame {
             res = stmt.executeQuery(query);
             res.next();
             int rowCount = 0;
-            System.out.println("res of 1 is " + res.getString(1));
-            for (int i = 0; i < MainForm.subNamesV.size(); i++) {
-                System.out.println(MainForm.subNamesV.get(i));
-            }
 
             for (int row = 3; row < 35; row += 4) {
 
@@ -434,6 +409,7 @@ public class DisplayForm extends javax.swing.JFrame {
     }
 
     private void retrieveSubjectNames() {
+        MainForm.subNamesV.clear();
         Connection con = DBConnect.connection;
         ResultSet rs = null;
         String sql = "Select * From SUBJECTTABLE";

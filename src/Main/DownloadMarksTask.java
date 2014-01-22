@@ -4,8 +4,6 @@ package Main;
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -17,10 +15,6 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 import run.DBConnect;
 
-/**
- *
- * @author Jickson
- */
 public class DownloadMarksTask extends SwingWorker<Integer, Integer> {
 
     PreparedStatement pstmt;
@@ -45,23 +39,21 @@ public class DownloadMarksTask extends SwingWorker<Integer, Integer> {
     public Integer doInBackground() throws InterruptedException {
         MainForm.curUsnDownloadLabel.show();
         resultFetch r = new resultFetch();
-        if(MainForm.stopFlag==true) {
+        if (MainForm.stopFlag == true) {
             stopFetching();
         }
         try {
-            //  BufferedWriter writer = new BufferedWriter(new FileWriter(MainForm.outFile));
-            for (int i = 0; i < extractUSN.usnList.size()&& MainForm.stopFlag==false ; i++) {
+            for (int i = 0; i < extractUSN.usnList.size() && MainForm.stopFlag == false; i++) {
                 int colCount = 1;
                 setProgress(i);
                 MainForm.setCurStatusLabel("USN " + extractUSN.usnList.get(i) + " is parsed");
                 System.out.println(extractUSN.usnList.get(i));
 
-                if (r.FetchTheresult(extractUSN.usnList.get(i))  ) {
+                if (r.FetchTheresult(extractUSN.usnList.get(i))) {
                     //display marks
 
                     pstmt.setString(colCount++, extractUSN.usnList.get(i));
                     pstmt.setString(colCount++, r.name);
-                    //writer.write(r.usn + "," + r.name + "," + r.sem + "," + r.totalmarks + "," + r.result);
                     for (int x = 0; x < 8; x++) {
                         pstmt.setInt(colCount++, r.marks[x][1]);
                         pstmt.setInt(colCount++, r.marks[x][0]);
@@ -73,11 +65,10 @@ public class DownloadMarksTask extends SwingWorker<Integer, Integer> {
                     pstmt.execute();
                 }
             }
-            //JOptionPane.showMessageDialog(null, "All marks finished downloading and saved to file ", "USN EXTRACTOR", JOptionPane.PLAIN_MESSAGE);
 
         } catch (Exception e) {
             System.out.println("Error:" + e);
-            JOptionPane.showMessageDialog(null,  e+ " Download marks task");
+            JOptionPane.showMessageDialog(null, e + " Download marks task");
         }
         return 1;
     }
@@ -89,8 +80,6 @@ public class DownloadMarksTask extends SwingWorker<Integer, Integer> {
 
     @Override
     protected void done() {
-        //progFrame.setVisible(false); // hide my progress bar JFrame
-        MainForm.objCopy.setButtons();
         MainForm.objCopy.usnProgressBar.hide();
         System.out.println("DONE!!!");
     }

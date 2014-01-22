@@ -14,10 +14,7 @@ import javax.swing.JSpinner;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-/**
- *
- * @author Ashu
- */
+
 public class ProxyForm extends javax.swing.JFrame {
 
     /**

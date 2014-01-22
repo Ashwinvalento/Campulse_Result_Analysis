@@ -14,10 +14,7 @@ import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 
 
-/**
- *
- * @author Jickson
- */
+
 public class extractUSN {
 
     /**

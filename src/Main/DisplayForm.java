@@ -5,14 +5,10 @@ package Main;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 import net.proteanit.sql.DbUtils;
 import run.DBConnect;
@@ -27,10 +23,10 @@ public class DisplayForm extends javax.swing.JFrame implements MapInterface {
     ResultSet rs = null;
     Connection con = DBConnect.connection;
     DefaultTableModel model;
+
     /**
      * Creates new form DisplayForm
      */
-    
     public DisplayForm() {
 
         model = new DefaultTableModel();
@@ -45,14 +41,9 @@ public class DisplayForm extends javax.swing.JFrame implements MapInterface {
         StudDetails.addRowSelectionInterval(0, 0);
 //get student names and usn and print table
         if ((rs = getDetails("ALL")) != null) {
-            try {
-                rs.last();
-                StudentNumberInfo.setText(rs.getRow() + " Student Records found");
-                rs.beforeFirst();
-            } catch (SQLException ex) {
-                Logger.getLogger(DisplayForm.class.getName()).log(Level.SEVERE, null, ex);
-            }
+
             StudDetails.setModel(DbUtils.resultSetToTableModel(rs));
+            StudentNumberInfo.setText(StudDetails.getRowCount() + " Student Records found");
         }
 
         if (!extractUSN.usnList.isEmpty()) {
@@ -62,6 +53,7 @@ public class DisplayForm extends javax.swing.JFrame implements MapInterface {
         }
         //System.out.println("1st USN : "+extractUSN.usnList.get(0).toString() );
         // fill marks table
+
         fillMarksTable(StudDetails.getValueAt(0, 1).toString());
 
     }
@@ -295,16 +287,12 @@ public class DisplayForm extends javax.swing.JFrame implements MapInterface {
     }//GEN-LAST:event_ClassComboPropertyChange
 
     private void ClassComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ClassComboActionPerformed
-        if ((rs = getDetails(ClassCombo.getSelectedItem().toString())) != null) {
-            try {
-                rs.last();
-                StudentNumberInfo.setText(rs.getRow() + " Student Records found");
-                rs.beforeFirst();
-            } catch (SQLException ex) {
-                Logger.getLogger(DisplayForm.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        ResultSet res;
+        System.out.println("selected item = " + ClassCombo.getSelectedItem().toString());
+        if ((res = getDetails(ClassCombo.getSelectedItem().toString())) != null) {
 
-            StudDetails.setModel(DbUtils.resultSetToTableModel(rs));
+            StudDetails.setModel(DbUtils.resultSetToTableModel(res));
+            StudentNumberInfo.setText(StudDetails.getRowCount() + " Student Records found");
         }
     }//GEN-LAST:event_ClassComboActionPerformed
 
@@ -373,14 +361,17 @@ public class DisplayForm extends javax.swing.JFrame implements MapInterface {
         ResultSet rs = null;
         String query = "";
         //get USN from user
+
+        System.out.println("after trim " + StdClass.trim());
         if (StdClass.equals("ALL")) {
             query = "select DISTINCT NAME,USN from RESULTTABLE ";
         } else {
-            query = "select DISTINCT NAME,USN from RESULTTABLE WHERE MARKCLASS = '" + StdClass + "'";
+            query = "select DISTINCT NAME,USN from RESULTTABLE WHERE MARKCLASS = '" + StdClass.trim() + " '";
         }
 
         try {
-            stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            //stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            stmt = con.createStatement();
             rs = stmt.executeQuery(query);
 
         } catch (SQLException ex) {

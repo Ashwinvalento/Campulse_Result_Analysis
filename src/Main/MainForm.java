@@ -4,30 +4,38 @@ package Main;
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
+import run.DBConnect;
 
 /**
  *
  * @author yo boys
  */
-public class MainForm extends javax.swing.JFrame implements run.MapInterface {
+public class MainForm extends javax.swing.JFrame {
 
     /**
      * Creates new form main
      */
+    static Vector<String> subNamesV = new Vector<String>();
+    static boolean stopFlag = false;
     String inFile;
     // public static String outFile;
 
     extractUSN e;
     public static MainForm objCopy;
+    DownloadMarksTask task;
 
     public MainForm() {
         run.DBConnect.getConnection();
@@ -55,13 +63,21 @@ public class MainForm extends javax.swing.JFrame implements run.MapInterface {
         jLabel1 = new javax.swing.JLabel();
         saveButton = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        bView = new javax.swing.JButton();
         B_proxy = new javax.swing.JButton();
+        stopbtn = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
         curUsnDownloadLabel = new javax.swing.JLabel();
         usnProgressBar = new javax.swing.JProgressBar(0,100);
+        jLabel3 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Vtu Marks Downloader");
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Class Result"));
 
         ipFileLabel.setText("Select the Input File");
 
@@ -90,10 +106,10 @@ public class MainForm extends javax.swing.JFrame implements run.MapInterface {
 
         jLabel2.setText("Save the Results");
 
-        jButton1.setText("View");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        bView.setText("View");
+        bView.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                bViewActionPerformed(evt);
             }
         });
 
@@ -101,6 +117,22 @@ public class MainForm extends javax.swing.JFrame implements run.MapInterface {
         B_proxy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 B_proxyActionPerformed(evt);
+            }
+        });
+
+        stopbtn.setText("Stop");
+        stopbtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                stopbtnActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setText("filename");
+
+        jButton2.setText("jButton2");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
             }
         });
 
@@ -116,13 +148,26 @@ public class MainForm extends javax.swing.JFrame implements run.MapInterface {
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(B_proxy)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
-                        .addComponent(submitButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(ipFileButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
-                        .addComponent(saveButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(88, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(B_proxy)
+                        .addContainerGap())
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(bView, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(submitButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(ipFileButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
+                            .addComponent(saveButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(stopbtn)
+                                    .addComponent(jLabel4))
+                                .addGap(54, 54, 54))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(41, 41, 41)
+                                .addComponent(jButton2)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -130,17 +175,21 @@ public class MainForm extends javax.swing.JFrame implements run.MapInterface {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ipFileLabel)
-                    .addComponent(ipFileButton))
+                    .addComponent(ipFileButton)
+                    .addComponent(jLabel4))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(submitButton)
-                    .addComponent(jLabel1))
+                    .addComponent(jLabel1)
+                    .addComponent(stopbtn))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(saveButton)
                     .addComponent(jLabel2))
                 .addGap(18, 18, 18)
-                .addComponent(jButton1)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(bView)
+                    .addComponent(jButton2))
                 .addGap(18, 18, 18)
                 .addComponent(B_proxy)
                 .addContainerGap(26, Short.MAX_VALUE))
@@ -148,29 +197,42 @@ public class MainForm extends javax.swing.JFrame implements run.MapInterface {
 
         curUsnDownloadLabel.setText("<Displays the Usn which is downloading>");
 
+        jLabel3.setText("Enter USN :");
+
+        jButton1.setText("Get Result");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(81, 81, 81)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 83, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
                         .addComponent(curUsnDownloadLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(usnProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                        .addGap(29, 29, 29)
+                        .addComponent(usnProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(jLabel3)
+                            .addGap(18, 18, 18)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(32, 32, 32)
+                            .addComponent(jButton1))))
+                .addContainerGap(47, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(48, 48, 48)
+                .addContainerGap(50, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1))
+                .addGap(37, 37, 37)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(usnProgressBar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(curUsnDownloadLabel, javax.swing.GroupLayout.Alignment.TRAILING))
@@ -229,8 +291,11 @@ public class MainForm extends javax.swing.JFrame implements run.MapInterface {
         saveButton.setFocusable(true);
     }
     private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
+
         ipFileButton.setEnabled(false);
         submitButton.setEnabled(false);
+        resultFetch r = new resultFetch();
+        r.fetchSubjectNames(extractUSN.usnList.get(0));
         updateProgress();
 
     }//GEN-LAST:event_submitButtonActionPerformed
@@ -239,17 +304,49 @@ public class MainForm extends javax.swing.JFrame implements run.MapInterface {
 
     }//GEN-LAST:event_saveButtonActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void bViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bViewActionPerformed
 
         new DisplayForm().setVisible(true);
         for (int i = 0; i < 8; i++) {
             System.out.println(subNamesV.get(i));
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_bViewActionPerformed
 
     private void B_proxyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B_proxyActionPerformed
-       new ProxyForm().setVisible(true);
+        new ProxyForm().setVisible(true);
     }//GEN-LAST:event_B_proxyActionPerformed
+
+    private void stopbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopbtnActionPerformed
+        stopFlag = true;
+        task.stopFetching();
+    }//GEN-LAST:event_stopbtnActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+
+        retrieveSubjectNames();
+        for (int i = 0; i < subNamesV.size(); i++) {
+            System.out.println(subNamesV.get(i));
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void retrieveSubjectNames() {
+        Connection con = DBConnect.connection;
+        ResultSet rs = null;
+        String sql = "Select * From SUBJECTTABLE";
+        try {
+            Statement stmt = con.createStatement();
+            rs = stmt.executeQuery(sql);
+
+            while (rs.next()) {
+                // MainForm.subNamesV.add(rs.getString(1));
+                System.out.println("rs.getstring(1) " + rs.getString(1));
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(resultFetch.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
 
     /**
      * @param args the command line arguments
@@ -299,14 +396,20 @@ public class MainForm extends javax.swing.JFrame implements run.MapInterface {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton B_proxy;
+    private javax.swing.JButton bView;
     public static javax.swing.JLabel curUsnDownloadLabel;
     private javax.swing.JButton ipFileButton;
     private javax.swing.JLabel ipFileLabel;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JTextField jTextField1;
     private javax.swing.JButton saveButton;
+    private javax.swing.JButton stopbtn;
     private javax.swing.JButton submitButton;
     public javax.swing.JProgressBar usnProgressBar;
     // End of variables declaration//GEN-END:variables
@@ -332,7 +435,7 @@ public class MainForm extends javax.swing.JFrame implements run.MapInterface {
         usnProgressBar.show();
         usnProgressBar.setMinimum(1);
         usnProgressBar.setMaximum(extractUSN.usnList.size());
-        DownloadMarksTask task = new DownloadMarksTask();
+        task = new DownloadMarksTask();
         task.addPropertyChangeListener(
                 new PropertyChangeListener() {
 

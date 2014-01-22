@@ -45,15 +45,18 @@ public class DownloadMarksTask extends SwingWorker<Integer, Integer> {
     public Integer doInBackground() throws InterruptedException {
         MainForm.curUsnDownloadLabel.show();
         resultFetch r = new resultFetch();
+        if(MainForm.stopFlag==true) {
+            stopFetching();
+        }
         try {
             //  BufferedWriter writer = new BufferedWriter(new FileWriter(MainForm.outFile));
-            for (int i = 0; i < extractUSN.usnList.size(); i++) {
+            for (int i = 0; i < extractUSN.usnList.size()&& MainForm.stopFlag==false ; i++) {
                 int colCount = 1;
                 setProgress(i);
                 MainForm.setCurStatusLabel("USN " + extractUSN.usnList.get(i) + " is parsed");
                 System.out.println(extractUSN.usnList.get(i));
 
-                if (r.FetchTheresult(extractUSN.usnList.get(i))) {
+                if (r.FetchTheresult(extractUSN.usnList.get(i))  ) {
                     //display marks
 
                     pstmt.setString(colCount++, extractUSN.usnList.get(i));
@@ -74,7 +77,7 @@ public class DownloadMarksTask extends SwingWorker<Integer, Integer> {
 
         } catch (Exception e) {
             System.out.println("Error:" + e);
-            JOptionPane.showMessageDialog(null, e);
+            JOptionPane.showMessageDialog(null,  e+ " Download marks task");
         }
         return 1;
     }
@@ -90,5 +93,9 @@ public class DownloadMarksTask extends SwingWorker<Integer, Integer> {
         MainForm.objCopy.setButtons();
         MainForm.objCopy.usnProgressBar.hide();
         System.out.println("DONE!!!");
+    }
+
+    void stopFetching() {
+        this.cancel(true);
     }
 }

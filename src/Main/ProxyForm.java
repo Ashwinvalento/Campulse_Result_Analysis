@@ -1,6 +1,5 @@
 package Main;
 
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,7 +8,6 @@ import java.io.IOException;
 import java.util.Properties;
 import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
-import run.MapInterface;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -96,7 +94,7 @@ public class ProxyForm extends javax.swing.JFrame {
         B_Save = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), "Configure Proxy to access Internet", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
 

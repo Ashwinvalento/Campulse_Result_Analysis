@@ -4,21 +4,26 @@ package Main;
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import run.DBConnect;
 
 /**
  *
  * @author Jickson
  */
-public class resultFetch implements run.MapInterface {
+public class resultFetch {
 
     String result;
     int sem;
@@ -29,31 +34,10 @@ public class resultFetch implements run.MapInterface {
     String mk;
     String name;
 
-    resultFetch(String usn) {
+    public void fetchSubjectNames(String usn) {
 
         //get proxy Settings
-        try {
-            String ProxyIP, SecureIP, ProxyPort, SecurePort;
-            Properties prop = new Properties();
-            prop.load(new FileInputStream("config.ini"));
-            ProxyIP = prop.getProperty("HTTPProxy");
-            ProxyPort = prop.getProperty("HTTPPort");
-            SecureIP = prop.getProperty("HTTPSProxy");
-            SecurePort = prop.getProperty("HTTPSPort");
-
-            if (!ProxyIP.equals("")) {
-                System.out.println("Proxy is set to " + ProxyIP + ":" + ProxyPort);
-                System.out.println("Secure Proxy is set to " + SecureIP + ":" + SecurePort);
-                
-                System.setProperty("http.proxyHost", ProxyIP);
-                System.setProperty("http.proxyPort", ProxyPort);
-                System.setProperty("https.proxyHost", SecureIP);
-                System.setProperty("https.proxyPort", SecurePort);
-            }
-
-        } catch (IOException ex) {
-            System.out.println("Can not read config file...");
-        }
+        setProxy();
         String url = "http://results.vtualerts.com/get_res.php?usn=" + usn;
         Document doc;
 
@@ -62,22 +46,46 @@ public class resultFetch implements run.MapInterface {
             doc = Jsoup.connect(url).userAgent("Mozilla").get();
 
             Element firstTableMarks = doc.select("table:eq(3)").first();
-            Element tbody = firstTableMarks.select("tbody").first();
-            Element tmtbody = tbody;
+            Element tmtbody = firstTableMarks.select("tbody").first();
 
             for (int i = 0; i < 8; i++) {
                 String whichTr = "tr:eq(" + (i + 1) + ")";
-                subNamesV.add(tmtbody.select(whichTr).first().child(0).text());
+                MainForm.subNamesV.add(tmtbody.select(whichTr).first().child(0).text());
             }
         } catch (IOException e) {
+            MainForm.stopFlag = true;
             //e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e);
+            JOptionPane.showMessageDialog(null, e + "resultfetch");
+        }
+
+        //Store subject names to database
+        Connection con = DBConnect.connection;
+        String sql = "DELETE from SUBJECTTABLE";
+
+        Statement stmt;
+        try {
+            stmt = con.createStatement();
+            stmt.executeUpdate(sql);
+        } catch (SQLException ex) {
+            Logger.getLogger(resultFetch.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        for (int i = 0; i < MainForm.subNamesV.size(); i++) {
+            String sql1 = "INSERT INTO SUBJECTTABLE VALUES ('" + MainForm.subNamesV.get(i) + "')";
+            try {
+
+                Statement stmt1 = con.createStatement();
+                stmt1.executeUpdate(sql1);
+
+            } catch (SQLException ex) {
+                Logger.getLogger(resultFetch.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
     }
 
     resultFetch() {
-
+        setProxy();
     }
 
     public boolean FetchTheresult(String usn) {
@@ -112,9 +120,37 @@ public class resultFetch implements run.MapInterface {
 
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
+            JOptionPane.showMessageDialog(null, e + "fetch the result");
+            MainForm.stopFlag = true;
+
             return false;//if result is not found
         }
         return true;//result is found
+    }
+
+    private void setProxy() {
+        System.out.println("hello world");
+        try {
+            String ProxyIP, SecureIP, ProxyPort, SecurePort;
+            Properties prop = new Properties();
+            prop.load(new FileInputStream("config.ini"));
+            ProxyIP = prop.getProperty("HTTPProxy");
+            ProxyPort = prop.getProperty("HTTPPort");
+            SecureIP = prop.getProperty("HTTPSProxy");
+            SecurePort = prop.getProperty("HTTPSPort");
+            System.out.println("Proxy is set to " + ProxyIP + ":" + ProxyPort);
+            if (!ProxyIP.equals("")) {
+                System.out.println("Proxy is set to " + ProxyIP + ":" + ProxyPort);
+                System.out.println("Secure Proxy is set to " + SecureIP + ":" + SecurePort);
+
+                System.setProperty("http.proxyHost", ProxyIP);
+                System.setProperty("http.proxyPort", ProxyPort);
+                System.setProperty("https.proxyHost", SecureIP);
+                System.setProperty("https.proxyPort", SecurePort);
+            }
+
+        } catch (IOException ex) {
+            System.out.println("Can not read config file...");
+        }
     }
 }

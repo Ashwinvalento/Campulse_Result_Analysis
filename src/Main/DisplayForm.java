@@ -9,16 +9,17 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 import net.proteanit.sql.DbUtils;
 import run.DBConnect;
-import run.MapInterface;
 
 /**
  *
  * @author Ashu
  */
-public class DisplayForm extends javax.swing.JFrame implements MapInterface {
+public class DisplayForm extends javax.swing.JFrame {
 
     ResultSet rs = null;
     Connection con = DBConnect.connection;
@@ -38,22 +39,23 @@ public class DisplayForm extends javax.swing.JFrame implements MapInterface {
         model.addColumn("RESULT");
 
         initComponents();
-        StudDetails.addRowSelectionInterval(0, 0);
 //get student names and usn and print table
         if ((rs = getDetails("ALL")) != null) {
 
             StudDetails.setModel(DbUtils.resultSetToTableModel(rs));
             StudentNumberInfo.setText(StudDetails.getRowCount() + " Student Records found");
         }
+//--------------------------
+        /*if (!extractUSN.usnList.isEmpty()) {
+         new resultFetch(extractUSN.usnList.get(0));
+         } else {
+         new resultFetch(StudDetails.getValueAt(0, 1).toString());
+         }*/
 
-        if (!extractUSN.usnList.isEmpty()) {
-            new resultFetch(extractUSN.usnList.get(0));
-        } else {
-            new resultFetch(StudDetails.getValueAt(0, 1).toString());
-        }
+        retrieveSubjectNames();
+
         //System.out.println("1st USN : "+extractUSN.usnList.get(0).toString() );
         // fill marks table
-
         fillMarksTable(StudDetails.getValueAt(0, 1).toString());
 
     }
@@ -294,6 +296,7 @@ public class DisplayForm extends javax.swing.JFrame implements MapInterface {
             StudDetails.setModel(DbUtils.resultSetToTableModel(res));
             StudentNumberInfo.setText(StudDetails.getRowCount() + " Student Records found");
         }
+        fillMarksTable(StudDetails.getValueAt(0, 1).toString());
     }//GEN-LAST:event_ClassComboActionPerformed
 
     private void ClassComboItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_ClassComboItemStateChanged
@@ -404,15 +407,21 @@ public class DisplayForm extends javax.swing.JFrame implements MapInterface {
         model.setRowCount(0);
         StudentMarksTable.setModel(model);
         query = "select * from RESULTTABLE where USN='" + usn + "'";
+
+        System.out.println(query);
         try {
             stmt = con.createStatement();
             res = stmt.executeQuery(query);
             res.next();
             int rowCount = 0;
             System.out.println("res of 1 is " + res.getString(1));
+            for (int i = 0; i < MainForm.subNamesV.size(); i++) {
+                System.out.println(MainForm.subNamesV.get(i));
+            }
+
             for (int row = 3; row < 35; row += 4) {
 
-                model.insertRow(rowCount, new Object[]{subNamesV.get(rowCount++), res.getInt(row), res.getInt(row + 1), res.getInt(row + 2), res.getString(row + 3)});
+                model.insertRow(rowCount, new Object[]{MainForm.subNamesV.get(rowCount++), res.getInt(row), res.getInt(row + 1), res.getInt(row + 2), res.getString(row + 3)});
             }
             NameLabel.setText(res.getString(2));
             TotalLabel.setText(Integer.toString(res.getInt(35)));
@@ -422,5 +431,23 @@ public class DisplayForm extends javax.swing.JFrame implements MapInterface {
         } catch (SQLException ex) {
             System.out.println("Error : " + ex);
         }
+    }
+
+    private void retrieveSubjectNames() {
+        Connection con = DBConnect.connection;
+        ResultSet rs = null;
+        String sql = "Select * From SUBJECTTABLE";
+        try {
+            Statement stmt = con.createStatement();
+            rs = stmt.executeQuery(sql);
+
+            while (rs.next()) {
+                MainForm.subNamesV.add(rs.getString(1));
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(resultFetch.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 }

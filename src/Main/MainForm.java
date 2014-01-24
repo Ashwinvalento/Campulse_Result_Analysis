@@ -4,6 +4,7 @@ package Main;
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
+import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.ResultSet;
@@ -12,6 +13,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
 public class MainForm extends javax.swing.JFrame {
@@ -67,6 +69,7 @@ public class MainForm extends javax.swing.JFrame {
         B_GetResult = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
+        jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
@@ -202,6 +205,14 @@ public class MainForm extends javax.swing.JFrame {
         });
 
         jMenu1.setText("File");
+
+        jMenuItem3.setText("About Us");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem3);
 
         jMenuItem1.setText("Exit");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
@@ -356,6 +367,11 @@ public class MainForm extends javax.swing.JFrame {
         SaveTable ST = new SaveTable(model);
     }//GEN-LAST:event_btn_saveActionPerformed
 
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+            
+        new AboutUs().setVisible(true);
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -421,6 +437,7 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton stopbtn;
     private javax.swing.JButton submitButton;
@@ -432,6 +449,7 @@ public class MainForm extends javax.swing.JFrame {
     }
 
     private void updateProgress() {
+
         usnProgressBar.show();
         usnProgressBar.setMinimum(0);
         usnProgressBar.setMaximum(100);
@@ -451,7 +469,7 @@ public class MainForm extends javax.swing.JFrame {
         task.execute();
     }
 
-    public static void setLabel(String s) {
-        curUsnDownloadLabel.setText(s);
+    public void clickStop() {
+        stopbtn.doClick();
     }
 }

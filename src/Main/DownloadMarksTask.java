@@ -46,7 +46,7 @@ public class DownloadMarksTask extends SwingWorker<Integer, Integer> {
             for (int i = 0; i < MainForm.usnList.size() && MainForm.stopFlag == false; i++) {
                 int colCount = 1;
                 setProgress((i + 1) * 100 / MainForm.usnList.size());
-                MainForm.setCurStatusLabel("USN " + MainForm.usnList.get(i) + " is parsed");
+                MainForm.setCurStatusLabel("Downloading USN :" + MainForm.usnList.get(i));
                 System.out.println(MainForm.usnList.get(i));
                 
                 if (r.FetchTheresult(MainForm.usnList.get(i))) {
@@ -81,9 +81,10 @@ public class DownloadMarksTask extends SwingWorker<Integer, Integer> {
     
     @Override
     protected void done() {
-        MainForm.objCopy.usnProgressBar.hide();
+       // MainForm.objCopy.usnProgressBar.hide();
+        MainForm.objCopy.clickStop();
         System.out.println("DONE!!!");
-        MainForm.setLabel("DOWNLOAD COMPLETE");
+        MainForm.setCurStatusLabel("DOWNLOAD COMPLETE");
         
     }
     

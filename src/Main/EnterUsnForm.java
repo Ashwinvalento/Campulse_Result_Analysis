@@ -344,7 +344,7 @@ public class EnterUsnForm extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Please Enter The USN Range ");
         } else if (!mFr.matches() || !mTo.matches()) {
             JOptionPane.showMessageDialog(null, "Invalid USN Format");
-        } else if (!trimmedTo.equals(trimedFr) || (!usnMatcher.equals("") && !trimmedTo.equalsIgnoreCase(trimedFr))) {
+        } else if (!trimmedTo.equalsIgnoreCase(trimedFr) || (!usnMatcher.equals("") && !trimmedTo.equalsIgnoreCase(usnMatcher))) {
             JOptionPane.showMessageDialog(null, "Invalid USN Range");
         } else {
 
@@ -385,7 +385,7 @@ public class EnterUsnForm extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Please Enter The USN ");
         } else if (!m.matches()) {
             JOptionPane.showMessageDialog(null, "Invalid USN Format");
-        } else if (!usnMatcher.equals("") && !trimmedUsn.equalsIgnoreCase(usnMatcher)) {
+        } else if (!usnMatcher.equals("") && !trimmedUsn.substring(5,7).equalsIgnoreCase(usnMatcher)) {
             JOptionPane.showMessageDialog(null, "Invalid USN .Make sure all The USN correspond to same branch");
         } else {
 
@@ -446,6 +446,7 @@ public class EnterUsnForm extends javax.swing.JFrame {
     private void bClearAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bClearAllActionPerformed
         list.removeAllElements();
         MainForm.usnList.clear();
+        usnMatcher="";
     }//GEN-LAST:event_bClearAllActionPerformed
 
     private void bDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bDeleteActionPerformed

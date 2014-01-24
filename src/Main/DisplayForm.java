@@ -13,6 +13,7 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.Document;
@@ -34,6 +35,7 @@ public class DisplayForm extends javax.swing.JFrame {
     }
 
     public DisplayForm() {
+
         int rowCount = 0;
         model = new DefaultTableModel();
 
@@ -98,7 +100,6 @@ public class DisplayForm extends javax.swing.JFrame {
         retrieveSubjectNames();
 
         fillMarksTable(StudDetails.getValueAt(0, 1).toString());
-
     }
 
     /**
@@ -547,6 +548,5 @@ public class DisplayForm extends javax.swing.JFrame {
         }
 
     }
-    
 
 }

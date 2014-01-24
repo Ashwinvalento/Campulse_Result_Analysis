@@ -34,8 +34,7 @@ public class resultFetch {
         Document doc;
 
         try {
-
-            doc = Jsoup.connect(url).userAgent("Mozilla").get();
+            doc = Jsoup.connect(url).userAgent("Mozilla").timeout(25*1000).get();
 
             Element firstTableMarks = doc.select("table:eq(3)").first();
             Element tmtbody = firstTableMarks.select("tbody").first();
@@ -84,7 +83,7 @@ public class resultFetch {
         Document doc;
         String url = "http://results.vtualerts.com/get_res.php?usn=" + usn;
         try {
-            doc = Jsoup.connect(url).userAgent("Mozilla").get();
+            doc = Jsoup.connect(url).userAgent("Mozilla").timeout(25*1000).get();
 
             Element StdName = doc.select("div").select("B:eq(0)").first();
             name = StdName.toString().split(">")[1].split(Pattern.quote("("))[0];

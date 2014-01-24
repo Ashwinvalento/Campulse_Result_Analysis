@@ -52,6 +52,7 @@ public class MainForm extends javax.swing.JFrame {
         B_UsnSelect = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        bSubjectWise = new javax.swing.JButton();
         curUsnDownloadLabel = new javax.swing.JLabel();
         usnProgressBar = new javax.swing.JProgressBar(0,100);
         jLabel3 = new javax.swing.JLabel();
@@ -103,6 +104,13 @@ public class MainForm extends javax.swing.JFrame {
 
         jLabel4.setText("View Results :");
 
+        bSubjectWise.setText("Subject Wise");
+        bSubjectWise.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bSubjectWiseActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -114,12 +122,15 @@ public class MainForm extends javax.swing.JFrame {
                     .addComponent(jLabel2)
                     .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(B_UsnSelect, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(submitButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(bView, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(28, 28, 28)
-                .addComponent(stopbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(bSubjectWise)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(B_UsnSelect, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(submitButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(bView, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(28, 28, 28)
+                        .addComponent(stopbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -141,7 +152,9 @@ public class MainForm extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(bView))
-                .addContainerGap(96, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(bSubjectWise)
+                .addContainerGap(55, Short.MAX_VALUE))
         );
 
         curUsnDownloadLabel.setText("<Displays the Usn which is downloading>");
@@ -272,6 +285,11 @@ public class MainForm extends javax.swing.JFrame {
 
     }//GEN-LAST:event_B_GetResultActionPerformed
 
+    private void bSubjectWiseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSubjectWiseActionPerformed
+        SubjectWiseResult frame=new SubjectWiseResult();
+        frame.setVisible(true);
+    }//GEN-LAST:event_bSubjectWiseActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -323,6 +341,7 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JButton B_GetResult;
     private javax.swing.JButton B_UsnSelect;
     private javax.swing.JTextField TF_usn;
+    private javax.swing.JButton bSubjectWise;
     private javax.swing.JButton bView;
     public static javax.swing.JLabel curUsnDownloadLabel;
     private javax.swing.JLabel jLabel1;

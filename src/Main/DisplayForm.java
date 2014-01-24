@@ -5,6 +5,7 @@ package Main;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+import java.awt.Color;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -28,10 +29,27 @@ public class DisplayForm extends javax.swing.JFrame {
     /**
      * Creates new form DisplayForm
      */
+    public DisplayForm(String x) {
+
+    }
+
     public DisplayForm() {
         int rowCount = 0;
         model = new DefaultTableModel();
-        firstTableModel = new DefaultTableModel();
+
+        firstTableModel
+                = new DefaultTableModel() {
+                    Class[] types = new Class[]{
+                        //COL. TYPES ARE HERE!!!  
+                        java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class
+                    };
+
+                    @Override
+                    public Class getColumnClass(int columnIndex) {
+                        return types[columnIndex];
+                    }
+                };
+
         model.addColumn("SUBJECT");
         model.addColumn("INTERNAL");
         model.addColumn("EXTERNAL");
@@ -40,7 +58,7 @@ public class DisplayForm extends javax.swing.JFrame {
 
         initComponents();
 
-        if ((rs = getDetails("ALL")) != null) {
+        if ((rs = getDetails("SOME")) != null) {
 
             //StudDetails.setModel(DbUtils.resultSetToTableModel(rs));
             firstTableModel.addColumn("Rank");
@@ -63,20 +81,18 @@ public class DisplayForm extends javax.swing.JFrame {
                         ToBEInserted = "FAIL";
                     }
                     firstTableModel.insertRow(rowCount++, new Object[]{rowCount, rs.getString(2), rs.getString(1), rs.getString(3), ToBEInserted});
-
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(DisplayForm.class.getName()).log(Level.SEVERE, null, ex);
             }
             StudDetails.setModel(firstTableModel);
             StudentNumberInfo.setText(StudDetails.getRowCount() + " Student Records found");
-            StudDetails.getColumn("Rank").setPreferredWidth(30);
+            StudDetails.getColumn("Rank").setPreferredWidth(50);
             StudDetails.getColumn("USN").setPreferredWidth(100);
             StudDetails.getColumn("Name").setPreferredWidth(150);
-            StudDetails.getColumn("Total").setPreferredWidth(30);
-            StudDetails.getColumn("Class").setPreferredWidth(40);
+            StudDetails.getColumn("Total").setPreferredWidth(50);
+            StudDetails.getColumn("Class").setPreferredWidth(50);
             StudDetails.setAutoCreateRowSorter(true);
-            //firstTableModel.
         }
 
         retrieveSubjectNames();
@@ -361,11 +377,11 @@ public class DisplayForm extends javax.swing.JFrame {
             }
             StudDetails.setModel(firstTableModel);
             StudentNumberInfo.setText(StudDetails.getRowCount() + " Student Records found");
-            StudDetails.getColumn("Rank").setPreferredWidth(30);
+            StudDetails.getColumn("Rank").setPreferredWidth(50);
             StudDetails.getColumn("USN").setPreferredWidth(100);
             StudDetails.getColumn("Name").setPreferredWidth(150);
-            StudDetails.getColumn("Total").setPreferredWidth(30);
-            StudDetails.getColumn("Class").setPreferredWidth(40);
+            StudDetails.getColumn("Total").setPreferredWidth(50);
+            StudDetails.getColumn("Class").setPreferredWidth(50);
             StudDetails.setAutoCreateRowSorter(true);
             StudentNumberInfo.setText(StudDetails.getRowCount() + " Student Records found");
         }
@@ -440,15 +456,17 @@ public class DisplayForm extends javax.swing.JFrame {
         });
     }
 
-    private ResultSet getDetails(String StdClass) {
+    public ResultSet getDetails(String StdClass) {
         Statement stmt = null;
         ResultSet rs = null;
         String query = "";
         //get USN from user
 
         System.out.println("after trim " + StdClass.trim());
-        if (StdClass.equals("ALL")) {
+        if (StdClass.equals("SOME")) {
             query = "select DISTINCT NAME,USN,TOTAL,MARKCLASS from RESULTTABLE ORDER BY TOTAL DESC";
+        } else if (StdClass.equals("ALL")) {
+            query = "select * from RESULTTABLE ";
         } else {
             query = "select DISTINCT NAME,USN,TOTAL,MARKCLASS from RESULTTABLE WHERE MARKCLASS = '" + StdClass.trim() + " ' ORDER BY TOTAL DESC";
         }
@@ -511,7 +529,7 @@ public class DisplayForm extends javax.swing.JFrame {
         }
     }
 
-    private void retrieveSubjectNames() {
+    public void retrieveSubjectNames() {
         MainForm.subNamesV.clear();
         Connection con = DBConnect.connection;
         ResultSet rs = null;
@@ -529,4 +547,6 @@ public class DisplayForm extends javax.swing.JFrame {
         }
 
     }
+    
+
 }

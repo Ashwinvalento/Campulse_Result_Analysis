@@ -6,8 +6,13 @@ package Main;
  */
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 public class MainForm extends javax.swing.JFrame {
 
@@ -53,6 +58,8 @@ public class MainForm extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         bSubjectWise = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        btn_save = new javax.swing.JButton();
         curUsnDownloadLabel = new javax.swing.JLabel();
         usnProgressBar = new javax.swing.JProgressBar(0,100);
         jLabel3 = new javax.swing.JLabel();
@@ -77,7 +84,7 @@ public class MainForm extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("Start Downloading Data :");
+        jLabel1.setText("Start Downloading :");
 
         bView.setText("View");
         bView.addActionListener(new java.awt.event.ActionListener() {
@@ -111,6 +118,15 @@ public class MainForm extends javax.swing.JFrame {
             }
         });
 
+        jLabel5.setText("Save results :");
+
+        btn_save.setText("Save");
+        btn_save.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_saveActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -118,21 +134,35 @@ public class MainForm extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(bSubjectWise)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(B_UsnSelect, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(submitButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(bView, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(28, 28, 28)
-                        .addComponent(stopbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(submitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(stopbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel5))
+                                .addGap(48, 48, 48)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btn_save)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(bView, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(B_UsnSelect, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addGap(18, 18, 18)
+                        .addComponent(bSubjectWise)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
+
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {bSubjectWise, stopbtn});
+
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {B_UsnSelect, bView, btn_save, submitButton});
+
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -143,17 +173,20 @@ public class MainForm extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(B_UsnSelect)))
-                .addGap(10, 10, 10)
+                .addGap(17, 17, 17)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(submitButton)
                     .addComponent(stopbtn))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(bView))
+                    .addComponent(bView)
+                    .addComponent(bSubjectWise))
                 .addGap(18, 18, 18)
-                .addComponent(bSubjectWise)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel5)
+                    .addComponent(btn_save))
                 .addContainerGap(55, Short.MAX_VALUE))
         );
 
@@ -266,9 +299,13 @@ public class MainForm extends javax.swing.JFrame {
             stopFlag = false;
             submitButton.setEnabled(false);
             stopbtn.setEnabled(true);
-            resultFetch r = new resultFetch();
-            //r.fetchSubjectNames(extractUSN.usnList.get(0));
-            r.fetchSubjectNames(usnList.get(0));
+            new Thread() {
+                public void run() {
+                    resultFetch r = new resultFetch();
+
+                    r.fetchSubjectNames(usnList.get(0));
+                }
+            }.start();
             updateProgress();
         }
     }//GEN-LAST:event_submitButtonActionPerformed
@@ -286,9 +323,38 @@ public class MainForm extends javax.swing.JFrame {
     }//GEN-LAST:event_B_GetResultActionPerformed
 
     private void bSubjectWiseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSubjectWiseActionPerformed
-        SubjectWiseResult frame=new SubjectWiseResult();
+        SubjectWiseResult frame = new SubjectWiseResult();
         frame.setVisible(true);
     }//GEN-LAST:event_bSubjectWiseActionPerformed
+
+    private void btn_saveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_saveActionPerformed
+        int count = 0;
+        DisplayForm df = new DisplayForm("Dummy");
+        initComponents();
+        df.retrieveSubjectNames();
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("USN");
+        model.addColumn("NAME");
+        model.addColumn(MainForm.subNamesV.get(0));
+        model.addColumn(MainForm.subNamesV.get(1));
+        model.addColumn(MainForm.subNamesV.get(2));
+        model.addColumn(MainForm.subNamesV.get(3));
+        model.addColumn(MainForm.subNamesV.get(4));
+        model.addColumn(MainForm.subNamesV.get(5));
+        model.addColumn(MainForm.subNamesV.get(6));
+        model.addColumn(MainForm.subNamesV.get(7));
+        model.addColumn("TOTAL");
+        model.addColumn("RESULT");
+        ResultSet r = df.getDetails("ALL");
+        try {
+            while (r.next()) {
+                model.insertRow(count++, new Object[]{r.getString(1), r.getString(2), r.getInt(5), r.getInt(9), r.getInt(13), r.getInt(17), r.getInt(21), r.getInt(25), r.getInt(29), r.getInt(33), r.getInt(35), r.getString(36)});
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(VirtualSaveForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        SaveTable ST = new SaveTable(model);
+    }//GEN-LAST:event_btn_saveActionPerformed
 
     /**
      * @param args the command line arguments
@@ -343,11 +409,13 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JTextField TF_usn;
     private javax.swing.JButton bSubjectWise;
     private javax.swing.JButton bView;
+    private javax.swing.JButton btn_save;
     public static javax.swing.JLabel curUsnDownloadLabel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
@@ -383,4 +451,7 @@ public class MainForm extends javax.swing.JFrame {
         task.execute();
     }
 
+    public static void setLabel(String s) {
+        curUsnDownloadLabel.setText(s);
+    }
 }

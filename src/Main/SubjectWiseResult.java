@@ -27,17 +27,33 @@ public class SubjectWiseResult extends javax.swing.JFrame {
         initComponents();
         retrieveSubjectNames();
         fillSubjectCombo();
-        
-        model = new DefaultTableModel();
+
+        model = new DefaultTableModel() {
+            Class[] types = new Class[]{
+                //COL. TYPES ARE HERE!!!  
+                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class
+            };
+
+            @Override
+            public Class getColumnClass(int columnIndex) {
+                return types[columnIndex];
+            }
+        };
         // StudentMarksTable.setModel(model);
         model.addColumn("USN");
         model.addColumn("NAME");
         model.addColumn("INTERNAL");
         model.addColumn("EXTERNAL");
         model.addColumn("TOTAL");
+        model.addColumn("CLASS");
         bSubmit.doClick();
-
         studentMarksTable.setAutoCreateRowSorter(true);
+        studentMarksTable.getColumn("USN").setPreferredWidth(100);
+        studentMarksTable.getColumn("NAME").setPreferredWidth(150);
+        studentMarksTable.getColumn("INTERNAL").setPreferredWidth(50);
+        studentMarksTable.getColumn("EXTERNAL").setPreferredWidth(50);
+        studentMarksTable.getColumn("TOTAL").setPreferredWidth(40);
+        studentMarksTable.getColumn("CLASS").setPreferredWidth(40);
     }
 
     /**
@@ -98,12 +114,12 @@ public class SubjectWiseResult extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(firstValue, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel2)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lastValue, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 8, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(subjectCombo, 0, 255, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -210,8 +226,8 @@ public class SubjectWiseResult extends javax.swing.JFrame {
         ResultSet rs = null;
         String query = "";
         Connection con = DBConnect.connection;
-        int lowLimit = Integer.parseInt(firstValue.getValue().toString())-1;
-        int highLimit = Integer.parseInt(lastValue.getValue().toString())+1;
+        int lowLimit = Integer.parseInt(firstValue.getValue().toString()) - 1;
+        int highLimit = Integer.parseInt(lastValue.getValue().toString()) + 1;
         //get USN from user
 
         model.setRowCount(0);
@@ -236,10 +252,8 @@ public class SubjectWiseResult extends javax.swing.JFrame {
                     if (flag == 0) {
                         model.insertRow(rowCount++, new Object[]{rs.getString(1), rs.getString(2), rs.getString(35), rs.getString(36), rs.getString(36)});
                     }
-                    
 
-                }
-                else if(subjectCombo.getSelectedIndex() == 9){
+                } else if (subjectCombo.getSelectedIndex() == 9) {
                     int flag = 0;
                     for (int i = 3; i < 35; i += 4) {
                         if (Integer.parseInt(rs.getString(i)) > lowLimit || Integer.parseInt(rs.getString(i)) < highLimit) {
@@ -250,14 +264,13 @@ public class SubjectWiseResult extends javax.swing.JFrame {
                     if (flag == 1) {
                         model.insertRow(rowCount++, new Object[]{rs.getString(1), rs.getString(2), rs.getString(35), rs.getString(36), rs.getString(36)});
                     }
-                }
-                else {
+                } else {
                     whichROw = subjectCombo.getSelectedIndex() * 4 + 3;
                     //System.out.println(rs.getString(1) + "  " + rs.getString(whichROw) + " " + rs.getString(whichROw + 1) + " " + rs.getString(whichROw + 2) + " " + rs.getString(whichROw + 3));
                     // System.out.println("lowLimit is : "+lowLimit + " highLimit is : " +highLimit + " total is : " + Integer.parseInt(rs.getString(whichROw+2)));
                     if (Integer.parseInt(rs.getString(whichROw + 2)) > lowLimit) {
                         if (Integer.parseInt(rs.getString(whichROw + 2)) < highLimit) {
-                            model.insertRow(rowCount++, new Object[]{rs.getString(1), rs.getString(2), rs.getString(whichROw), rs.getString(whichROw + 1), rs.getString(whichROw + 2)});
+                            model.insertRow(rowCount++, new Object[]{rs.getString(1), rs.getString(2), Integer.parseInt(rs.getString(whichROw)), Integer.parseInt(rs.getString(whichROw + 1)), Integer.parseInt(rs.getString(whichROw + 2)), rs.getString(whichROw + 3)});
                         } else {
 
                         }
@@ -279,7 +292,7 @@ public class SubjectWiseResult extends javax.swing.JFrame {
     }//GEN-LAST:event_bCloseActionPerformed
 
     private void bSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSaveActionPerformed
-        
+       SaveTable ST =  new SaveTable(model);
     }//GEN-LAST:event_bSaveActionPerformed
 
     /**
@@ -348,7 +361,7 @@ public class SubjectWiseResult extends javax.swing.JFrame {
         subjectCombo.setModel(model);
 
     }
-    
+
     private void retrieveSubjectNames() {
         MainForm.subNamesV.clear();
         Connection con = DBConnect.connection;

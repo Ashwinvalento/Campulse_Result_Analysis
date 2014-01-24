@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package Main;
 
 import java.io.BufferedWriter;
@@ -14,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -21,11 +21,14 @@ import javax.swing.table.DefaultTableModel;
  * @author DELL
  */
 public class SaveTable {
-    
-    SaveTable(DefaultTableModel dataModel){
+
+    SaveTable(DefaultTableModel dataModel) {
         JFileChooser chooser = null;
         BufferedWriter bfw = null;
         chooser = new JFileChooser();
+        chooser.setAcceptAllFileFilterUsed(false);
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Excel Sheet", ".CSV", "CSV");
+        chooser.setFileFilter(filter);
         int actionDialog = chooser.showSaveDialog(null);
         if (actionDialog == JFileChooser.APPROVE_OPTION) {
 
@@ -44,7 +47,7 @@ public class SaveTable {
                 }
 
                 System.out.println("Writing to File" + fileName);
-                bfw = new BufferedWriter(new FileWriter(fileName));
+                bfw = new BufferedWriter(new FileWriter(fileName + ".csv"));
                 //bfw.write("hello world");
                 for (int i = 0; i < dataModel.getColumnCount(); i++) {
                     try {
@@ -76,5 +79,5 @@ public class SaveTable {
             }
         }
     }
-    
+
 }

@@ -16,10 +16,10 @@ import javax.swing.SwingWorker;
 import run.DBConnect;
 
 public class DownloadMarksTask extends SwingWorker<Integer, Integer> {
-
+    
     PreparedStatement pstmt;
     Statement stmt;
-
+    
     DownloadMarksTask() {
         //initialize 
         Connection con = DBConnect.connection;
@@ -32,9 +32,9 @@ public class DownloadMarksTask extends SwingWorker<Integer, Integer> {
         } catch (SQLException ex) {
             Logger.getLogger(DownloadMarksTask.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        
     }
-
+    
     @Override
     public Integer doInBackground() throws InterruptedException {
         MainForm.curUsnDownloadLabel.show();
@@ -48,7 +48,7 @@ public class DownloadMarksTask extends SwingWorker<Integer, Integer> {
                 setProgress((i + 1) * 100 / MainForm.usnList.size());
                 MainForm.setCurStatusLabel("USN " + MainForm.usnList.get(i) + " is parsed");
                 System.out.println(MainForm.usnList.get(i));
-
+                
                 if (r.FetchTheresult(MainForm.usnList.get(i))) {
                     //display marks
 
@@ -65,7 +65,7 @@ public class DownloadMarksTask extends SwingWorker<Integer, Integer> {
                     pstmt.execute();
                 }
             }
-
+            
         } catch (Exception e) {
             System.out.println("Error:" + e);
             JOptionPane.showMessageDialog(null, e + " Download marks task");
@@ -73,18 +73,20 @@ public class DownloadMarksTask extends SwingWorker<Integer, Integer> {
         }
         return 1;
     }
-
+    
     @Override
     protected void process(List<Integer> chunks) {
-
+        
     }
-
+    
     @Override
     protected void done() {
         MainForm.objCopy.usnProgressBar.hide();
         System.out.println("DONE!!!");
+        MainForm.setLabel("DOWNLOAD COMPLETE");
+        
     }
-
+    
     void stopFetching() {
         this.cancel(true);
     }

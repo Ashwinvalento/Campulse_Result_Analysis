@@ -34,8 +34,7 @@ public class resultFetch {
         Document doc;
 
         try {
-
-            doc = Jsoup.connect(url).userAgent("Mozilla").get();
+            doc = Jsoup.connect(url).userAgent("Mozilla").timeout(25*1000).get();
 
             Element firstTableMarks = doc.select("table:eq(3)").first();
             Element tmtbody = firstTableMarks.select("tbody").first();
@@ -45,8 +44,8 @@ public class resultFetch {
                 MainForm.subNamesV.add(tmtbody.select(whichTr).first().child(0).text());
             }
         } catch (IOException e) {
-            MainForm.stopFlag = true;
-            JOptionPane.showMessageDialog(null, e + "resultfetch");
+            //MainForm.stopFlag = true;
+            JOptionPane.showMessageDialog(null, e + " tyfghfg resultfetch");
         }
 
         //Store subject names to database
@@ -84,7 +83,7 @@ public class resultFetch {
         Document doc;
         String url = "http://results.vtualerts.com/get_res.php?usn=" + usn;
         try {
-            doc = Jsoup.connect(url).userAgent("Mozilla").get();
+            doc = Jsoup.connect(url).userAgent("Mozilla").timeout(25*1000).get();
 
             Element StdName = doc.select("div").select("B:eq(0)").first();
             name = StdName.toString().split(">")[1].split(Pattern.quote("("))[0];
@@ -110,9 +109,9 @@ public class resultFetch {
 
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e + "fetch the result");
+            //JOptionPane.showMessageDialog(null, e + " fetch the result");
             System.out.println("Here is the exception");
-            MainForm.stopFlag = true;
+           // MainForm.stopFlag = true;
 
             return false;//if result is not found
         }

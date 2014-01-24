@@ -79,6 +79,8 @@ public class EnterUsnForm extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         List_Usn = new javax.swing.JList();
+        bDelete = new javax.swing.JButton();
+        bClearAll = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -92,7 +94,7 @@ public class EnterUsnForm extends javax.swing.JFrame {
             }
         });
 
-        TF_from.setText("4PA13CS001");
+        TF_from.setText("4PA10CS001");
         TF_from.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 TF_fromActionPerformed(evt);
@@ -108,7 +110,7 @@ public class EnterUsnForm extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel3.setText("Or");
 
-        TF_to.setText("4PA13CS055");
+        TF_to.setText("4PA10CS055");
 
         jLabel2.setText("USN :");
 
@@ -203,14 +205,17 @@ public class EnterUsnForm extends javax.swing.JFrame {
                                         .addComponent(jLabel3)))
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(90, 90, 90)
+                                .addContainerGap(90, Short.MAX_VALUE)
                                 .addComponent(B_cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(B_done, javax.swing.GroupLayout.DEFAULT_SIZE, 72, Short.MAX_VALUE)))
+                                .addComponent(B_done, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(22, 22, 22)))
                 .addContainerGap())
             .addComponent(jSeparator1)
         );
+
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {B_cancel, B_done});
+
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -240,7 +245,7 @@ public class EnterUsnForm extends javax.swing.JFrame {
                     .addComponent(ipFileButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(Lab_filename, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -253,20 +258,46 @@ public class EnterUsnForm extends javax.swing.JFrame {
 
         jScrollPane1.setViewportView(List_Usn);
 
+        bDelete.setText("Delete");
+        bDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bDeleteActionPerformed(evt);
+            }
+        });
+
+        bClearAll.setText("Clear All");
+        bClearAll.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bClearAllActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(bDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(bClearAll, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        jPanel2Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {bClearAll, bDelete});
+
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(bDelete)
+                    .addComponent(bClearAll))
                 .addContainerGap())
         );
 
@@ -279,16 +310,16 @@ public class EnterUsnForm extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(14, 14, 14))
+                .addContainerGap(43, Short.MAX_VALUE))
         );
 
         pack();
@@ -313,12 +344,12 @@ public class EnterUsnForm extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Please Enter The USN Range ");
         } else if (!mFr.matches() || !mTo.matches()) {
             JOptionPane.showMessageDialog(null, "Invalid USN Format");
-        } else if (!trimmedTo.equals(trimedFr) || (!usnMatcher.equals("") && !usnMatcher.equalsIgnoreCase(trimedFr))) {
+        } else if (!trimmedTo.equals(trimedFr) || (!usnMatcher.equals("") && !trimmedTo.equalsIgnoreCase(trimedFr))) {
             JOptionPane.showMessageDialog(null, "Invalid USN Range");
         } else {
 
             if (usnMatcher.equals("")) {
-                usnMatcher = trimedFr;
+                usnMatcher = fromUsn.substring(5,7);
                 System.out.println("usn set in multiple");
             }
             int start = Integer.parseInt(fromUsn.substring(7));
@@ -359,7 +390,7 @@ public class EnterUsnForm extends javax.swing.JFrame {
         } else {
 
             if (usnMatcher.equals("")) {
-                usnMatcher = trimmedUsn;
+                usnMatcher = trimmedUsn.substring(5,7);
                 System.out.println("usn set in single");
             }
             list.addElement(Str_singleUsn);
@@ -401,8 +432,9 @@ public class EnterUsnForm extends javax.swing.JFrame {
 
     private void B_doneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B_doneActionPerformed
         // TODO add your handling code here:
-        for (int i = 0; i < localUsnList.size(); i++) {
-            MainForm.usnList.add(localUsnList.get(i));
+        System.out.println(list.size());
+        for (int i = 0; i < list.size(); i++) {
+            MainForm.usnList.add(list.getElementAt(i).toString());
         }
         this.dispose();
     }//GEN-LAST:event_B_doneActionPerformed
@@ -410,6 +442,15 @@ public class EnterUsnForm extends javax.swing.JFrame {
     private void B_cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B_cancelActionPerformed
         this.dispose();
     }//GEN-LAST:event_B_cancelActionPerformed
+
+    private void bClearAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bClearAllActionPerformed
+        list.removeAllElements();
+        //List_Usn.removeAll();
+    }//GEN-LAST:event_bClearAllActionPerformed
+
+    private void bDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bDeleteActionPerformed
+        list.removeElementAt(List_Usn.getSelectedIndex());
+    }//GEN-LAST:event_bDeleteActionPerformed
 
     private void saveCurrentDirectory(String absolutePath) {
         try {
@@ -485,6 +526,8 @@ public class EnterUsnForm extends javax.swing.JFrame {
     private javax.swing.JTextField TF_SingleUsn;
     private javax.swing.JTextField TF_from;
     private javax.swing.JTextField TF_to;
+    private javax.swing.JButton bClearAll;
+    private javax.swing.JButton bDelete;
     private javax.swing.JButton ipFileButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

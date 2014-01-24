@@ -13,7 +13,9 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultRowSorter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import run.DBConnect;
 
 public class SubjectWiseResult extends javax.swing.JFrame {
@@ -35,6 +37,7 @@ public class SubjectWiseResult extends javax.swing.JFrame {
         model.addColumn("TOTAL");
         bSubmit.doClick();
 
+        studentMarksTable.setAutoCreateRowSorter(true);
     }
 
     /**
@@ -207,8 +210,8 @@ public class SubjectWiseResult extends javax.swing.JFrame {
         ResultSet rs = null;
         String query = "";
         Connection con = DBConnect.connection;
-        int lowLimit = Integer.parseInt(firstValue.getValue().toString());
-        int highLimit = Integer.parseInt(lastValue.getValue().toString());
+        int lowLimit = Integer.parseInt(firstValue.getValue().toString())-1;
+        int highLimit = Integer.parseInt(lastValue.getValue().toString())+1;
         //get USN from user
 
         model.setRowCount(0);

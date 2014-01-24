@@ -44,8 +44,8 @@ public class resultFetch {
                 MainForm.subNamesV.add(tmtbody.select(whichTr).first().child(0).text());
             }
         } catch (IOException e) {
-            MainForm.stopFlag = true;
-            JOptionPane.showMessageDialog(null, e + "resultfetch");
+            //MainForm.stopFlag = true;
+            JOptionPane.showMessageDialog(null, e + " tyfghfg resultfetch");
         }
 
         //Store subject names to database
@@ -109,9 +109,9 @@ public class resultFetch {
 
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e + "fetch the result");
+            //JOptionPane.showMessageDialog(null, e + " fetch the result");
             System.out.println("Here is the exception");
-            MainForm.stopFlag = true;
+           // MainForm.stopFlag = true;
 
             return false;//if result is not found
         }

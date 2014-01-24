@@ -22,13 +22,15 @@ public class DisplayForm extends javax.swing.JFrame {
     ResultSet rs = null;
     Connection con = DBConnect.connection;
     DefaultTableModel model;
+    DefaultTableModel firstTableModel;
 
     /**
      * Creates new form DisplayForm
      */
     public DisplayForm() {
-
+        int rowCount = 0;
         model = new DefaultTableModel();
+        firstTableModel = new DefaultTableModel();
         model.addColumn("SUBJECT");
         model.addColumn("INTERNAL");
         model.addColumn("EXTERNAL");
@@ -36,10 +38,44 @@ public class DisplayForm extends javax.swing.JFrame {
         model.addColumn("RESULT");
 
         initComponents();
+
         if ((rs = getDetails("ALL")) != null) {
 
-            StudDetails.setModel(DbUtils.resultSetToTableModel(rs));
+            //StudDetails.setModel(DbUtils.resultSetToTableModel(rs));
+            firstTableModel.addColumn("Rank");
+            firstTableModel.addColumn("USN");
+            firstTableModel.addColumn("Name");
+            firstTableModel.addColumn("Total");
+            firstTableModel.addColumn("Class");
+
+            try {
+                while (rs.next()) {
+                    String temp = rs.getString(4);
+                    String ToBEInserted = "Oth";
+                    if (temp.equalsIgnoreCase("FIRST CLASS WITH DISTINCTION ")) {
+                        ToBEInserted = "FCD";
+                    } else if (temp.equalsIgnoreCase("FIRST CLASS ")) {
+                        ToBEInserted = "FC";
+                    } else if (temp.equalsIgnoreCase("SECOND CLASS")) {
+                        ToBEInserted = "SC";
+                    } else if (temp.equalsIgnoreCase("FAIL ")) {
+                        ToBEInserted = "FAIL";
+                    }
+                    firstTableModel.insertRow(rowCount++, new Object[]{rowCount, rs.getString(2), rs.getString(1), rs.getString(3), ToBEInserted});
+
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(DisplayForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            StudDetails.setModel(firstTableModel);
             StudentNumberInfo.setText(StudDetails.getRowCount() + " Student Records found");
+            StudDetails.getColumn("Rank").setPreferredWidth(30);
+            StudDetails.getColumn("USN").setPreferredWidth(100);
+            StudDetails.getColumn("Name").setPreferredWidth(150);
+            StudDetails.getColumn("Total").setPreferredWidth(30);
+            StudDetails.getColumn("Class").setPreferredWidth(40);
+            StudDetails.setAutoCreateRowSorter(true);
+            //firstTableModel.
         }
 
         retrieveSubjectNames();
@@ -135,10 +171,13 @@ public class DisplayForm extends javax.swing.JFrame {
             .addGroup(Panel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(Panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(StudentNumberInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ClassCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addGroup(Panel1Layout.createSequentialGroup()
+                        .addGroup(Panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(StudentNumberInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ClassCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 152, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         Panel1Layout.setVerticalGroup(
             Panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -181,6 +220,9 @@ public class DisplayForm extends javax.swing.JFrame {
         StudentMarksTable.setRowHeight(33);
         StudentMarksTable.setRowSelectionAllowed(false);
         jScrollPane2.setViewportView(StudentMarksTable);
+        if (StudentMarksTable.getColumnModel().getColumnCount() > 0) {
+            StudentMarksTable.getColumnModel().getColumn(4).setMinWidth(2);
+        }
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel1.setText("Name  :");
@@ -209,31 +251,28 @@ public class DisplayForm extends javax.swing.JFrame {
         Panel2Layout.setHorizontalGroup(
             Panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(Panel2Layout.createSequentialGroup()
-                .addGroup(Panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(Panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(Panel2Layout.createSequentialGroup()
                         .addGap(30, 30, 30)
-                        .addGroup(Panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(Panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(Panel2Layout.createSequentialGroup()
                                 .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(ResultLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
+                                .addComponent(ResultLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(Panel2Layout.createSequentialGroup()
                                 .addComponent(jLabel1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(NameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(bSave)
-                                .addGap(43, 43, 43))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 426, Short.MAX_VALUE)
+                                .addComponent(bSave))
                             .addGroup(Panel2Layout.createSequentialGroup()
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(TotalLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                .addComponent(TotalLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(Panel2Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 855, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(21, Short.MAX_VALUE))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 717, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         Panel2Layout.setVerticalGroup(
             Panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -271,7 +310,7 @@ public class DisplayForm extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(Panel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(Panel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(Panel2, javax.swing.GroupLayout.PREFERRED_SIZE, 749, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -293,8 +332,36 @@ public class DisplayForm extends javax.swing.JFrame {
 
     private void ClassComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ClassComboActionPerformed
         ResultSet res;
+        int rowCount=0;
         if ((res = getDetails(ClassCombo.getSelectedItem().toString())) != null) {
-            StudDetails.setModel(DbUtils.resultSetToTableModel(res));
+           
+            try {
+                while (rs.next()) {
+                    String temp = rs.getString(4);
+                    String ToBEInserted = "Oth";
+                    if (temp.equalsIgnoreCase("FIRST CLASS WITH DISTINCTION ")) {
+                        ToBEInserted = "FCD";
+                    } else if (temp.equalsIgnoreCase("FIRST CLASS ")) {
+                        ToBEInserted = "FC";
+                    } else if (temp.equalsIgnoreCase("SECOND CLASS")) {
+                        ToBEInserted = "SC";
+                    } else if (temp.equalsIgnoreCase("FAIL ")) {
+                        ToBEInserted = "FAIL";
+                    }
+                    firstTableModel.insertRow(rowCount++, new Object[]{rowCount, rs.getString(2), rs.getString(1), rs.getString(3), ToBEInserted});
+
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(DisplayForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            StudDetails.setModel(firstTableModel);
+            StudentNumberInfo.setText(StudDetails.getRowCount() + " Student Records found");
+            StudDetails.getColumn("Rank").setPreferredWidth(30);
+            StudDetails.getColumn("USN").setPreferredWidth(100);
+            StudDetails.getColumn("Name").setPreferredWidth(150);
+            StudDetails.getColumn("Total").setPreferredWidth(30);
+            StudDetails.getColumn("Class").setPreferredWidth(40);
+            StudDetails.setAutoCreateRowSorter(true);
             StudentNumberInfo.setText(StudDetails.getRowCount() + " Student Records found");
         }
         fillMarksTable(StudDetails.getValueAt(0, 1).toString());
@@ -368,9 +435,9 @@ public class DisplayForm extends javax.swing.JFrame {
 
         System.out.println("after trim " + StdClass.trim());
         if (StdClass.equals("ALL")) {
-            query = "select DISTINCT NAME,USN from RESULTTABLE ";
+            query = "select DISTINCT NAME,USN,TOTAL,MARKCLASS from RESULTTABLE ORDER BY TOTAL DESC";
         } else {
-            query = "select DISTINCT NAME,USN from RESULTTABLE WHERE MARKCLASS = '" + StdClass.trim() + " '";
+            query = "select DISTINCT NAME,USN,TOTAL,MARKCLASS from RESULTTABLE WHERE MARKCLASS = '" + StdClass.trim() + " ' ORDER BY TOTAL DESC";
         }
 
         try {
@@ -423,6 +490,7 @@ public class DisplayForm extends javax.swing.JFrame {
             NameLabel.setText(res.getString(2));
             TotalLabel.setText(Integer.toString(res.getInt(35)));
             ResultLabel.setText(res.getString(36));
+
             StudentMarksTable.getColumn("SUBJECT").setPreferredWidth(300);
 
         } catch (SQLException ex) {

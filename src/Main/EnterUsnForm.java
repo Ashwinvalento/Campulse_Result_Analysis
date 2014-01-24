@@ -445,7 +445,7 @@ public class EnterUsnForm extends javax.swing.JFrame {
 
     private void bClearAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bClearAllActionPerformed
         list.removeAllElements();
-        //List_Usn.removeAll();
+        MainForm.usnList.clear();
     }//GEN-LAST:event_bClearAllActionPerformed
 
     private void bDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bDeleteActionPerformed

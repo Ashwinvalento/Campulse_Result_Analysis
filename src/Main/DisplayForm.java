@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.Document;
@@ -56,7 +57,7 @@ public class DisplayForm extends javax.swing.JFrame {
                         ToBEInserted = "FCD";
                     } else if (temp.equalsIgnoreCase("FIRST CLASS ")) {
                         ToBEInserted = "FC";
-                    } else if (temp.equalsIgnoreCase("SECOND CLASS")) {
+                    } else if (temp.equalsIgnoreCase("SECOND CLASS ")) {
                         ToBEInserted = "SC";
                     } else if (temp.equalsIgnoreCase("FAIL ")) {
                         ToBEInserted = "FAIL";
@@ -103,7 +104,7 @@ public class DisplayForm extends javax.swing.JFrame {
         StudentMarksTable = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         NameLabel = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        jlabel2 = new javax.swing.JLabel();
         TotalLabel = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         ResultLabel = new javax.swing.JLabel();
@@ -229,8 +230,8 @@ public class DisplayForm extends javax.swing.JFrame {
 
         NameLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel2.setText("Total   :");
+        jlabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jlabel2.setText("Total   :");
 
         TotalLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
@@ -266,7 +267,7 @@ public class DisplayForm extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 426, Short.MAX_VALUE)
                                 .addComponent(bSave))
                             .addGroup(Panel2Layout.createSequentialGroup()
-                                .addComponent(jLabel2)
+                                .addComponent(jlabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(TotalLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(Panel2Layout.createSequentialGroup()
@@ -292,7 +293,7 @@ public class DisplayForm extends javax.swing.JFrame {
                         .addComponent(TotalLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Panel2Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel2)))
+                        .addComponent(jlabel2)))
                 .addGap(18, 18, 18)
                 .addGroup(Panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(ResultLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -331,23 +332,27 @@ public class DisplayForm extends javax.swing.JFrame {
     }//GEN-LAST:event_ClassComboPropertyChange
 
     private void ClassComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ClassComboActionPerformed
-        ResultSet res;
-        int rowCount=0;
-        if ((res = getDetails(ClassCombo.getSelectedItem().toString())) != null) {
-           
+        ResultSet rs;
+        int rowCount = 0;
+        boolean set = false;
+        firstTableModel.setRowCount(0);
+        if ((rs = getDetails(ClassCombo.getSelectedItem().toString())) != null) {
+
             try {
                 while (rs.next()) {
+                    set = true;
                     String temp = rs.getString(4);
                     String ToBEInserted = "Oth";
                     if (temp.equalsIgnoreCase("FIRST CLASS WITH DISTINCTION ")) {
                         ToBEInserted = "FCD";
                     } else if (temp.equalsIgnoreCase("FIRST CLASS ")) {
                         ToBEInserted = "FC";
-                    } else if (temp.equalsIgnoreCase("SECOND CLASS")) {
+                    } else if (temp.equalsIgnoreCase("SECOND CLASS ")) {
                         ToBEInserted = "SC";
                     } else if (temp.equalsIgnoreCase("FAIL ")) {
                         ToBEInserted = "FAIL";
                     }
+
                     firstTableModel.insertRow(rowCount++, new Object[]{rowCount, rs.getString(2), rs.getString(1), rs.getString(3), ToBEInserted});
 
                 }
@@ -364,7 +369,15 @@ public class DisplayForm extends javax.swing.JFrame {
             StudDetails.setAutoCreateRowSorter(true);
             StudentNumberInfo.setText(StudDetails.getRowCount() + " Student Records found");
         }
-        fillMarksTable(StudDetails.getValueAt(0, 1).toString());
+        if (set) {
+            fillMarksTable(StudDetails.getValueAt(0, 1).toString());
+        } else {
+            NameLabel.setText("");
+            ResultLabel.setText("");
+            TotalLabel.setText("");
+            model.setRowCount(0);
+            JOptionPane.showMessageDialog(null, "No " + ClassCombo.getSelectedItem().toString() + " Students found");
+        }
     }//GEN-LAST:event_ClassComboActionPerformed
 
     private void ClassComboItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_ClassComboItemStateChanged
@@ -462,10 +475,10 @@ public class DisplayForm extends javax.swing.JFrame {
     private javax.swing.JLabel TotalLabel;
     private javax.swing.JButton bSave;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel jlabel2;
     // End of variables declaration//GEN-END:variables
 
     private void fillMarksTable(String usn) {

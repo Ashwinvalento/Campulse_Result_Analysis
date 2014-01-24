@@ -32,15 +32,15 @@ public class extractUSN {
             while ((line = br.readLine()) != null) {
                 Matcher m = p.matcher(line);
                 while (m.find()) {
-                    if (EnterUsnForm.usnMatcher.equals("")) {
-                        EnterUsnForm.usnMatcher = m.group(0).substring(0, 7);
+                    /*if (EnterUsnForm.usnMatcher.equals("")) {
+                        EnterUsnForm.usnMatcher = m.group(0).substring(5, 7);
                         System.out.println("Matcher set in extractUsn" + EnterUsnForm.usnMatcher);
-                    }
-                    if (!EnterUsnForm.usnMatcher.equals("") && m.group(0).substring(0, 7).equals(EnterUsnForm.usnMatcher)) {
+                    }*/
+                   // if (!EnterUsnForm.usnMatcher.equals("") && m.group(0).substring(0, 7).equals(EnterUsnForm.usnMatcher)) {
                         EnterUsnForm.localUsnList.add(m.group(0));
-                    } else {
+                   /* } else {
                         allExtractSuccess = false;
-                    }
+                    }*/
                 }
             }
             br.close();

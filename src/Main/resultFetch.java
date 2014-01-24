@@ -41,7 +41,7 @@ public class resultFetch {
 
             for (int i = 0; i < 8; i++) {
                 String whichTr = "tr:eq(" + (i + 1) + ")";
-                MainForm.subNamesV.add(tmtbody.select(whichTr).first().child(0).text());
+                MainForm.subNamesV.add(tmtbody.select(whichTr).first().child(0).text().trim());
             }
         } catch (IOException e) {
             //MainForm.stopFlag = true;

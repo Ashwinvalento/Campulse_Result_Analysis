@@ -1,5 +1,6 @@
 package Main;
 
+import Forms.MainForm;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
@@ -74,7 +75,7 @@ public class resultFetch {
 
     }
 
-    resultFetch() {
+    public resultFetch() {
         setProxy();
     }
 

@@ -1,9 +1,13 @@
-package Main;
+package Forms;
 
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
+import Main.DownloadMarksTask;
+import Main.SaveTable;
+import Main.extractUSN;
+import Main.resultFetch;
 import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -22,8 +26,8 @@ public class MainForm extends javax.swing.JFrame {
      * Creates new form main
      */
     public static Vector<String> usnList = new Vector<String>();
-    static Vector<String> subNamesV = new Vector<String>();
-    static boolean stopFlag = false;
+    public static Vector<String> subNamesV = new Vector<String>();
+    public static boolean stopFlag = false;
     String inFile;
     static int usnCount = 0;
 
@@ -368,7 +372,6 @@ public class MainForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_saveActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-
         new AboutUs().setVisible(true);
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
@@ -455,7 +458,7 @@ public class MainForm extends javax.swing.JFrame {
         usnProgressBar.setMaximum(100);
         //usnProgressBar.setMaximum(extractUSN.usnList.size());
 
-        task = new DownloadMarksTask();
+        task = new Main.DownloadMarksTask();
         task.addPropertyChangeListener(
                 new PropertyChangeListener() {
 

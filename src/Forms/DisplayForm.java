@@ -1,11 +1,12 @@
-package Main;
+package Forms;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-import java.awt.Color;
+import Main.SaveTable;
+import Main.resultFetch;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,11 +14,7 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.text.AbstractDocument;
-import javax.swing.text.Document;
-import net.proteanit.sql.DbUtils;
 import run.DBConnect;
 
 public class DisplayForm extends javax.swing.JFrame {
@@ -414,7 +411,7 @@ public class DisplayForm extends javax.swing.JFrame {
     }//GEN-LAST:event_StudDetailsMouseClicked
 
     private void bSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSaveActionPerformed
-        new SaveTable(model);
+        Main.SaveTable saveTable = new Main.SaveTable(model);
     }//GEN-LAST:event_bSaveActionPerformed
 
     /**

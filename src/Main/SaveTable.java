@@ -22,7 +22,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class SaveTable {
 
-    SaveTable(DefaultTableModel dataModel) {
+    public SaveTable(DefaultTableModel dataModel) {
         JFileChooser chooser = null;
         BufferedWriter bfw = null;
         chooser = new JFileChooser();

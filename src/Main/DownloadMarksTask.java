@@ -4,6 +4,7 @@ package Main;
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
+import Forms.MainForm;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -16,11 +17,11 @@ import javax.swing.SwingWorker;
 import run.DBConnect;
 
 public class DownloadMarksTask extends SwingWorker<Integer, Integer> {
-    
+
     PreparedStatement pstmt;
     Statement stmt;
-    
-    DownloadMarksTask() {
+
+    public DownloadMarksTask() {
         //initialize 
         Connection con = DBConnect.connection;
         String sql = " DELETE from RESULTTABLE ";
@@ -32,9 +33,9 @@ public class DownloadMarksTask extends SwingWorker<Integer, Integer> {
         } catch (SQLException ex) {
             Logger.getLogger(DownloadMarksTask.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
-    
+
     @Override
     public Integer doInBackground() throws InterruptedException {
         MainForm.curUsnDownloadLabel.show();
@@ -48,7 +49,7 @@ public class DownloadMarksTask extends SwingWorker<Integer, Integer> {
                 setProgress((i + 1) * 100 / MainForm.usnList.size());
                 MainForm.setCurStatusLabel("Downloading USN :" + MainForm.usnList.get(i));
                 System.out.println(MainForm.usnList.get(i));
-                
+
                 if (r.FetchTheresult(MainForm.usnList.get(i))) {
                     //display marks
 
@@ -65,7 +66,7 @@ public class DownloadMarksTask extends SwingWorker<Integer, Integer> {
                     pstmt.execute();
                 }
             }
-            
+
         } catch (Exception e) {
             System.out.println("Error:" + e);
             JOptionPane.showMessageDialog(null, e + " Download marks task");
@@ -73,22 +74,22 @@ public class DownloadMarksTask extends SwingWorker<Integer, Integer> {
         }
         return 1;
     }
-    
+
     @Override
     protected void process(List<Integer> chunks) {
-        
+
     }
-    
+
     @Override
     protected void done() {
-       // MainForm.objCopy.usnProgressBar.hide();
+        // MainForm.objCopy.usnProgressBar.hide();
         MainForm.objCopy.clickStop();
         System.out.println("DONE!!!");
         MainForm.setCurStatusLabel("DOWNLOAD COMPLETE");
-        
+
     }
-    
-    void stopFetching() {
+
+    public void stopFetching() {
         this.cancel(true);
     }
 }

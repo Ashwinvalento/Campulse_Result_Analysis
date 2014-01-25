@@ -9,11 +9,16 @@ import Main.SaveTable;
 import Main.resultFetch;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.swing.JEditorPane;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -66,6 +71,7 @@ public class MainForm extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         TF_usn = new javax.swing.JTextField();
         B_GetResult = new javax.swing.JButton();
+        Combo_sem = new javax.swing.JComboBox();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem3 = new javax.swing.JMenuItem();
@@ -215,6 +221,13 @@ public class MainForm extends javax.swing.JFrame {
             }
         });
 
+        Combo_sem.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Select", "1", "2", "3", "4", "5", "6", "7", "8" }));
+        Combo_sem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Combo_semActionPerformed(evt);
+            }
+        });
+
         jMenu1.setText("File");
 
         jMenuItem3.setText("About Us");
@@ -262,11 +275,13 @@ public class MainForm extends javax.swing.JFrame {
                         .addComponent(usnProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(14, 14, 14)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(TF_usn, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(TF_usn, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(Combo_sem, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(B_GetResult))
                             .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
@@ -279,7 +294,8 @@ public class MainForm extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(TF_usn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(B_GetResult)
-                    .addComponent(jLabel3))
+                    .addComponent(jLabel3)
+                    .addComponent(Combo_sem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -338,6 +354,26 @@ public class MainForm extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void B_GetResultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B_GetResultActionPerformed
+        Pattern p = Pattern.compile("4[a-zA-Z][a-zA-Z][0-9]{2}[a-zA-Z]{2}[0-9]{3}");
+        String Str_singleUsn = TF_usn.getText();
+        Matcher m = p.matcher(Str_singleUsn);
+        if (Str_singleUsn.equals("")) {
+            JOptionPane.showMessageDialog(null, "Please Enter The USN ");
+        } else if (!m.matches()) {
+            JOptionPane.showMessageDialog(null, "Invalid USN Format");
+        } else {
+
+            int sem = Integer.parseInt(Combo_sem.getSelectedItem().toString());
+            String URL = "http://results.vtualerts.com/get_res.php?usn=" + TF_usn + "&sem=" + sem;
+
+            JEditorPane editorPane = new JEditorPane();
+            try {
+                editorPane.setPage(new URL("http://www.java2s.com"));
+                editorPane.setVisible(true);
+            } catch (IOException ex) {
+                Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
 
     }//GEN-LAST:event_B_GetResultActionPerformed
 
@@ -368,9 +404,11 @@ public class MainForm extends javax.swing.JFrame {
         try {
             while (r.next()) {
                 model.insertRow(count++, new Object[]{r.getString(1), r.getString(2), r.getInt(5), r.getInt(9), r.getInt(13), r.getInt(17), r.getInt(21), r.getInt(25), r.getInt(29), r.getInt(33), r.getInt(35), r.getString(36)});
+
             }
         } catch (SQLException ex) {
-            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MainForm.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         SaveTable ST = new SaveTable(model);
     }//GEN-LAST:event_btn_saveActionPerformed
@@ -383,6 +421,10 @@ public class MainForm extends javax.swing.JFrame {
 
         DF.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void Combo_semActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Combo_semActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_Combo_semActionPerformed
 
     /**
      * @param args the command line arguments
@@ -406,16 +448,20 @@ public class MainForm extends javax.swing.JFrame {
             }
         } catch (ClassNotFoundException ex) {
             JOptionPane.showMessageDialog(null, ex);
-            java.util.logging.Logger.getLogger(MainForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MainForm.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
             JOptionPane.showMessageDialog(null, ex);
-            java.util.logging.Logger.getLogger(MainForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MainForm.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
             JOptionPane.showMessageDialog(null, ex);
-            java.util.logging.Logger.getLogger(MainForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MainForm.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             JOptionPane.showMessageDialog(null, ex);
-            java.util.logging.Logger.getLogger(MainForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MainForm.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -434,6 +480,7 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.ButtonGroup BGinput;
     private javax.swing.JButton B_GetResult;
     private javax.swing.JButton B_UsnSelect;
+    private javax.swing.JComboBox Combo_sem;
     private javax.swing.JTextField TF_usn;
     private javax.swing.JButton bSubjectWise;
     private javax.swing.JButton bView;

@@ -6,6 +6,7 @@ package Forms;
  * and open the template in the editor.
  */
 import Main.resultFetch;
+import java.awt.event.KeyEvent;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -155,6 +156,9 @@ public class DisplayForm extends javax.swing.JFrame {
             }
         });
         StudDetails.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                StudDetailsKeyReleased(evt);
+            }
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 StudDetailsKeyPressed(evt);
             }
@@ -421,9 +425,17 @@ public class DisplayForm extends javax.swing.JFrame {
     }//GEN-LAST:event_bSaveActionPerformed
 
     private void StudDetailsKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_StudDetailsKeyPressed
-        System.out.println("key pressed = "+evt.getKeyCode());
-        System.out.println("row selected = "+StudDetails.getSelectedRow());
+
     }//GEN-LAST:event_StudDetailsKeyPressed
+
+    private void StudDetailsKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_StudDetailsKeyReleased
+
+        if (evt.getKeyCode() == KeyEvent.VK_DOWN || evt.getKeyCode() == KeyEvent.VK_UP) {
+            int selRow = StudDetails.getSelectedRow();
+            String usn = (String) StudDetails.getModel().getValueAt(selRow, 1).toString();
+            fillMarksTable(usn);
+        }
+    }//GEN-LAST:event_StudDetailsKeyReleased
 
     /**
      * @param args the command line arguments

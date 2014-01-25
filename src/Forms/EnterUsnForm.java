@@ -347,8 +347,8 @@ public class EnterUsnForm extends javax.swing.JFrame {
     private void B_multipleAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B_multipleAddActionPerformed
         String fromUsn = TF_from.getText();
         String toUsn = TF_to.getText();
-        Pattern p = Pattern.compile("4[pP][aA][0-9]{2}[a-zA-Z]{2}[0-9]{3}");
-
+        //Pattern p = Pattern.compile("4[pP][aA][0-9]{2}[a-zA-Z]{2}[0-9]{3}");
+        Pattern p = Pattern.compile("4[a-zA-Z][a-zA-Z][0-9]{2}[a-zA-Z]{2}[0-9]{3}");
         Matcher mFr = p.matcher(fromUsn);
         Matcher mTo = p.matcher(toUsn);
 
@@ -388,7 +388,8 @@ public class EnterUsnForm extends javax.swing.JFrame {
     }//GEN-LAST:event_B_multipleAddActionPerformed
 
     private void B_singleAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B_singleAddActionPerformed
-        Pattern p = Pattern.compile("4[pP][aA][0-9]{2}[a-zA-Z]{2}[0-9]{3}");
+        // Pattern p = Pattern.compile("4[pP][aA][0-9]{2}[a-zA-Z]{2}[0-9]{3}");
+        Pattern p = Pattern.compile("4[a-zA-Z][a-zA-Z][0-9]{2}[a-zA-Z]{2}[0-9]{3}");
         String Str_singleUsn = TF_SingleUsn.getText();
         String trimmedUsn = null;
         Matcher m = p.matcher(Str_singleUsn);

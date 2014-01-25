@@ -5,7 +5,6 @@ package Forms;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-import Main.SaveTable;
 import Main.resultFetch;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -56,7 +55,7 @@ public class DisplayForm extends javax.swing.JFrame {
         model.addColumn("RESULT");
 
         initComponents();
-
+        this.setLocationRelativeTo(null);
         if ((rs = getDetails("SOME")) != null) {
 
             //StudDetails.setModel(DbUtils.resultSetToTableModel(rs));

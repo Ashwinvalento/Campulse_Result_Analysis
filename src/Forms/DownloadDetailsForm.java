@@ -5,6 +5,7 @@
 package Forms;
 
 import java.net.URL;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
 
@@ -26,10 +27,10 @@ public class DownloadDetailsForm extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         row = 0;
         model = new DefaultTableModel();
+
         DetailsTable.setModel(model);
         model.addColumn("USN");
         model.addColumn("status");
-
     }
 
     /**
@@ -58,7 +59,7 @@ public class DownloadDetailsForm extends javax.swing.JFrame {
                 {null, null}
             },
             new String [] {
-                "Email Id", "Status"
+                "USN", "Status"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -72,7 +73,7 @@ public class DownloadDetailsForm extends javax.swing.JFrame {
         DetailsTable.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(DetailsTable);
 
-        jLabel1.setText("Sent Email Details :");
+        jLabel1.setText("Marks Fetching Details :");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -142,13 +143,13 @@ public class DownloadDetailsForm extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 
-   public void setStatus(String usn, ImageIcon state) {
+    public void setStatus(String usn, String state) {
         model.insertRow(row, new Object[]{usn, state});
         row++;
     }
-   
-   public void setStatus(String usn, String state) {
-        model.insertRow(row, new Object[]{usn, state});
-        row++;
+    
+    public void reset()
+    {
+        model.setRowCount(0);
     }
 }

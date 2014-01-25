@@ -278,7 +278,6 @@ public class SubjectWiseResult extends javax.swing.JFrame {
 
         model.setRowCount(0);
         studentMarksTable.setModel(model);
-        // System.out.println("after trim " + .trim());
         query = "select DISTINCT * from RESULTTABLE";
         //query = "select DISTINCT NAME,USN from RESULTTABLE";
         try {
@@ -417,7 +416,6 @@ public class SubjectWiseResult extends javax.swing.JFrame {
         Vector comboBoxItems = new Vector();
 
         for (int i = 0; i < MainForm.subNamesV.size(); i++) {
-            //System.out.println(MainForm.subNamesV.get(i));
             comboBoxItems.add(MainForm.subNamesV.get(i));
         }
         comboBoxItems.add("All");

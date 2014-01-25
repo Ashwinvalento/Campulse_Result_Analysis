@@ -310,6 +310,7 @@ public class MainForm extends javax.swing.JFrame {
     }//GEN-LAST:event_bViewActionPerformed
 
     private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
+        DF.reset();
         usnProgressBar.setValue(usnProgressBar.getMinimum());
 
         if (usnList.size() == 0) {
@@ -321,7 +322,7 @@ public class MainForm extends javax.swing.JFrame {
             new Thread() {
                 public void run() {
                     resultFetch r = new resultFetch();
-                    r.fetchSubjectNames(usnList.get(0));
+                    r.fetchSubjectNames(usnList.get(0), EnterUsnForm.sem);
                 }
             }.start();
             updateProgress();

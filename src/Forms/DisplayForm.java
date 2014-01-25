@@ -56,7 +56,7 @@ public class DisplayForm extends javax.swing.JFrame {
 
         initComponents();
         this.setLocationRelativeTo(null);
-        if ((rs = getDetails("SOME")) != null) {
+        if ((rs = getDetails("ALL")) != null) {
 
             //StudDetails.setModel(DbUtils.resultSetToTableModel(rs));
             firstTableModel.addColumn("Rank");
@@ -152,6 +152,11 @@ public class DisplayForm extends javax.swing.JFrame {
         StudDetails.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 StudDetailsMouseClicked(evt);
+            }
+        });
+        StudDetails.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                StudDetailsKeyPressed(evt);
             }
         });
         jScrollPane1.setViewportView(StudDetails);
@@ -349,8 +354,10 @@ public class DisplayForm extends javax.swing.JFrame {
         int rowCount = 0;
         boolean set = false;
         firstTableModel.setRowCount(0);
+        if (ClassCombo.getSelectedIndex() == 1) {
+            set = true;
+        }
         if ((rs = getDetails(ClassCombo.getSelectedItem().toString())) != null) {
-
             try {
                 while (rs.next()) {
                     set = true;
@@ -413,6 +420,11 @@ public class DisplayForm extends javax.swing.JFrame {
         Main.SaveTable saveTable = new Main.SaveTable(model);
     }//GEN-LAST:event_bSaveActionPerformed
 
+    private void StudDetailsKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_StudDetailsKeyPressed
+        System.out.println("key pressed = "+evt.getKeyCode());
+        System.out.println("row selected = "+StudDetails.getSelectedRow());
+    }//GEN-LAST:event_StudDetailsKeyPressed
+
     /**
      * @param args the command line arguments
      */
@@ -460,9 +472,9 @@ public class DisplayForm extends javax.swing.JFrame {
         //get USN from user
 
         System.out.println("after trim " + StdClass.trim());
-        if (StdClass.equals("SOME")) {
+        if (StdClass.equals("ALL")) {
             query = "select DISTINCT NAME,USN,TOTAL,MARKCLASS from RESULTTABLE ORDER BY TOTAL DESC";
-        } else if (StdClass.equals("ALL")) {
+        } else if (StdClass.equals("SOME")) {
             query = "select * from RESULTTABLE ";
         } else {
             query = "select DISTINCT NAME,USN,TOTAL,MARKCLASS from RESULTTABLE WHERE MARKCLASS = '" + StdClass.trim() + " ' ORDER BY TOTAL DESC";
@@ -504,7 +516,6 @@ public class DisplayForm extends javax.swing.JFrame {
         StudentMarksTable.setModel(model);
         query = "select * from RESULTTABLE where USN='" + usn + "'";
 
-        System.out.println(query);
         try {
             stmt = con.createStatement();
             res = stmt.executeQuery(query);
@@ -538,7 +549,6 @@ public class DisplayForm extends javax.swing.JFrame {
             while (rs.next()) {
                 MainForm.subNamesV.add(rs.getString(1));
             }
-
         } catch (SQLException ex) {
             Logger.getLogger(resultFetch.class.getName()).log(Level.SEVERE, null, ex);
         }

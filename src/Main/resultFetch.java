@@ -10,6 +10,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -27,6 +28,9 @@ public class resultFetch {
     String mk;
     String name;
 
+    ImageIcon yesIcon = new ImageIcon("Resources/yes-icon.png");
+    ImageIcon noIcon = new ImageIcon("Resources/no-icon.png");
+
     public void fetchSubjectNames(String usn) {
 
         //get proxy Settings
@@ -35,7 +39,7 @@ public class resultFetch {
         Document doc;
 
         try {
-            doc = Jsoup.connect(url).userAgent("Mozilla").timeout(25*1000).get();
+            doc = Jsoup.connect(url).userAgent("Mozilla").timeout(25 * 1000).get();
 
             Element firstTableMarks = doc.select("table:eq(3)").first();
             Element tmtbody = firstTableMarks.select("tbody").first();
@@ -84,7 +88,7 @@ public class resultFetch {
         Document doc;
         String url = "http://results.vtualerts.com/get_res.php?usn=" + usn;
         try {
-            doc = Jsoup.connect(url).userAgent("Mozilla").timeout(25*1000).get();
+            doc = Jsoup.connect(url).userAgent("Mozilla").timeout(25 * 1000).get();
 
             Element StdName = doc.select("div").select("B:eq(0)").first();
             name = StdName.toString().split(">")[1].split(Pattern.quote("("))[0];
@@ -107,13 +111,15 @@ public class resultFetch {
 
                 Element totMks = doc.select("table:eq(4)").select("td:eq(3)").first();
                 totalmarks = totMks.toString().split(" ")[1];
-
             }
+           // MainForm.DF.setStatus(usn, yesIcon);
+            MainForm.DF.setStatus(usn, "Success");
         } catch (Exception e) {
             //JOptionPane.showMessageDialog(null, e + " fetch the result");
             System.out.println("Here is the exception");
-           // MainForm.stopFlag = true;
-
+            // MainForm.stopFlag = true;
+            MainForm.DF.setStatus(usn, "failed");
+            //MainForm.DF.setStatus(usn, noIcon);
             return false;//if result is not found
         }
         return true;//result is found

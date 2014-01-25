@@ -15,9 +15,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultRowSorter;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
 import run.DBConnect;
 
 public class SubjectWiseResult extends javax.swing.JFrame {
@@ -30,6 +28,7 @@ public class SubjectWiseResult extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         retrieveSubjectNames();
         fillSubjectCombo();
+        examType.setSelectedIndex(2);
 
         model = new DefaultTableModel() {
             Class[] types = new Class[]{
@@ -76,6 +75,8 @@ public class SubjectWiseResult extends javax.swing.JFrame {
         bSubmit = new javax.swing.JButton();
         lastValue = new javax.swing.JSpinner();
         firstValue = new javax.swing.JSpinner();
+        examType = new javax.swing.JComboBox();
+        jLabel4 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         studentMarksTable = new javax.swing.JTable();
         lcount = new javax.swing.JLabel();
@@ -83,7 +84,7 @@ public class SubjectWiseResult extends javax.swing.JFrame {
         bClose = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Subject WIse Result");
+        setTitle("Subject Wise Result");
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel3.setText("in");
@@ -100,7 +101,7 @@ public class SubjectWiseResult extends javax.swing.JFrame {
         jLabel2.setText("and");
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabel1.setText("How many got marks between ");
+        jLabel1.setText("How many got  ");
 
         bSubmit.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         bSubmit.setText("OK");
@@ -111,10 +112,21 @@ public class SubjectWiseResult extends javax.swing.JFrame {
         });
 
         lastValue.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        lastValue.setModel(new javax.swing.SpinnerNumberModel(125, 0, 125, 1));
+        lastValue.setModel(new javax.swing.SpinnerNumberModel(125, 0, 200, 1));
 
         firstValue.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         firstValue.setModel(new javax.swing.SpinnerNumberModel(50, 0, 125, 1));
+
+        examType.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        examType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Internal", "External", "Total" }));
+        examType.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                examTypeActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jLabel4.setText("mark between");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -130,15 +142,19 @@ public class SubjectWiseResult extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(26, 26, 26)
                         .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(examType, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel4)
                         .addGap(18, 18, 18)
                         .addComponent(firstValue, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(41, 41, 41)
+                        .addGap(18, 18, 18)
                         .addComponent(jLabel2)
-                        .addGap(27, 27, 27)
+                        .addGap(18, 18, 18)
                         .addComponent(lastValue, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(31, 31, 31)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(63, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {firstValue, lastValue});
@@ -152,7 +168,9 @@ public class SubjectWiseResult extends javax.swing.JFrame {
                     .addComponent(jLabel1)
                     .addComponent(jLabel2)
                     .addComponent(lastValue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
+                    .addComponent(jLabel3)
+                    .addComponent(examType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(subjectCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -181,6 +199,7 @@ public class SubjectWiseResult extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(studentMarksTable);
 
+        lcount.setForeground(new java.awt.Color(0, 0, 255));
         lcount.setText("COUNT WILL BE DIPLAYED HERE");
 
         bSave.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -204,22 +223,22 @@ public class SubjectWiseResult extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(61, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(bSave)
+                .addGap(39, 39, 39)
+                .addComponent(bClose)
+                .addGap(47, 47, 47))
+            .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(lcount))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(bSave)
-                            .addGap(39, 39, 39)
-                            .addComponent(bClose))))
-                .addGap(87, 87, 87))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1)
-                .addContainerGap())
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 650, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lcount)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {bClose, bSave});
@@ -254,6 +273,7 @@ public class SubjectWiseResult extends javax.swing.JFrame {
         Connection con = DBConnect.connection;
         int lowLimit = Integer.parseInt(firstValue.getValue().toString()) - 1;
         int highLimit = Integer.parseInt(lastValue.getValue().toString()) + 1;
+        int typeValue=examType.getSelectedIndex()+1;
         //get USN from user
 
         model.setRowCount(0);
@@ -291,12 +311,15 @@ public class SubjectWiseResult extends javax.swing.JFrame {
                         model.insertRow(rowCount++, new Object[]{rs.getString(1), rs.getString(2), rs.getString(35), rs.getString(36), rs.getString(36)});
                     }
                 } else {
-                    whichROw = subjectCombo.getSelectedIndex() * 4 + 3;
+                    whichROw = subjectCombo.getSelectedIndex() * 4 +3;
+                   // System.out.println("whichROw : "+ whichROw );
+                    //System.out.println("typeValue : "+ typeValue);
                     //System.out.println(rs.getString(1) + "  " + rs.getString(whichROw) + " " + rs.getString(whichROw + 1) + " " + rs.getString(whichROw + 2) + " " + rs.getString(whichROw + 3));
-                    // System.out.println("lowLimit is : "+lowLimit + " highLimit is : " +highLimit + " total is : " + Integer.parseInt(rs.getString(whichROw+2)));
-                    if (Integer.parseInt(rs.getString(whichROw + 2)) > lowLimit) {
-                        if (Integer.parseInt(rs.getString(whichROw + 2)) < highLimit) {
+                  //  System.out.println("lowLimit is : "+lowLimit + " highLimit is : " +highLimit + " total is : " + Integer.parseInt(rs.getString(whichROw+2)));
+                    if (Integer.parseInt(rs.getString(whichROw+ typeValue-1)) > lowLimit) {
+                        if (Integer.parseInt(rs.getString(whichROw+ typeValue-1)) < highLimit) {
                             model.insertRow(rowCount++, new Object[]{rs.getString(1), rs.getString(2), Integer.parseInt(rs.getString(whichROw)), Integer.parseInt(rs.getString(whichROw + 1)), Integer.parseInt(rs.getString(whichROw + 2)), rs.getString(whichROw + 3)});
+                            //System.out.println(rs.getString(1) + "  " + rs.getString(whichROw) + " " + rs.getString(whichROw + 1) + " " + rs.getString(whichROw + 2) + " " + rs.getString(whichROw + 3));
                         } else {
 
                         }
@@ -309,7 +332,7 @@ public class SubjectWiseResult extends javax.swing.JFrame {
         } catch (SQLException ex) {
             System.out.println("Error : " + ex);
         }
-        lcount.setText(Integer.toString(model.getRowCount()) + " of them scored between " + firstValue.getValue() + " and " + lastValue.getValue());
+        lcount.setText(Integer.toString(model.getRowCount()) + " of them scored between " + firstValue.getValue() + " and " + lastValue.getValue() +" in " + subjectCombo.getSelectedItem().toString() + " "+ examType.getSelectedItem().toString());
 
     }//GEN-LAST:event_bSubmitActionPerformed
 
@@ -320,6 +343,21 @@ public class SubjectWiseResult extends javax.swing.JFrame {
     private void bSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSaveActionPerformed
        SaveTable ST =  new SaveTable(model);
     }//GEN-LAST:event_bSaveActionPerformed
+
+    private void examTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_examTypeActionPerformed
+        if(examType.getSelectedIndex()==0) {
+            firstValue.setValue(15);
+            lastValue.setValue(25);
+        } else if(examType.getSelectedIndex()==1) {
+            firstValue.setValue(35);
+            lastValue.setValue(100);
+        } else {
+            firstValue.setValue(50);
+            lastValue.setValue(125);
+        }
+        //bSubmit.doClick();
+        
+    }//GEN-LAST:event_examTypeActionPerformed
 
     /**
      * @param args the command line arguments
@@ -360,10 +398,12 @@ public class SubjectWiseResult extends javax.swing.JFrame {
     private javax.swing.JButton bClose;
     private javax.swing.JButton bSave;
     private javax.swing.JButton bSubmit;
+    private javax.swing.JComboBox examType;
     private javax.swing.JSpinner firstValue;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSpinner lastValue;

@@ -362,13 +362,14 @@ public class MainForm extends javax.swing.JFrame {
                 model.insertRow(count++, new Object[]{r.getString(1), r.getString(2), r.getInt(5), r.getInt(9), r.getInt(13), r.getInt(17), r.getInt(21), r.getInt(25), r.getInt(29), r.getInt(33), r.getInt(35), r.getString(36)});
             }
         } catch (SQLException ex) {
-            Logger.getLogger(VirtualSaveForm.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
         }
+
         SaveTable ST = new SaveTable(model);
     }//GEN-LAST:event_btn_saveActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-            
+
         new AboutUs().setVisible(true);
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 

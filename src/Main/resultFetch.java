@@ -89,6 +89,8 @@ public class resultFetch {
         String url = "http://results.vtualerts.com/get_res.php?usn=" + usn;
         try {
             doc = Jsoup.connect(url).userAgent("Mozilla").timeout(25 * 1000).get();
+            doc = Jsoup.connect(url).userAgent("Mozilla").timeout(5*1000).get();
+
 
             Element StdName = doc.select("div").select("B:eq(0)").first();
             name = StdName.toString().split(">")[1].split(Pattern.quote("("))[0];

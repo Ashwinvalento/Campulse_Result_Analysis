@@ -49,12 +49,12 @@ public class SubjectWiseResult extends javax.swing.JFrame {
         model.addColumn("CLASS");
         bSubmit.doClick();
         studentMarksTable.setAutoCreateRowSorter(true);
-        /*studentMarksTable.getColumn("USN").setPreferredWidth(100);
-         studentMarksTable.getColumn("NAME").setPreferredWidth(150);
-         studentMarksTable.getColumn("INTERNAL").setPreferredWidth(50);
-         studentMarksTable.getColumn("EXTERNAL").setPreferredWidth(50);
-         studentMarksTable.getColumn("TOTAL").setPreferredWidth(40);
-         studentMarksTable.getColumn("CLASS").setPreferredWidth(40);*/
+        studentMarksTable.getColumn("USN").setPreferredWidth(100);
+        studentMarksTable.getColumn("NAME").setPreferredWidth(150);
+        studentMarksTable.getColumn("INTERNAL").setPreferredWidth(50);
+        studentMarksTable.getColumn("EXTERNAL").setPreferredWidth(50);
+        studentMarksTable.getColumn("TOTAL").setPreferredWidth(40);
+        studentMarksTable.getColumn("CLASS").setPreferredWidth(40);
         examType.setSelectedIndex(2);
     }
 
@@ -279,6 +279,24 @@ public class SubjectWiseResult extends javax.swing.JFrame {
 
         model.setRowCount(0);
         studentMarksTable.setModel(model);
+
+        if (subjectCombo.getSelectedIndex() == 8 || subjectCombo.getSelectedIndex() == 9) {
+
+            studentMarksTable.getColumn("USN").setPreferredWidth(100);
+            studentMarksTable.getColumn("NAME").setPreferredWidth(150);
+            studentMarksTable.getColumn("INTERNAL").setPreferredWidth(10);
+            studentMarksTable.getColumn("EXTERNAL").setPreferredWidth(10);
+            studentMarksTable.getColumn("TOTAL").setPreferredWidth(40);
+            studentMarksTable.getColumn("CLASS").setPreferredWidth(100);
+        } else {
+            studentMarksTable.getColumn("USN").setPreferredWidth(100);
+            studentMarksTable.getColumn("NAME").setPreferredWidth(150);
+            studentMarksTable.getColumn("INTERNAL").setPreferredWidth(50);
+            studentMarksTable.getColumn("EXTERNAL").setPreferredWidth(50);
+            studentMarksTable.getColumn("TOTAL").setPreferredWidth(40);
+            studentMarksTable.getColumn("CLASS").setPreferredWidth(40);
+        }
+
         query = "select DISTINCT * from RESULTTABLE";
         //query = "select DISTINCT NAME,USN from RESULTTABLE";
         try {
@@ -334,22 +352,7 @@ public class SubjectWiseResult extends javax.swing.JFrame {
         } catch (SQLException ex) {
             System.out.println("Error : " + ex);
         }
-        lcount.setText(Integer.toString(model.getRowCount()) + " of them scored between " + firstValue.getValue() + " and " + lastValue.getValue() + " in " + subjectCombo.getSelectedItem().toString() + " " + examType.getSelectedItem().toString());
-        if (subjectCombo.getSelectedIndex() == 8 || subjectCombo.getSelectedIndex() == 8) {
-            studentMarksTable.getColumn("USN").setPreferredWidth(100);
-            studentMarksTable.getColumn("NAME").setPreferredWidth(150);
-            studentMarksTable.getColumn("INTERNAL").setPreferredWidth(1);
-            studentMarksTable.getColumn("EXTERNAL").setPreferredWidth(1);
-            studentMarksTable.getColumn("TOTAL").setPreferredWidth(40);
-            studentMarksTable.getColumn("CLASS").setPreferredWidth(100);
-        } else {
-            studentMarksTable.getColumn("USN").setPreferredWidth(100);
-            studentMarksTable.getColumn("NAME").setPreferredWidth(150);
-            studentMarksTable.getColumn("INTERNAL").setPreferredWidth(50);
-            studentMarksTable.getColumn("EXTERNAL").setPreferredWidth(50);
-            studentMarksTable.getColumn("TOTAL").setPreferredWidth(40);
-            studentMarksTable.getColumn("CLASS").setPreferredWidth(40);
-        }
+        lcount.setText(Integer.toString(model.getRowCount()) + " of them scored between " + firstValue.getValue() + " and " + lastValue.getValue() + " in  " + examType.getSelectedItem().toString()+" of " + subjectCombo.getSelectedItem().toString());
     }//GEN-LAST:event_bSubmitActionPerformed
 
     private void bCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCloseActionPerformed
@@ -435,8 +438,8 @@ public class SubjectWiseResult extends javax.swing.JFrame {
         for (int i = 0; i < MainForm.subNamesV.size(); i++) {
             comboBoxItems.add(MainForm.subNamesV.get(i));
         }
-        comboBoxItems.add("All");
-        comboBoxItems.add("Any");
+        comboBoxItems.add("All thoery sub");
+        comboBoxItems.add("Any theory sub");
         DefaultComboBoxModel model = new DefaultComboBoxModel(comboBoxItems);
 
         subjectCombo.setModel(model);

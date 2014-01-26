@@ -129,6 +129,7 @@ public class DisplayForm extends javax.swing.JFrame {
 
         Panel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), "Student Record", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
 
+        StudentNumberInfo.setForeground(new java.awt.Color(0, 51, 255));
         StudentNumberInfo.setText("Select Students based on class");
 
         StudDetails.setModel(new javax.swing.table.DefaultTableModel(

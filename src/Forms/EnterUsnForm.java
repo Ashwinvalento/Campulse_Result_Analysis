@@ -283,8 +283,9 @@ public class EnterUsnForm extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel3.setText("Choose Semester :");
 
+        Combo_sem.setEditable(true);
         Combo_sem.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        Combo_sem.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Select", "1", "2", "3", "4", "5", "6", "7", "8" }));
+        Combo_sem.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5", "6", "7", "8" }));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -450,17 +451,11 @@ public class EnterUsnForm extends javax.swing.JFrame {
     }//GEN-LAST:event_ipFileButtonActionPerformed
 
     private void B_doneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B_doneActionPerformed
-        // TODO add your handling code here:
-
-        if (Combo_sem.getSelectedItem().equals("Select")) {
-            JOptionPane.showMessageDialog(null, "Select a valid semester");
-        } else {
             sem = Integer.parseInt(Combo_sem.getSelectedItem().toString());
             for (int i = 0; i < list.size(); i++) {
                 MainForm.usnList.add(list.getElementAt(i).toString());
-            }
             this.dispose();
-        }
+            }
     }//GEN-LAST:event_B_doneActionPerformed
 
     private void B_cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B_cancelActionPerformed

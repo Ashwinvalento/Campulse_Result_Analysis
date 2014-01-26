@@ -290,8 +290,8 @@ public class SubjectWiseResult extends javax.swing.JFrame {
                 if (subjectCombo.getSelectedIndex() == 8) {
                     
                     int flag = 0;
-                    for (int i = 3+examType.getSelectedIndex(); i < 35; i += 4) {
-                        if (Integer.parseInt(rs.getString(i)) < lowLimit || Integer.parseInt(rs.getString(i)) > highLimit) {
+                    for (int i = 3+examType.getSelectedIndex(); i < 27; i += 4) {
+                        if (Integer.parseInt(rs.getString(i)) < lowLimit+1 || Integer.parseInt(rs.getString(i)) > highLimit) {
                             flag = 1;
                  //           System.out.println("i is " + i + "value at ith row is :  "+rs.getString(i));
                             break;
@@ -303,7 +303,7 @@ public class SubjectWiseResult extends javax.swing.JFrame {
 
                 } else if (subjectCombo.getSelectedIndex() == 9) {
                     int flag = 0;
-                    for (int i = 3+examType.getSelectedIndex(); i < 35; i += 4) {
+                    for (int i = 3+examType.getSelectedIndex(); i < 27; i += 4) {
                         if (Integer.parseInt(rs.getString(i)) > lowLimit && Integer.parseInt(rs.getString(i)) < highLimit) {
                             flag = 1;
                             break;

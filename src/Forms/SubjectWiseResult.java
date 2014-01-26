@@ -330,7 +330,7 @@ public class SubjectWiseResult extends javax.swing.JFrame {
                     if (flag == 1) {
                         model.insertRow(rowCount++, new Object[]{rs.getString(1), rs.getString(2),null,null, rs.getString(35), rs.getString(36)});
                     }
-                } else {
+                    } else {
                     whichROw = subjectCombo.getSelectedIndex() * 4 + 3;
                     // System.out.println("whichROw : "+ whichROw );
                     //System.out.println("typeValue : "+ typeValue);

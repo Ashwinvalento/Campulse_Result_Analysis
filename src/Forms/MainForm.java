@@ -21,7 +21,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class MainForm extends javax.swing.JFrame {
 
-    public static int timeout=10;
+    public static int timeout = 10;
     public static Vector<String> usnList = new Vector<String>();
     public static Vector<String> subNamesV = new Vector<String>();
     public static boolean stopFlag = false;
@@ -426,10 +426,14 @@ public class MainForm extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void setTimeOutMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setTimeOutMenuActionPerformed
-        String str = JOptionPane.showInputDialog(null, "Enter time out in seconds : ", "Set time out", JOptionPane.QUESTION_MESSAGE);
-        //System.out.println("str is : " + str);
-        timeout=Integer.parseInt(str);
-        if(timeout==0) timeout=10;
+        Object[] timeArray = {"5", "10", "15", "20", "25"};
+
+        Object str = JOptionPane.showInputDialog(null, "Select the timeout (in seconds) : ", "Set time out", JOptionPane.QUESTION_MESSAGE, null, timeArray, timeArray[1]);
+        System.out.println("str is : " + str);
+        timeout = Integer.parseInt(str.toString());
+        if (timeout == 0) {
+            timeout = 10;
+        }
     }//GEN-LAST:event_setTimeOutMenuActionPerformed
 
     /**

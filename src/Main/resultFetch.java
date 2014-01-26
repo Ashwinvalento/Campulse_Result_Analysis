@@ -30,14 +30,15 @@ public class resultFetch {
 
         //get proxy Settings
         setProxy();
-        String url="http://results.vtualerts.com/get_res.php?usn=" + usn;
-        if(Forms.EnterUsnForm.sem>0 && Forms.EnterUsnForm.sem<9 )
+        String url = "http://results.vtualerts.com/get_res.php?usn=" + usn;
+        if (Forms.EnterUsnForm.sem > 0 && Forms.EnterUsnForm.sem < 9) {
             url = "http://results.vtualerts.com/get_res.php?usn=" + usn + "&sem=" + sem;
+        }
         Document doc;
 
         try {
             doc = Jsoup.connect(url).userAgent("Mozilla").timeout(Forms.MainForm.timeout * 1000).get();
-            System.out.println("Forms.MainForm.timeout * 1000 : "+ Forms.MainForm.timeout * 1000);
+            //System.out.println("Forms.MainForm.timeout * 1000 : "+ Forms.MainForm.timeout * 1000);
             Element firstTableMarks = doc.select("table:eq(3)").first();
             Element tmtbody = firstTableMarks.select("tbody").first();
 
@@ -83,14 +84,15 @@ public class resultFetch {
     public boolean FetchTheresult(String usn, int sem) {
         Document doc;
         //String url = "http://results.vtualerts.com/get_res.php?usn=" + usn ;
-        String url="http://results.vtualerts.com/get_res.php?usn=" + usn;
-        if(Forms.EnterUsnForm.sem>0 && Forms.EnterUsnForm.sem<9 )
+        String url = "http://results.vtualerts.com/get_res.php?usn=" + usn;
+        if (Forms.EnterUsnForm.sem > 0 && Forms.EnterUsnForm.sem < 9) {
             url = "http://results.vtualerts.com/get_res.php?usn=" + usn + "&sem=" + sem;
-        System.out.println(url);
+        }
+        //System.out.println(url);
         try {
             doc = Jsoup.connect(url).userAgent("Mozilla").timeout(Forms.MainForm.timeout * 1000).get();
             //doc = Jsoup.connect(url).userAgent("Mozilla").timeout(5 * 1000).get();
-            System.out.println("Forms.MainForm.timeout * 1000 : "+ Forms.MainForm.timeout * 1000);
+            //System.out.println("Forms.MainForm.timeout * 1000 : "+ Forms.MainForm.timeout * 1000);
             Element StdName = doc.select("div").select("B:eq(0)").first();
             name = StdName.toString().split(">")[1].split(Pattern.quote("("))[0];
             System.out.println("name is : " + name);

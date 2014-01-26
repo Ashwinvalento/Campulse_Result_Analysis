@@ -288,6 +288,7 @@ public class SubjectWiseResult extends javax.swing.JFrame {
             int rowCount = 0;
             while (rs.next()) {
                 if (subjectCombo.getSelectedIndex() == 8) {
+                    
                     int flag = 0;
                     for (int i = 3+examType.getSelectedIndex(); i < 35; i += 4) {
                         if (Integer.parseInt(rs.getString(i)) < lowLimit || Integer.parseInt(rs.getString(i)) > highLimit) {

@@ -28,6 +28,7 @@ import javax.swing.JOptionPane;
 public class EnterUsnForm extends javax.swing.JFrame {
 
     public static Vector<String> localUsnList = new Vector<>();
+    public static int sem = 0;
     DefaultListModel list = new DefaultListModel();
     extractUSN e;
     public static String usnMatcher = "";
@@ -82,6 +83,8 @@ public class EnterUsnForm extends javax.swing.JFrame {
         bDelete = new javax.swing.JButton();
         bClearAll = new javax.swing.JButton();
         B_cancel = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        Combo_sem = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Analyser - Add USN");
@@ -199,7 +202,7 @@ public class EnterUsnForm extends javax.swing.JFrame {
                     .addComponent(TF_SingleUsn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
                     .addComponent(B_singleAdd))
-                .addGap(34, 34, 34)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel4)
@@ -210,15 +213,18 @@ public class EnterUsnForm extends javax.swing.JFrame {
                     .addComponent(TF_to, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(B_multipleAdd)
-                .addGap(29, 29, 29)
+                .addGap(18, 18, 18)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Lab_filename, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(ipFileButton))
-                .addContainerGap(49, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(40, 40, 40)
+                        .addComponent(Lab_filename, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel6)
+                            .addComponent(ipFileButton))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), "USN LIST", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10))); // NOI18N
@@ -237,7 +243,7 @@ public class EnterUsnForm extends javax.swing.JFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addComponent(jScrollPane1)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -273,6 +279,10 @@ public class EnterUsnForm extends javax.swing.JFrame {
             }
         });
 
+        jLabel3.setText("Choose Semester :");
+
+        Combo_sem.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Select", "1", "2", "3", "4", "5", "6", "7", "8" }));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -286,7 +296,12 @@ public class EnterUsnForm extends javax.swing.JFrame {
                         .addGap(45, 45, 45)
                         .addComponent(B_cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(B_done, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(B_done, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addComponent(jLabel3)
+                        .addGap(22, 22, 22)
+                        .addComponent(Combo_sem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -305,9 +320,14 @@ public class EnterUsnForm extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(Combo_sem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(28, 28, 28)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
                     .addComponent(B_done, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
@@ -327,8 +347,8 @@ public class EnterUsnForm extends javax.swing.JFrame {
     private void B_multipleAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B_multipleAddActionPerformed
         String fromUsn = TF_from.getText();
         String toUsn = TF_to.getText();
-        Pattern p = Pattern.compile("4[pP][aA][0-9]{2}[a-zA-Z]{2}[0-9]{3}");
-
+        //Pattern p = Pattern.compile("4[pP][aA][0-9]{2}[a-zA-Z]{2}[0-9]{3}");
+        Pattern p = Pattern.compile("4[a-zA-Z][a-zA-Z][0-9]{2}[a-zA-Z]{2}[0-9]{3}");
         Matcher mFr = p.matcher(fromUsn);
         Matcher mTo = p.matcher(toUsn);
 
@@ -344,7 +364,7 @@ public class EnterUsnForm extends javax.swing.JFrame {
         } else {
 
             if (usnMatcher.equals("")) {
-                usnMatcher = fromUsn.substring(5,7);
+                usnMatcher = fromUsn.substring(5, 7);
                 System.out.println("usn set in multiple");
             }
             int start = Integer.parseInt(fromUsn.substring(7));
@@ -368,7 +388,8 @@ public class EnterUsnForm extends javax.swing.JFrame {
     }//GEN-LAST:event_B_multipleAddActionPerformed
 
     private void B_singleAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B_singleAddActionPerformed
-        Pattern p = Pattern.compile("4[pP][aA][0-9]{2}[a-zA-Z]{2}[0-9]{3}");
+        // Pattern p = Pattern.compile("4[pP][aA][0-9]{2}[a-zA-Z]{2}[0-9]{3}");
+        Pattern p = Pattern.compile("4[a-zA-Z][a-zA-Z][0-9]{2}[a-zA-Z]{2}[0-9]{3}");
         String Str_singleUsn = TF_SingleUsn.getText();
         String trimmedUsn = null;
         Matcher m = p.matcher(Str_singleUsn);
@@ -380,12 +401,12 @@ public class EnterUsnForm extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Please Enter The USN ");
         } else if (!m.matches()) {
             JOptionPane.showMessageDialog(null, "Invalid USN Format");
-        } else if (!usnMatcher.equals("") && !trimmedUsn.substring(5,7).equalsIgnoreCase(usnMatcher)) {
+        } else if (!usnMatcher.equals("") && !trimmedUsn.substring(5, 7).equalsIgnoreCase(usnMatcher)) {
             JOptionPane.showMessageDialog(null, "Invalid USN .Make sure all The USN correspond to same branch");
         } else {
 
             if (usnMatcher.equals("")) {
-                usnMatcher = trimmedUsn.substring(5,7);
+                usnMatcher = trimmedUsn.substring(5, 7);
                 System.out.println("usn set in single");
             }
             list.addElement(Str_singleUsn);
@@ -427,11 +448,16 @@ public class EnterUsnForm extends javax.swing.JFrame {
 
     private void B_doneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B_doneActionPerformed
         // TODO add your handling code here:
-        System.out.println(list.size());
-        for (int i = 0; i < list.size(); i++) {
-            MainForm.usnList.add(list.getElementAt(i).toString());
+
+        if (Combo_sem.getSelectedItem().equals("Select")) {
+            JOptionPane.showMessageDialog(null, "Select a valid semester");
+        } else {
+            sem = Integer.parseInt(Combo_sem.getSelectedItem().toString());
+            for (int i = 0; i < list.size(); i++) {
+                MainForm.usnList.add(list.getElementAt(i).toString());
+            }
+            this.dispose();
         }
-        this.dispose();
     }//GEN-LAST:event_B_doneActionPerformed
 
     private void B_cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B_cancelActionPerformed
@@ -441,7 +467,7 @@ public class EnterUsnForm extends javax.swing.JFrame {
     private void bClearAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bClearAllActionPerformed
         list.removeAllElements();
         MainForm.usnList.clear();
-        usnMatcher="";
+        usnMatcher = "";
     }//GEN-LAST:event_bClearAllActionPerformed
 
     private void bDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bDeleteActionPerformed
@@ -517,6 +543,7 @@ public class EnterUsnForm extends javax.swing.JFrame {
     private javax.swing.JButton B_done;
     private javax.swing.JButton B_multipleAdd;
     private javax.swing.JButton B_singleAdd;
+    private javax.swing.JComboBox Combo_sem;
     private javax.swing.JLabel Lab_filename;
     private javax.swing.JList List_Usn;
     private javax.swing.JTextField TF_SingleUsn;
@@ -527,6 +554,7 @@ public class EnterUsnForm extends javax.swing.JFrame {
     private javax.swing.JButton ipFileButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;

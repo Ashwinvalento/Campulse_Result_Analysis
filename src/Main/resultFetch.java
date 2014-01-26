@@ -19,7 +19,6 @@ import run.DBConnect;
 public class resultFetch {
 
     String result;
-    int sem;
     int marks[][] = new int[8][3];
     String res[] = new String[8];
     String subjects[] = new String[8];
@@ -27,15 +26,15 @@ public class resultFetch {
     String mk;
     String name;
 
-    public void fetchSubjectNames(String usn) {
+    public void fetchSubjectNames(String usn, int sem) {
 
         //get proxy Settings
         setProxy();
-        String url = "http://results.vtualerts.com/get_res.php?usn=" + usn;
+        String url = "http://results.vtualerts.com/get_res.php?usn=" + usn + "&sem=" + sem;
         Document doc;
 
         try {
-            doc = Jsoup.connect(url).userAgent("Mozilla").timeout(25*1000).get();
+            doc = Jsoup.connect(url).userAgent("Mozilla").timeout(25 * 1000).get();
 
             Element firstTableMarks = doc.select("table:eq(3)").first();
             Element tmtbody = firstTableMarks.select("tbody").first();
@@ -46,7 +45,7 @@ public class resultFetch {
             }
         } catch (IOException e) {
             //MainForm.stopFlag = true;
-            JOptionPane.showMessageDialog(null, e + " tyfghfg resultfetch");
+            JOptionPane.showMessageDialog(null, e + " subject fetch");
         }
 
         //Store subject names to database
@@ -79,12 +78,13 @@ public class resultFetch {
         setProxy();
     }
 
-    public boolean FetchTheresult(String usn) {
-        String temp;
+    public boolean FetchTheresult(String usn, int sem) {
         Document doc;
-        String url = "http://results.vtualerts.com/get_res.php?usn=" + usn;
+        //String url = "http://results.vtualerts.com/get_res.php?usn=" + usn ;
+        String url = "http://results.vtualerts.com/get_res.php?usn=" + usn + "&sem=" + sem;
         try {
-            doc = Jsoup.connect(url).userAgent("Mozilla").timeout(5*1000).get();
+            doc = Jsoup.connect(url).userAgent("Mozilla").timeout(25 * 1000).get();
+            //doc = Jsoup.connect(url).userAgent("Mozilla").timeout(5 * 1000).get();
 
             Element StdName = doc.select("div").select("B:eq(0)").first();
             name = StdName.toString().split(">")[1].split(Pattern.quote("("))[0];
@@ -107,20 +107,17 @@ public class resultFetch {
 
                 Element totMks = doc.select("table:eq(4)").select("td:eq(3)").first();
                 totalmarks = totMks.toString().split(" ")[1];
-
             }
+            MainForm.DF.setStatus(usn, "Success");
         } catch (Exception e) {
-            //JOptionPane.showMessageDialog(null, e + " fetch the result");
-            System.out.println("Here is the exception");
-           // MainForm.stopFlag = true;
-
+            System.out.println("fetch failed for " + usn);
+            MainForm.DF.setStatus(usn, "failed");
             return false;//if result is not found
         }
         return true;//result is found
     }
 
     private void setProxy() {
-        System.out.println("hello world");
         try {
             String ProxyIP, SecureIP, ProxyPort, SecurePort;
             Properties prop = new Properties();
@@ -129,16 +126,10 @@ public class resultFetch {
             ProxyPort = prop.getProperty("HTTPPort");
             SecureIP = prop.getProperty("HTTPSProxy");
             SecurePort = prop.getProperty("HTTPSPort");
-            System.out.println("Proxy is set to " + ProxyIP + ":" + ProxyPort);
-            if (!ProxyIP.equals("")) {
-                System.out.println("Proxy is set to " + ProxyIP + ":" + ProxyPort);
-                System.out.println("Secure Proxy is set to " + SecureIP + ":" + SecurePort);
-
-                System.setProperty("http.proxyHost", ProxyIP);
-                System.setProperty("http.proxyPort", ProxyPort);
-                System.setProperty("https.proxyHost", SecureIP);
-                System.setProperty("https.proxyPort", SecurePort);
-            }
+            System.setProperty("http.proxyHost", ProxyIP);
+            System.setProperty("http.proxyPort", ProxyPort);
+            System.setProperty("https.proxyHost", SecureIP);
+            System.setProperty("https.proxyPort", SecurePort);
 
         } catch (IOException ex) {
             System.out.println("Can not read config file...");

@@ -4,6 +4,7 @@ package Main;
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
+import Forms.EnterUsnForm;
 import Forms.MainForm;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -50,7 +51,7 @@ public class DownloadMarksTask extends SwingWorker<Integer, Integer> {
                 MainForm.setCurStatusLabel("Downloading USN :" + MainForm.usnList.get(i));
                 System.out.println(MainForm.usnList.get(i));
 
-                if (r.FetchTheresult(MainForm.usnList.get(i))) {
+                if (r.FetchTheresult(MainForm.usnList.get(i), EnterUsnForm.sem)) {
                     //display marks
 
                     pstmt.setString(colCount++, MainForm.usnList.get(i));

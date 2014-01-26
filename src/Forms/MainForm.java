@@ -26,7 +26,7 @@ public class MainForm extends javax.swing.JFrame {
     public static Vector<String> subNamesV = new Vector<String>();
     public static boolean stopFlag = false;
     public static DownloadDetailsForm DF = new DownloadDetailsForm();
-
+    private int fetchCount;
     public static MainForm objCopy;
     DownloadMarksTask task;
 
@@ -37,6 +37,7 @@ public class MainForm extends javax.swing.JFrame {
         curUsnDownloadLabel.hide();
         stopbtn.setEnabled(false);
         this.setLocationRelativeTo(null);
+        fetchCount = 0;
     }
 
     /**
@@ -391,29 +392,37 @@ public class MainForm extends javax.swing.JFrame {
         initComponents();
         df.retrieveSubjectNames();
         DefaultTableModel model = new DefaultTableModel();
-        model.addColumn("USN");
-        model.addColumn("NAME");
-        model.addColumn(MainForm.subNamesV.get(0));
-        model.addColumn(MainForm.subNamesV.get(1));
-        model.addColumn(MainForm.subNamesV.get(2));
-        model.addColumn(MainForm.subNamesV.get(3));
-        model.addColumn(MainForm.subNamesV.get(4));
-        model.addColumn(MainForm.subNamesV.get(5));
-        model.addColumn(MainForm.subNamesV.get(6));
-        model.addColumn(MainForm.subNamesV.get(7));
-        model.addColumn("TOTAL");
-        model.addColumn("RESULT");
-        ResultSet r = df.getDetails("ALL");
         try {
+
+            model.addColumn("USN");
+            model.addColumn("NAME");
+            model.addColumn(MainForm.subNamesV.get(0));
+            model.addColumn(MainForm.subNamesV.get(1));
+            model.addColumn(MainForm.subNamesV.get(2));
+            model.addColumn(MainForm.subNamesV.get(3));
+            model.addColumn(MainForm.subNamesV.get(4));
+            model.addColumn(MainForm.subNamesV.get(5));
+            model.addColumn(MainForm.subNamesV.get(6));
+            model.addColumn(MainForm.subNamesV.get(7));
+            model.addColumn("TOTAL");
+            model.addColumn("RESULT");
+            ResultSet r = df.getDetails("ALL");
+
             while (r.next()) {
                 model.insertRow(count++, new Object[]{r.getString(1), r.getString(2), r.getInt(5), r.getInt(9), r.getInt(13), r.getInt(17), r.getInt(21), r.getInt(25), r.getInt(29), r.getInt(33), r.getInt(35), r.getString(36)});
 
             }
+            SaveTable ST = new SaveTable(model);
         } catch (SQLException ex) {
-            Logger.getLogger(MainForm.class
-                    .getName()).log(Level.SEVERE, null, ex);
+          //  Logger.getLogger(MainForm.class
+            //          .getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "Couldn't save any data ", "Error!", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception ex) {
+          //  Logger.getLogger(MainForm.class
+            //          .getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this,  "Failed to save :  " + ex.getMessage(), "Error!", JOptionPane.ERROR_MESSAGE);
         }
-        SaveTable ST = new SaveTable(model);
+
     }//GEN-LAST:event_btn_saveActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed

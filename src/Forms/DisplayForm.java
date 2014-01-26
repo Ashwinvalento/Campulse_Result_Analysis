@@ -95,8 +95,9 @@ public class DisplayForm extends javax.swing.JFrame {
         }
 
         retrieveSubjectNames();
-
-        fillMarksTable(StudDetails.getValueAt(0, 1).toString());
+        if (firstTableModel.getRowCount() != 0) {
+            fillMarksTable(StudDetails.getValueAt(0, 1).toString());
+        }
     }
 
     /**
@@ -157,11 +158,11 @@ public class DisplayForm extends javax.swing.JFrame {
             }
         });
         StudDetails.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                StudDetailsKeyReleased(evt);
-            }
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 StudDetailsKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                StudDetailsKeyReleased(evt);
             }
         });
         jScrollPane1.setViewportView(StudDetails);

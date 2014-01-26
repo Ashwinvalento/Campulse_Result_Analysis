@@ -30,7 +30,9 @@ public class resultFetch {
 
         //get proxy Settings
         setProxy();
-        String url = "http://results.vtualerts.com/get_res.php?usn=" + usn + "&sem=" + sem;
+        String url="http://results.vtualerts.com/get_res.php?usn=" + usn;
+        if(Forms.EnterUsnForm.sem>0 && Forms.EnterUsnForm.sem<9 )
+            url = "http://results.vtualerts.com/get_res.php?usn=" + usn + "&sem=" + sem;
         Document doc;
 
         try {
@@ -81,9 +83,12 @@ public class resultFetch {
     public boolean FetchTheresult(String usn, int sem) {
         Document doc;
         //String url = "http://results.vtualerts.com/get_res.php?usn=" + usn ;
-        String url = "http://results.vtualerts.com/get_res.php?usn=" + usn + "&sem=" + sem;
+        String url="http://results.vtualerts.com/get_res.php?usn=" + usn;
+        if(Forms.EnterUsnForm.sem>0 && Forms.EnterUsnForm.sem<9 )
+            url = "http://results.vtualerts.com/get_res.php?usn=" + usn + "&sem=" + sem;
+        System.out.println(url);
         try {
-            doc = Jsoup.connect(url).userAgent("Mozilla").timeout(25 * 1000).get();
+            doc = Jsoup.connect(url).userAgent("Mozilla").timeout(5 * 1000).get();
             //doc = Jsoup.connect(url).userAgent("Mozilla").timeout(5 * 1000).get();
 
             Element StdName = doc.select("div").select("B:eq(0)").first();

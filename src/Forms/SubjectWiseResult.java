@@ -28,7 +28,7 @@ public class SubjectWiseResult extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         retrieveSubjectNames();
         fillSubjectCombo();
-        examType.setSelectedIndex(2);
+        
 
         model = new DefaultTableModel() {
             Class[] types = new Class[]{
@@ -56,6 +56,7 @@ public class SubjectWiseResult extends javax.swing.JFrame {
         studentMarksTable.getColumn("EXTERNAL").setPreferredWidth(50);
         studentMarksTable.getColumn("TOTAL").setPreferredWidth(40);
         studentMarksTable.getColumn("CLASS").setPreferredWidth(40);
+        examType.setSelectedIndex(2);
     }
 
     /**
@@ -287,10 +288,12 @@ public class SubjectWiseResult extends javax.swing.JFrame {
             int rowCount = 0;
             while (rs.next()) {
                 if (subjectCombo.getSelectedIndex() == 8) {
+                    
                     int flag = 0;
-                    for (int i = 3; i < 35; i += 4) {
+                    for (int i = 3+examType.getSelectedIndex(); i < 35; i += 4) {
                         if (Integer.parseInt(rs.getString(i)) < lowLimit || Integer.parseInt(rs.getString(i)) > highLimit) {
                             flag = 1;
+                 //           System.out.println("i is " + i + "value at ith row is :  "+rs.getString(i));
                             break;
                         }
                     }
@@ -300,8 +303,8 @@ public class SubjectWiseResult extends javax.swing.JFrame {
 
                 } else if (subjectCombo.getSelectedIndex() == 9) {
                     int flag = 0;
-                    for (int i = 3; i < 35; i += 4) {
-                        if (Integer.parseInt(rs.getString(i)) > lowLimit || Integer.parseInt(rs.getString(i)) < highLimit) {
+                    for (int i = 3+examType.getSelectedIndex(); i < 35; i += 4) {
+                        if (Integer.parseInt(rs.getString(i)) > lowLimit && Integer.parseInt(rs.getString(i)) < highLimit) {
                             flag = 1;
                             break;
                         }
@@ -354,7 +357,7 @@ public class SubjectWiseResult extends javax.swing.JFrame {
             firstValue.setValue(50);
             lastValue.setValue(125);
         }
-        //bSubmit.doClick();
+        bSubmit.doClick();
         
     }//GEN-LAST:event_examTypeActionPerformed
 

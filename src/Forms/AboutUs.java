@@ -63,10 +63,10 @@ public class AboutUs extends javax.swing.JFrame {
         jLabel1.setText("Developers");
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel2.setText("Yajnesh talapady");
+        jLabel2.setText("Yajnesh Talapady");
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel3.setText("Jickson Stephan");
+        jLabel3.setText("Jickson Stephen");
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel4.setText("Vishal Vijay");

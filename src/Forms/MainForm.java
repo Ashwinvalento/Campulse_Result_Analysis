@@ -21,9 +21,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class MainForm extends javax.swing.JFrame {
 
-    /**
-     * Creates new form main
-     */
+    public static int timeout=10;
     public static Vector<String> usnList = new Vector<String>();
     public static Vector<String> subNamesV = new Vector<String>();
     public static boolean stopFlag = false;
@@ -74,6 +72,7 @@ public class MainForm extends javax.swing.JFrame {
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
+        setTimeOutMenu = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Vtu Marks Downloader");
@@ -257,6 +256,14 @@ public class MainForm extends javax.swing.JFrame {
         });
         jMenu2.add(jMenuItem2);
 
+        setTimeOutMenu.setText("Set Time Out");
+        setTimeOutMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                setTimeOutMenuActionPerformed(evt);
+            }
+        });
+        jMenu2.add(setTimeOutMenu);
+
         jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
@@ -418,6 +425,13 @@ public class MainForm extends javax.swing.JFrame {
         DF.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void setTimeOutMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setTimeOutMenuActionPerformed
+        String str = JOptionPane.showInputDialog(null, "Enter time out in seconds : ", "Set time out", JOptionPane.QUESTION_MESSAGE);
+        //System.out.println("str is : " + str);
+        timeout=Integer.parseInt(str);
+        if(timeout==0) timeout=10;
+    }//GEN-LAST:event_setTimeOutMenuActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -490,6 +504,7 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JMenuItem setTimeOutMenu;
     private javax.swing.JButton stopbtn;
     private javax.swing.JButton submitButton;
     public javax.swing.JProgressBar usnProgressBar;

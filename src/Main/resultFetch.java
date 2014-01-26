@@ -3,9 +3,15 @@ package Main;
 import Forms.MainForm;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.ProxySelector;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -125,21 +131,59 @@ public class resultFetch {
     }
 
     private void setProxy() {
+
         try {
             String ProxyIP, SecureIP, ProxyPort, SecurePort;
             Properties prop = new Properties();
             prop.load(new FileInputStream("config.ini"));
-            ProxyIP = prop.getProperty("HTTPProxy");
-            ProxyPort = prop.getProperty("HTTPPort");
-            SecureIP = prop.getProperty("HTTPSProxy");
-            SecurePort = prop.getProperty("HTTPSPort");
-            System.setProperty("http.proxyHost", ProxyIP);
-            System.setProperty("http.proxyPort", ProxyPort);
-            System.setProperty("https.proxyHost", SecureIP);
-            System.setProperty("https.proxyPort", SecurePort);
 
+            if (prop.getProperty("NoProxy").equals("true")) {
+                System.out.println("No proxy is set");
+            } else if (prop.getProperty("SysProxy").equals("true")) {
+                System.out.println("Proxy set to system proxy");
+                setSysProx();
+            } else {
+                System.out.println("Using selected proxy");
+                ProxyIP = prop.getProperty("HTTPProxy");
+                ProxyPort = prop.getProperty("HTTPPort");
+                SecureIP = prop.getProperty("HTTPSProxy");
+                SecurePort = prop.getProperty("HTTPSPort");
+                System.setProperty("http.proxyHost", ProxyIP);
+                System.setProperty("http.proxyPort", ProxyPort);
+                System.setProperty("https.proxyHost", SecureIP);
+                System.setProperty("https.proxyPort", SecurePort);
+            }
         } catch (IOException ex) {
             System.out.println("Can not read config file...");
+            setSysProx();
+        }
+    }
+
+    private void setSysProx() {
+        System.setProperty("java.net.useSystemProxies", "true");
+        System.out.println("detecting proxies");
+        List l = null;
+        try {
+            l = ProxySelector.getDefault().select(new URI("http://foo/bar"));
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        if (l != null) {
+            for (Iterator iter = l.iterator(); iter.hasNext();) {
+                java.net.Proxy proxy = (java.net.Proxy) iter.next();
+                System.out.println("proxy hostname : " + proxy.type());
+
+                InetSocketAddress addr = (InetSocketAddress) proxy.address();
+
+                if (addr == null) {
+                    System.out.println("No Proxy");
+                } else {
+                    System.out.println("proxy hostname : " + addr.getHostName());
+                    System.setProperty("http.proxyHost", addr.getHostName());
+                    System.out.println("proxy port : " + addr.getPort());
+                    System.setProperty("http.proxyPort", Integer.toString(addr.getPort()));
+                }
+            }
         }
     }
 }

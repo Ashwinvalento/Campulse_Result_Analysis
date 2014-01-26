@@ -1,11 +1,12 @@
 package Forms;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 
@@ -14,7 +15,6 @@ import javax.swing.JSpinner;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 public class ProxyForm extends javax.swing.JFrame {
 
     /**
@@ -28,28 +28,42 @@ public class ProxyForm extends javax.swing.JFrame {
             Integer ProxyPort, SecurePort;
             Properties prop = new Properties();
             prop.load(new FileInputStream("config.ini"));
-            ProxyIP = prop.getProperty("HTTPProxy");
-            ProxyPort = Integer.parseInt(prop.getProperty("HTTPPort"));
-            SecureIP = prop.getProperty("HTTPSProxy");
-            SecurePort = Integer.parseInt(prop.getProperty("HTTPSPort"));
-            if (!ProxyIP.equals("")) {
-                RB_manProxy.setSelected(true);
-                TF_ProxyIp.setText(ProxyIP);
-                TF_secureIp.setText(SecureIP);
-                Spin_ProxyPort.setValue(ProxyPort);
-                Spin_SecurePort.setValue((Object) SecurePort);
-            } else {
+            String SysProx = prop.getProperty("SysProxy");
+            String noProx = prop.getProperty("NoProxy");
+
+            if (noProx == null) {
+                RB_sysProxy.setSelected(true);
+                System.out.println("System proxy selected by default");
+            } else if (noProx.equals("true")) {
                 RB_noProxy.setSelected(true);
                 TF_secureIp.setEnabled(false);
                 Spin_SecurePort.setEnabled(false);
                 TF_ProxyIp.setEnabled(false);
                 Spin_ProxyPort.setEnabled(false);
                 CB_sameProxy.setEnabled(false);
+            } else if (SysProx.equals("true")) {
+                RB_sysProxy.setSelected(true);
+                TF_secureIp.setEnabled(false);
+                Spin_SecurePort.setEnabled(false);
+                TF_ProxyIp.setEnabled(false);
+                Spin_ProxyPort.setEnabled(false);
+                CB_sameProxy.setEnabled(false);
+            } else {
+                ProxyIP = prop.getProperty("HTTPProxy");
+                ProxyPort = Integer.parseInt(prop.getProperty("HTTPPort"));
+                SecureIP = prop.getProperty("HTTPSProxy");
+                SecurePort = Integer.parseInt(prop.getProperty("HTTPSPort"));
+
+                RB_manProxy.setSelected(true);
+                TF_ProxyIp.setText(ProxyIP);
+                TF_secureIp.setText(SecureIP);
+                Spin_ProxyPort.setValue(ProxyPort);
+                Spin_SecurePort.setValue((Object) SecurePort);
 
             }
 
         } catch (IOException ex) {
-            RB_noProxy.setSelected(true);
+            RB_sysProxy.setSelected(true);
             TF_secureIp.setEnabled(false);
             Spin_SecurePort.setEnabled(false);
             TF_ProxyIp.setEnabled(false);
@@ -60,8 +74,10 @@ public class ProxyForm extends javax.swing.JFrame {
 
         //Remove comma from Jspinners
         JSpinner.NumberEditor editor = new JSpinner.NumberEditor(Spin_ProxyPort, "#");
+
         Spin_ProxyPort.setEditor(editor);
         JSpinner.NumberEditor editor1 = new JSpinner.NumberEditor(Spin_SecurePort, "#");
+
         Spin_SecurePort.setEditor(editor1);
 
     }
@@ -90,6 +106,7 @@ public class ProxyForm extends javax.swing.JFrame {
         CB_sameProxy = new javax.swing.JCheckBox();
         B_Save = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        RB_sysProxy = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -145,6 +162,14 @@ public class ProxyForm extends javax.swing.JFrame {
             }
         });
 
+        BG_Proxy.add(RB_sysProxy);
+        RB_sysProxy.setText("Use System Proxy");
+        RB_sysProxy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RB_sysProxyActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -152,6 +177,7 @@ public class ProxyForm extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(RB_sysProxy)
                     .addComponent(CB_sameProxy)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1)
@@ -185,7 +211,9 @@ public class ProxyForm extends javax.swing.JFrame {
                 .addComponent(RB_noProxy)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(RB_manProxy)
-                .addGap(23, 23, 23)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(RB_sysProxy)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(TF_ProxyIp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -203,7 +231,7 @@ public class ProxyForm extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(B_Save)
                     .addComponent(jButton2))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -219,8 +247,8 @@ public class ProxyForm extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -242,37 +270,69 @@ public class ProxyForm extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void B_SaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B_SaveActionPerformed
+        boolean noProx = false;
+        boolean sysProx = false;
+        BufferedWriter out = null;
+        FileWriter fstream;
+
+        try {
+            fstream = new FileWriter("config.ini");
+            out = new BufferedWriter(fstream);
+        } catch (IOException ex) {
+            Logger.getLogger(ProxyForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        if (RB_noProxy.isSelected()) {
+            noProx = true;
+        } else {
+            noProx = false;
+        }
+        if (RB_sysProxy.isSelected()) {
+            sysProx = true;
+        } else {
+            sysProx = false;
+        }
+
+        try {
+            out.write("NoProxy=" + noProx + "\n");
+            out.write("SysProxy=" + sysProx + "\n");
+        } catch (IOException ex) {
+            Logger.getLogger(ProxyForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         if (RB_manProxy.isSelected() && (TF_ProxyIp.getText().equals("") || ((Integer) Spin_ProxyPort.getValue()) == 0)) {
             JOptionPane.showMessageDialog(null, "Please Enter IP and Port Value");
         } else if (RB_manProxy.isSelected() && !CB_sameProxy.isSelected() && (TF_secureIp.getText().equals("") || ((Integer) Spin_SecurePort.getValue()) == 0)) {
-
             JOptionPane.showMessageDialog(null, "Please Enter Secure IP and Secure Port Value");
-
-        } else if (RB_manProxy.isSelected() || RB_noProxy.isSelected()) {
+        } else if (RB_manProxy.isSelected()) {
 
             String HTTPPROXY = TF_ProxyIp.getText();
             int HTTPPORT = (Integer) Spin_ProxyPort.getValue();
             String SECUREPROXY = TF_secureIp.getText();
             int SECUREPORT = (Integer) Spin_SecurePort.getValue();
+
             if (CB_sameProxy.isSelected()) {
                 SECUREPROXY = HTTPPROXY;
                 SECUREPORT = HTTPPORT;
             }
             try {
                 // Create file 
-                FileWriter fstream = new FileWriter("config.ini");
-                BufferedWriter out = new BufferedWriter(fstream);
                 out.write("HTTPProxy=" + HTTPPROXY + "\n");
                 out.write("HTTPPort=" + HTTPPORT + "\n");
                 out.write("HTTPSProxy=" + SECUREPROXY + "\n");
                 out.write("HTTPSPort=" + SECUREPORT + "\n");
+
                 //Close the output stream
-                out.close();
-                this.dispose();
             } catch (Exception e) {//Catch exception if any
                 System.err.println("Error: " + e.getMessage());
             }
         }
+        try {
+            out.close();
+        } catch (IOException ex) {
+            Logger.getLogger(ProxyForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        this.dispose();
     }//GEN-LAST:event_B_SaveActionPerformed
 
     private void RB_noProxyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RB_noProxyActionPerformed
@@ -299,6 +359,19 @@ public class ProxyForm extends javax.swing.JFrame {
     private void RB_noProxyPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_RB_noProxyPropertyChange
 
     }//GEN-LAST:event_RB_noProxyPropertyChange
+
+    private void RB_sysProxyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RB_sysProxyActionPerformed
+        TF_secureIp.setEnabled(false);
+        Spin_SecurePort.setEnabled(false);
+        TF_ProxyIp.setEnabled(false);
+        Spin_ProxyPort.setEnabled(false);
+        CB_sameProxy.setEnabled(false);
+
+        TF_secureIp.setText("");
+        Spin_SecurePort.setValue(new Integer(0));
+        TF_ProxyIp.setText("");
+        Spin_ProxyPort.setValue(new Integer(0));
+    }//GEN-LAST:event_RB_sysProxyActionPerformed
 
     /**
      * @param args the command line arguments
@@ -346,6 +419,7 @@ public class ProxyForm extends javax.swing.JFrame {
     private javax.swing.JCheckBox CB_sameProxy;
     private javax.swing.JRadioButton RB_manProxy;
     private javax.swing.JRadioButton RB_noProxy;
+    private javax.swing.JRadioButton RB_sysProxy;
     private javax.swing.JSpinner Spin_ProxyPort;
     private javax.swing.JSpinner Spin_SecurePort;
     private javax.swing.JTextField TF_ProxyIp;

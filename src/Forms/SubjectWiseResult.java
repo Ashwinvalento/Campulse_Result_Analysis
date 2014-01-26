@@ -31,7 +31,6 @@ public class SubjectWiseResult extends javax.swing.JFrame {
 
         model = new DefaultTableModel() {
             Class[] types = new Class[]{
-                //COL. TYPES ARE HERE!!!  
                 java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class
             };
 
@@ -316,7 +315,7 @@ public class SubjectWiseResult extends javax.swing.JFrame {
                         }
                     }
                     if (flag == 0) {
-                        model.insertRow(rowCount++, new Object[]{rs.getString(1), rs.getString(2),null,null, rs.getString(35), rs.getString(36)});
+                        model.insertRow(rowCount++, new Object[]{rs.getString(1), rs.getString(2), null, null, rs.getString(35), rs.getString(36)});
                     }
 
                 } else if (subjectCombo.getSelectedIndex() == 9) {
@@ -328,9 +327,9 @@ public class SubjectWiseResult extends javax.swing.JFrame {
                         }
                     }
                     if (flag == 1) {
-                        model.insertRow(rowCount++, new Object[]{rs.getString(1), rs.getString(2),null,null, rs.getString(35), rs.getString(36)});
+                        model.insertRow(rowCount++, new Object[]{rs.getString(1), rs.getString(2), null, null, rs.getString(35), rs.getString(36)});
                     }
-                    } else {
+                } else {
                     whichROw = subjectCombo.getSelectedIndex() * 4 + 3;
                     // System.out.println("whichROw : "+ whichROw );
                     //System.out.println("typeValue : "+ typeValue);
@@ -352,7 +351,7 @@ public class SubjectWiseResult extends javax.swing.JFrame {
         } catch (SQLException ex) {
             System.out.println("Error : " + ex);
         }
-        lcount.setText(Integer.toString(model.getRowCount()) + " of them scored between " + firstValue.getValue() + " and " + lastValue.getValue() + " in  " + examType.getSelectedItem().toString()+" of " + subjectCombo.getSelectedItem().toString());
+        lcount.setText(Integer.toString(model.getRowCount()) + " of them scored between " + firstValue.getValue() + " and " + lastValue.getValue() + " in  " + examType.getSelectedItem().toString() + " of " + subjectCombo.getSelectedItem().toString());
     }//GEN-LAST:event_bSubmitActionPerformed
 
     private void bCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCloseActionPerformed

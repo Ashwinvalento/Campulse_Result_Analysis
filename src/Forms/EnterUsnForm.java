@@ -451,11 +451,11 @@ public class EnterUsnForm extends javax.swing.JFrame {
     }//GEN-LAST:event_ipFileButtonActionPerformed
 
     private void B_doneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B_doneActionPerformed
-            sem = Integer.parseInt(Combo_sem.getSelectedItem().toString());
-            for (int i = 0; i < list.size(); i++) {
-                MainForm.usnList.add(list.getElementAt(i).toString());
+        sem = Integer.parseInt(Combo_sem.getSelectedItem().toString());
+        for (int i = 0; i < list.size(); i++) {
+            MainForm.usnList.add(list.getElementAt(i).toString());
             this.dispose();
-            }
+        }
     }//GEN-LAST:event_B_doneActionPerformed
 
     private void B_cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B_cancelActionPerformed

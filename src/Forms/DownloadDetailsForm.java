@@ -144,9 +144,8 @@ public class DownloadDetailsForm extends javax.swing.JFrame {
         model.insertRow(row, new Object[]{usn, state});
         row++;
     }
-    
-    public void reset()
-    {
+
+    public void reset() {
         model.setRowCount(0);
     }
 }

@@ -34,14 +34,14 @@ public class extractUSN {
                 Matcher m = p.matcher(line);
                 while (m.find()) {
                     /*if (EnterUsnForm.usnMatcher.equals("")) {
-                        EnterUsnForm.usnMatcher = m.group(0).substring(5, 7);
-                        System.out.println("Matcher set in extractUsn" + EnterUsnForm.usnMatcher);
-                    }*/
-                   // if (!EnterUsnForm.usnMatcher.equals("") && m.group(0).substring(0, 7).equals(EnterUsnForm.usnMatcher)) {
-                        EnterUsnForm.localUsnList.add(m.group(0));
-                   /* } else {
-                        allExtractSuccess = false;
-                    }*/
+                     EnterUsnForm.usnMatcher = m.group(0).substring(5, 7);
+                     System.out.println("Matcher set in extractUsn" + EnterUsnForm.usnMatcher);
+                     }*/
+                    // if (!EnterUsnForm.usnMatcher.equals("") && m.group(0).substring(0, 7).equals(EnterUsnForm.usnMatcher)) {
+                    EnterUsnForm.localUsnList.add(m.group(0));
+                    /* } else {
+                     allExtractSuccess = false;
+                     }*/
                 }
             }
             br.close();
@@ -50,8 +50,8 @@ public class extractUSN {
             JOptionPane.showMessageDialog(null, e);
             Logger.getLogger(EnterUsnForm.class.getName()).log(Level.SEVERE, null, e);
         }
-        
-        if(!allExtractSuccess){
+
+        if (!allExtractSuccess) {
             JOptionPane.showMessageDialog(null, "Some USN have not been added \n Please check the input file if the USN is correct");
         }
     }

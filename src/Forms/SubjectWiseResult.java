@@ -28,7 +28,6 @@ public class SubjectWiseResult extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         retrieveSubjectNames();
         fillSubjectCombo();
-        
 
         model = new DefaultTableModel() {
             Class[] types = new Class[]{
@@ -50,12 +49,12 @@ public class SubjectWiseResult extends javax.swing.JFrame {
         model.addColumn("CLASS");
         bSubmit.doClick();
         studentMarksTable.setAutoCreateRowSorter(true);
-        studentMarksTable.getColumn("USN").setPreferredWidth(100);
-        studentMarksTable.getColumn("NAME").setPreferredWidth(150);
-        studentMarksTable.getColumn("INTERNAL").setPreferredWidth(50);
-        studentMarksTable.getColumn("EXTERNAL").setPreferredWidth(50);
-        studentMarksTable.getColumn("TOTAL").setPreferredWidth(40);
-        studentMarksTable.getColumn("CLASS").setPreferredWidth(40);
+        /*studentMarksTable.getColumn("USN").setPreferredWidth(100);
+         studentMarksTable.getColumn("NAME").setPreferredWidth(150);
+         studentMarksTable.getColumn("INTERNAL").setPreferredWidth(50);
+         studentMarksTable.getColumn("EXTERNAL").setPreferredWidth(50);
+         studentMarksTable.getColumn("TOTAL").setPreferredWidth(40);
+         studentMarksTable.getColumn("CLASS").setPreferredWidth(40);*/
         examType.setSelectedIndex(2);
     }
 
@@ -268,13 +267,14 @@ public class SubjectWiseResult extends javax.swing.JFrame {
     }//GEN-LAST:event_subjectComboActionPerformed
 
     private void bSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSubmitActionPerformed
+
         Statement stmt = null;
         ResultSet rs = null;
         String query = "";
         Connection con = DBConnect.connection;
         int lowLimit = Integer.parseInt(firstValue.getValue().toString()) - 1;
         int highLimit = Integer.parseInt(lastValue.getValue().toString()) + 1;
-        int typeValue=examType.getSelectedIndex()+1;
+        int typeValue = examType.getSelectedIndex() + 1;
         //get USN from user
 
         model.setRowCount(0);
@@ -288,38 +288,38 @@ public class SubjectWiseResult extends javax.swing.JFrame {
             int rowCount = 0;
             while (rs.next()) {
                 if (subjectCombo.getSelectedIndex() == 8) {
-                    
+
                     int flag = 0;
-                    for (int i = 3+examType.getSelectedIndex(); i < 35; i += 4) {
+                    for (int i = 3 + examType.getSelectedIndex(); i < 35; i += 4) {
                         if (Integer.parseInt(rs.getString(i)) < lowLimit || Integer.parseInt(rs.getString(i)) > highLimit) {
                             flag = 1;
-                 //           System.out.println("i is " + i + "value at ith row is :  "+rs.getString(i));
+                            //           System.out.println("i is " + i + "value at ith row is :  "+rs.getString(i));
                             break;
                         }
                     }
                     if (flag == 0) {
-                        model.insertRow(rowCount++, new Object[]{rs.getString(1), rs.getString(2), rs.getString(35), rs.getString(36), rs.getString(36)});
+                        model.insertRow(rowCount++, new Object[]{rs.getString(1), rs.getString(2),null,null, rs.getString(35), rs.getString(36)});
                     }
 
                 } else if (subjectCombo.getSelectedIndex() == 9) {
                     int flag = 0;
-                    for (int i = 3+examType.getSelectedIndex(); i < 35; i += 4) {
+                    for (int i = 3 + examType.getSelectedIndex(); i < 35; i += 4) {
                         if (Integer.parseInt(rs.getString(i)) > lowLimit && Integer.parseInt(rs.getString(i)) < highLimit) {
                             flag = 1;
                             break;
                         }
                     }
                     if (flag == 1) {
-                        model.insertRow(rowCount++, new Object[]{rs.getString(1), rs.getString(2), rs.getString(35), rs.getString(36), rs.getString(36)});
+                        model.insertRow(rowCount++, new Object[]{rs.getString(1), rs.getString(2),null,null, rs.getString(35), rs.getString(36)});
                     }
                 } else {
-                    whichROw = subjectCombo.getSelectedIndex() * 4 +3;
-                   // System.out.println("whichROw : "+ whichROw );
+                    whichROw = subjectCombo.getSelectedIndex() * 4 + 3;
+                    // System.out.println("whichROw : "+ whichROw );
                     //System.out.println("typeValue : "+ typeValue);
                     //System.out.println(rs.getString(1) + "  " + rs.getString(whichROw) + " " + rs.getString(whichROw + 1) + " " + rs.getString(whichROw + 2) + " " + rs.getString(whichROw + 3));
-                  //  System.out.println("lowLimit is : "+lowLimit + " highLimit is : " +highLimit + " total is : " + Integer.parseInt(rs.getString(whichROw+2)));
-                    if (Integer.parseInt(rs.getString(whichROw+ typeValue-1)) > lowLimit) {
-                        if (Integer.parseInt(rs.getString(whichROw+ typeValue-1)) < highLimit) {
+                    //  System.out.println("lowLimit is : "+lowLimit + " highLimit is : " +highLimit + " total is : " + Integer.parseInt(rs.getString(whichROw+2)));
+                    if (Integer.parseInt(rs.getString(whichROw + typeValue - 1)) > lowLimit) {
+                        if (Integer.parseInt(rs.getString(whichROw + typeValue - 1)) < highLimit) {
                             model.insertRow(rowCount++, new Object[]{rs.getString(1), rs.getString(2), Integer.parseInt(rs.getString(whichROw)), Integer.parseInt(rs.getString(whichROw + 1)), Integer.parseInt(rs.getString(whichROw + 2)), rs.getString(whichROw + 3)});
                             //System.out.println(rs.getString(1) + "  " + rs.getString(whichROw) + " " + rs.getString(whichROw + 1) + " " + rs.getString(whichROw + 2) + " " + rs.getString(whichROw + 3));
                         } else {
@@ -334,8 +334,22 @@ public class SubjectWiseResult extends javax.swing.JFrame {
         } catch (SQLException ex) {
             System.out.println("Error : " + ex);
         }
-        lcount.setText(Integer.toString(model.getRowCount()) + " of them scored between " + firstValue.getValue() + " and " + lastValue.getValue() +" in " + subjectCombo.getSelectedItem().toString() + " "+ examType.getSelectedItem().toString());
-
+        lcount.setText(Integer.toString(model.getRowCount()) + " of them scored between " + firstValue.getValue() + " and " + lastValue.getValue() + " in " + subjectCombo.getSelectedItem().toString() + " " + examType.getSelectedItem().toString());
+        if (subjectCombo.getSelectedIndex() == 8 || subjectCombo.getSelectedIndex() == 8) {
+            studentMarksTable.getColumn("USN").setPreferredWidth(100);
+            studentMarksTable.getColumn("NAME").setPreferredWidth(150);
+            studentMarksTable.getColumn("INTERNAL").setPreferredWidth(1);
+            studentMarksTable.getColumn("EXTERNAL").setPreferredWidth(1);
+            studentMarksTable.getColumn("TOTAL").setPreferredWidth(40);
+            studentMarksTable.getColumn("CLASS").setPreferredWidth(100);
+        } else {
+            studentMarksTable.getColumn("USN").setPreferredWidth(100);
+            studentMarksTable.getColumn("NAME").setPreferredWidth(150);
+            studentMarksTable.getColumn("INTERNAL").setPreferredWidth(50);
+            studentMarksTable.getColumn("EXTERNAL").setPreferredWidth(50);
+            studentMarksTable.getColumn("TOTAL").setPreferredWidth(40);
+            studentMarksTable.getColumn("CLASS").setPreferredWidth(40);
+        }
     }//GEN-LAST:event_bSubmitActionPerformed
 
     private void bCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCloseActionPerformed
@@ -343,14 +357,14 @@ public class SubjectWiseResult extends javax.swing.JFrame {
     }//GEN-LAST:event_bCloseActionPerformed
 
     private void bSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSaveActionPerformed
-       SaveTable ST =  new SaveTable(model);
+        SaveTable ST = new SaveTable(model);
     }//GEN-LAST:event_bSaveActionPerformed
 
     private void examTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_examTypeActionPerformed
-        if(examType.getSelectedIndex()==0) {
+        if (examType.getSelectedIndex() == 0) {
             firstValue.setValue(15);
             lastValue.setValue(25);
-        } else if(examType.getSelectedIndex()==1) {
+        } else if (examType.getSelectedIndex() == 1) {
             firstValue.setValue(35);
             lastValue.setValue(100);
         } else {
@@ -358,7 +372,7 @@ public class SubjectWiseResult extends javax.swing.JFrame {
             lastValue.setValue(125);
         }
         bSubmit.doClick();
-        
+
     }//GEN-LAST:event_examTypeActionPerformed
 
     /**

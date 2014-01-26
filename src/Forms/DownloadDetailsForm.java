@@ -4,9 +4,6 @@
  */
 package Forms;
 
-import java.net.URL;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
 
 /**

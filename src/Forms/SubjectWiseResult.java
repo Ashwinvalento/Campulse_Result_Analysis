@@ -421,8 +421,8 @@ public class SubjectWiseResult extends javax.swing.JFrame {
         for (int i = 0; i < MainForm.subNamesV.size(); i++) {
             comboBoxItems.add(MainForm.subNamesV.get(i));
         }
-        comboBoxItems.add("All");
-        comboBoxItems.add("Any");
+        comboBoxItems.add("All thoery sub");
+        comboBoxItems.add("Any theory sub");
         DefaultComboBoxModel model = new DefaultComboBoxModel(comboBoxItems);
 
         subjectCombo.setModel(model);

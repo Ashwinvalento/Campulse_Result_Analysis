@@ -9,8 +9,6 @@ import Main.SaveTable;
 import Main.resultFetch;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.IOException;
-import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
@@ -18,7 +16,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.swing.JEditorPane;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -71,7 +68,6 @@ public class MainForm extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         TF_usn = new javax.swing.JTextField();
         B_GetResult = new javax.swing.JButton();
-        Combo_sem = new javax.swing.JComboBox();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem3 = new javax.swing.JMenuItem();
@@ -231,14 +227,6 @@ public class MainForm extends javax.swing.JFrame {
             }
         });
 
-        Combo_sem.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        Combo_sem.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Select", "1", "2", "3", "4", "5", "6", "7", "8" }));
-        Combo_sem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                Combo_semActionPerformed(evt);
-            }
-        });
-
         jMenu1.setText("File");
 
         jMenuItem3.setText("About Us");
@@ -286,16 +274,15 @@ public class MainForm extends javax.swing.JFrame {
                         .addComponent(usnProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(20, 20, 20)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
+                                .addGap(37, 37, 37)
                                 .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(TF_usn, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(Combo_sem, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(TF_usn, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(B_GetResult, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                                .addComponent(B_GetResult, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(25, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -305,8 +292,7 @@ public class MainForm extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(TF_usn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(B_GetResult)
-                    .addComponent(jLabel3)
-                    .addComponent(Combo_sem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel3))
                 .addGap(18, 18, 18)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -365,6 +351,7 @@ public class MainForm extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void B_GetResultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B_GetResultActionPerformed
+        String resultUrl = "http://results.vtu.ac.in";
         Pattern p = Pattern.compile("4[a-zA-Z][a-zA-Z][0-9]{2}[a-zA-Z]{2}[0-9]{3}");
         String Str_singleUsn = TF_usn.getText();
         Matcher m = p.matcher(Str_singleUsn);
@@ -374,18 +361,16 @@ public class MainForm extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Invalid USN Format");
         } else {
 
-            int sem = Integer.parseInt(Combo_sem.getSelectedItem().toString());
-            String URL = "http://results.vtualerts.com/get_res.php?usn=" + TF_usn + "&sem=" + sem;
+            resultUrl = "http://results.vtu.ac.in/vitavi.php?submit=true&rid=" + TF_usn.getText();
 
-            JEditorPane editorPane = new JEditorPane();
+            Runtime rt = Runtime.getRuntime();
             try {
-                editorPane.setPage(new URL("http://www.java2s.com"));
-                editorPane.setVisible(true);
-            } catch (IOException ex) {
-                Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+                Process clientProcess = rt.exec(new String[]{"C:\\Program Files\\Mozilla Firefox\\firefox.exe", "-new-window", resultUrl});
+                clientProcess.waitFor();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
-
     }//GEN-LAST:event_B_GetResultActionPerformed
 
     private void bSubjectWiseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSubjectWiseActionPerformed
@@ -432,10 +417,6 @@ public class MainForm extends javax.swing.JFrame {
 
         DF.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void Combo_semActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Combo_semActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_Combo_semActionPerformed
 
     /**
      * @param args the command line arguments
@@ -491,7 +472,6 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.ButtonGroup BGinput;
     private javax.swing.JButton B_GetResult;
     private javax.swing.JButton B_UsnSelect;
-    private javax.swing.JComboBox Combo_sem;
     private javax.swing.JTextField TF_usn;
     private javax.swing.JButton bSubjectWise;
     private javax.swing.JButton bView;

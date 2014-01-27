@@ -19,7 +19,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class MainForm extends javax.swing.JFrame {
 
-    public static int timeout = 10;
+    public static int timeout = 25;
     public static boolean autoRetry = true;
     public static Vector<String> usnList = new Vector<String>();
     public static Vector<String> subNamesV = new Vector<String>();
@@ -29,6 +29,8 @@ public class MainForm extends javax.swing.JFrame {
     private final int fetchCount;
     public static MainForm objCopy;
     DownloadMarksTask task;
+    boolean subjectFetched = false; // this is again initialized in start button
+    int subjectFetchTries = 5;  // this value is again initialized in start button action
 
     public MainForm() {
         run.DBConnect.getConnection();
@@ -228,8 +230,6 @@ public class MainForm extends javax.swing.JFrame {
                 .addContainerGap(64, Short.MAX_VALUE))
         );
 
-        curUsnDownloadLabel.setText("<Displays the Usn which is downloading>");
-
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel3.setText("Enter USN :");
 
@@ -299,24 +299,22 @@ public class MainForm extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(curUsnDownloadLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(usnProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(20, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(37, 37, 37)
+                            .addComponent(jLabel3)
+                            .addGap(18, 18, 18)
+                            .addComponent(TF_usn, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(B_GetResult, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(37, 37, 37)
-                                .addComponent(jLabel3)
-                                .addGap(18, 18, 18)
-                                .addComponent(TF_usn, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(B_GetResult, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(19, Short.MAX_VALUE))
+                        .addComponent(curUsnDownloadLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(usnProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(19, 19, 19))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -328,10 +326,10 @@ public class MainForm extends javax.swing.JFrame {
                     .addComponent(jLabel3))
                 .addGap(18, 18, 18)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(usnProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(curUsnDownloadLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(usnProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 21, Short.MAX_VALUE)
+                    .addComponent(curUsnDownloadLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -358,6 +356,8 @@ public class MainForm extends javax.swing.JFrame {
 
     private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
         DF.reset();
+        subjectFetchTries = 5;
+        subjectFetched = false;
         usnProgressBar.setValue(usnProgressBar.getMinimum());
 
         if (usnList.size() == 0) {
@@ -366,13 +366,33 @@ public class MainForm extends javax.swing.JFrame {
             stopFlag = false;
             submitButton.setEnabled(false);
             stopbtn.setEnabled(true);
+            final resultFetch r = new resultFetch();
             new Thread() {
                 public void run() {
-                    resultFetch r = new resultFetch();
-                    r.fetchSubjectNames(usnList.get(0), EnterUsnForm.sem);
+                    while (subjectFetchTries >= 0 && !subjectFetched) {
+                        if (subjectFetchTries == 0) {
+                            System.out.println("Subject fetching terminated");
+                            JOptionPane.showMessageDialog(null, "Error connecting to internet");
+                            stopbtn.doClick();
+                        } else {
+                            System.out.println("in here !!" + subjectFetchTries);
+                            curUsnDownloadLabel.setVisible(true);
+                            curUsnDownloadLabel.setText("Please wait While we fetch subject details.");
+                            subjectFetched = r.fetchSubjectNames(usnList.get(0), EnterUsnForm.sem);
+                            if (subjectFetched) {
+                                break;
+                            }
+                        }
+                        subjectFetchTries--;
+                    }
+                    if (subjectFetched) {
+                        curUsnDownloadLabel.setText("Subject names downloaded.");
+                        System.out.println("Subject fetched ");
+                        updateProgress();
+                    }
+
                 }
             }.start();
-            updateProgress();
         }
     }//GEN-LAST:event_submitButtonActionPerformed
 
@@ -400,6 +420,8 @@ public class MainForm extends javax.swing.JFrame {
             Runtime rt = Runtime.getRuntime();
             try {
                 Process clientProcess = rt.exec(new String[]{"C:\\Program Files\\Mozilla Firefox\\firefox.exe", "-new-window", resultUrl});
+                //Process clientProcess = rt.exec(new String[]{"START /max iexplore.exe", "-new-window", resultUrl});
+
                 clientProcess.waitFor();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -463,11 +485,16 @@ public class MainForm extends javax.swing.JFrame {
     private void setTimeOutMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setTimeOutMenuActionPerformed
         Object[] timeArray = {"5", "10", "15", "20", "25"};
 
-        Object str = JOptionPane.showInputDialog(null, "Select the timeout (in seconds) : ", "Set time out", JOptionPane.QUESTION_MESSAGE, null, timeArray, timeArray[1]);
-        System.out.println("str is : " + str);
-        timeout = Integer.parseInt(str.toString());
-        if (timeout == 0) {
-            timeout = 10;
+        Object str = JOptionPane.showInputDialog(null, "Select the timeout (in seconds) : ", "Set time out", JOptionPane.QUESTION_MESSAGE, null, timeArray, timeArray[4]);
+
+        if (str != null) {
+            System.out.println("str is : " + str);
+            timeout = Integer.parseInt(str.toString());
+            if (timeout == 0) {
+                timeout = 25;
+            }
+        } else {
+            System.out.println("cancelled");
         }
     }//GEN-LAST:event_setTimeOutMenuActionPerformed
 

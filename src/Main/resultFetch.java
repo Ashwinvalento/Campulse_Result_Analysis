@@ -32,7 +32,7 @@ public class resultFetch {
     String mk;
     String name;
 
-    public void fetchSubjectNames(String usn, int sem) {
+    public boolean fetchSubjectNames(String usn, int sem) {
 
         //get proxy Settings
         setProxy();
@@ -43,7 +43,7 @@ public class resultFetch {
         Document doc;
 
         try {
-            doc = Jsoup.connect(url).userAgent("Mozilla").timeout(Forms.MainForm.timeout * 1000).get();
+            doc = Jsoup.connect(url).userAgent("Mozilla").timeout(60 * 1000).get();
             //System.out.println("Forms.MainForm.timeout * 1000 : "+ Forms.MainForm.timeout * 1000);
             Element firstTableMarks = doc.select("table:eq(3)").first();
             Element tmtbody = firstTableMarks.select("tbody").first();
@@ -54,7 +54,8 @@ public class resultFetch {
             }
         } catch (IOException e) {
             //MainForm.stopFlag = true;
-            JOptionPane.showMessageDialog(null, e + " subject fetch");
+            //JOptionPane.showMessageDialog(null, "Error connecting to internet");
+            return false;
         }
 
         //Store subject names to database
@@ -80,6 +81,7 @@ public class resultFetch {
                 Logger.getLogger(resultFetch.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        return true;
 
     }
 

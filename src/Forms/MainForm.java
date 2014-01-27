@@ -20,16 +20,17 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 public class MainForm extends javax.swing.JFrame {
-
+    
     public static int timeout = 10;
     public static Vector<String> usnList = new Vector<String>();
     public static Vector<String> subNamesV = new Vector<String>();
+    public static Vector<String> RetryList = new Vector<String>();
     public static boolean stopFlag = false;
     public static DownloadDetailsForm DF = new DownloadDetailsForm();
-    private int fetchCount;
+    private final int fetchCount;
     public static MainForm objCopy;
     DownloadMarksTask task;
-
+    
     public MainForm() {
         run.DBConnect.getConnection();
         initComponents();
@@ -62,6 +63,7 @@ public class MainForm extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         btn_save = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        b_retry = new javax.swing.JButton();
         curUsnDownloadLabel = new javax.swing.JLabel();
         usnProgressBar = new javax.swing.JProgressBar(0,100);
         jLabel3 = new javax.swing.JLabel();
@@ -149,6 +151,13 @@ public class MainForm extends javax.swing.JFrame {
             }
         });
 
+        b_retry.setText("Retry");
+        b_retry.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                b_retryActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -173,13 +182,17 @@ public class MainForm extends javax.swing.JFrame {
                                 .addComponent(B_UsnSelect, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(stopbtn, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
-                    .addComponent(bSubjectWise, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(37, 37, 37))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(bSubjectWise, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(43, 43, 43))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(stopbtn)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(b_retry)
+                        .addGap(24, 24, 24))))
         );
-
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {bSubjectWise, stopbtn});
 
         jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {B_UsnSelect, bView, btn_save, submitButton});
 
@@ -199,7 +212,8 @@ public class MainForm extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(submitButton)
-                    .addComponent(stopbtn))
+                    .addComponent(stopbtn)
+                    .addComponent(b_retry))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
@@ -291,7 +305,7 @@ public class MainForm extends javax.swing.JFrame {
                                 .addComponent(TF_usn, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(B_GetResult, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -324,6 +338,7 @@ public class MainForm extends javax.swing.JFrame {
         submitButton.setEnabled(true);
         stopbtn.setEnabled(false);
         task.stopFetching();
+        b_retry.setEnabled(true);
     }//GEN-LAST:event_stopbtnActionPerformed
 
     private void bViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bViewActionPerformed
@@ -333,7 +348,7 @@ public class MainForm extends javax.swing.JFrame {
     private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
         DF.reset();
         usnProgressBar.setValue(usnProgressBar.getMinimum());
-
+        
         if (usnList.size() == 0) {
             JOptionPane.showMessageDialog(null, "Please Add at least 1 USN");
         } else {
@@ -368,9 +383,9 @@ public class MainForm extends javax.swing.JFrame {
         } else if (!m.matches()) {
             JOptionPane.showMessageDialog(null, "Invalid USN Format");
         } else {
-
+            
             resultUrl = "http://results.vtu.ac.in/vitavi.php?submit=true&rid=" + TF_usn.getText();
-
+            
             Runtime rt = Runtime.getRuntime();
             try {
                 Process clientProcess = rt.exec(new String[]{"C:\\Program Files\\Mozilla Firefox\\firefox.exe", "-new-window", resultUrl});
@@ -393,7 +408,7 @@ public class MainForm extends javax.swing.JFrame {
         df.retrieveSubjectNames();
         DefaultTableModel model = new DefaultTableModel();
         try {
-
+            
             model.addColumn("USN");
             model.addColumn("NAME");
             model.addColumn(MainForm.subNamesV.get(0));
@@ -407,20 +422,20 @@ public class MainForm extends javax.swing.JFrame {
             model.addColumn("TOTAL");
             model.addColumn("RESULT");
             ResultSet r = df.getDetails("ALL");
-
+            
             while (r.next()) {
                 model.insertRow(count++, new Object[]{r.getString(1), r.getString(2), r.getInt(5), r.getInt(9), r.getInt(13), r.getInt(17), r.getInt(21), r.getInt(25), r.getInt(29), r.getInt(33), r.getInt(35), r.getString(36)});
-
+                
             }
             SaveTable ST = new SaveTable(model);
         } catch (SQLException ex) {
-          //  Logger.getLogger(MainForm.class
+            //  Logger.getLogger(MainForm.class
             //          .getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(this, "Couldn't save any data ", "Error!", JOptionPane.ERROR_MESSAGE);
         } catch (Exception ex) {
-          //  Logger.getLogger(MainForm.class
+            //  Logger.getLogger(MainForm.class
             //          .getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(this,  "Failed to save :  " + ex.getMessage(), "Error!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Failed to save :  " + ex.getMessage(), "Error!", JOptionPane.ERROR_MESSAGE);
         }
 
     }//GEN-LAST:event_btn_saveActionPerformed
@@ -430,13 +445,13 @@ public class MainForm extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-
+        
         DF.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void setTimeOutMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setTimeOutMenuActionPerformed
         Object[] timeArray = {"5", "10", "15", "20", "25"};
-
+        
         Object str = JOptionPane.showInputDialog(null, "Select the timeout (in seconds) : ", "Set time out", JOptionPane.QUESTION_MESSAGE, null, timeArray, timeArray[1]);
         System.out.println("str is : " + str);
         timeout = Integer.parseInt(str.toString());
@@ -444,6 +459,22 @@ public class MainForm extends javax.swing.JFrame {
             timeout = 10;
         }
     }//GEN-LAST:event_setTimeOutMenuActionPerformed
+
+    private void b_retryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_retryActionPerformed
+        b_retry.setEnabled(false);
+        System.out.println("retrying !!");
+        usnList.clear();
+        for (int i = 0; i < RetryList.size(); i++) {
+            System.out.println(RetryList.get(i));
+            usnList.add(RetryList.get(i));
+        }
+        
+        usnProgressBar.setValue(usnProgressBar.getMinimum());
+        stopFlag = false;
+        submitButton.setEnabled(false);
+        stopbtn.setEnabled(true);
+        updateProgress();
+    }//GEN-LAST:event_b_retryActionPerformed
 
     /**
      * @param args the command line arguments
@@ -488,7 +519,7 @@ public class MainForm extends javax.swing.JFrame {
          * Create and display the form
          */
         java.awt.EventQueue.invokeLater(new Runnable() {
-
+            
             public void run() {
                 objCopy = new MainForm();
                 objCopy.setVisible(true);
@@ -502,6 +533,7 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JTextField TF_usn;
     private javax.swing.JButton bSubjectWise;
     private javax.swing.JButton bView;
+    private javax.swing.JButton b_retry;
     private javax.swing.JButton btn_save;
     public static javax.swing.JLabel curUsnDownloadLabel;
     private javax.swing.JButton jButton1;
@@ -526,9 +558,9 @@ public class MainForm extends javax.swing.JFrame {
     public static void setCurStatusLabel(String str) {
         curUsnDownloadLabel.setText(str);
     }
-
+    
     private void updateProgress() {
-
+        
         usnProgressBar.show();
         usnProgressBar.setMinimum(0);
         usnProgressBar.setMaximum(100);
@@ -537,17 +569,17 @@ public class MainForm extends javax.swing.JFrame {
         task = new Main.DownloadMarksTask();
         task.addPropertyChangeListener(
                 new PropertyChangeListener() {
-
+                    
                     public void propertyChange(PropertyChangeEvent evt) {
                         if ("progress".equals(evt.getPropertyName())) {
                             usnProgressBar.setValue((Integer) evt.getNewValue());
                         }
                     }
                 });
-
+        
         task.execute();
     }
-
+    
     public void clickStop() {
         stopbtn.doClick();
     }

@@ -123,6 +123,8 @@ public class resultFetch {
             }
             MainForm.DF.setStatus(usn, "Success");
         } catch (Exception e) {
+            MainForm.RetryList.add(usn);
+            System.out.println("usn added for retry !");
             System.out.println("fetch failed for " + usn);
             MainForm.DF.setStatus(usn, "failed");
             return false;//if result is not found

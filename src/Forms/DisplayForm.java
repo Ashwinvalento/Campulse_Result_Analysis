@@ -36,18 +36,17 @@ public class DisplayForm extends javax.swing.JFrame {
         int rowCount = 0;
         model = new DefaultTableModel();
 
-        firstTableModel
-                = new DefaultTableModel() {
-                    Class[] types = new Class[]{
-                        //COL. TYPES ARE HERE!!!  
-                        java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class
-                    };
+        firstTableModel = new DefaultTableModel() {
+            Class[] types = new Class[]{
+                //COL. TYPES ARE HERE!!!  
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class
+            };
 
-                    @Override
-                    public Class getColumnClass(int columnIndex) {
-                        return types[columnIndex];
-                    }
-                };
+            @Override
+            public Class getColumnClass(int columnIndex) {
+                return types[columnIndex];
+            }
+        };
 
         model.addColumn("SUBJECT");
         model.addColumn("INTERNAL");

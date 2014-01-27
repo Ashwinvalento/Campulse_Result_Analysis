@@ -9,13 +9,18 @@ import Main.SaveTable;
 import Main.resultFetch;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import run.DBConnect;
 
 public class MainForm extends javax.swing.JFrame {
 
@@ -356,6 +361,18 @@ public class MainForm extends javax.swing.JFrame {
 
     private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
         DF.reset();
+
+        Connection con = DBConnect.connection;
+        Statement stmt;
+        String sql = " DELETE from RESULTTABLE ";
+        try {
+            stmt = con.createStatement();
+            stmt.executeUpdate(sql);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DownloadMarksTask.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         subjectFetchTries = 5;
         subjectFetched = false;
         usnProgressBar.setValue(usnProgressBar.getMinimum());
@@ -441,7 +458,6 @@ public class MainForm extends javax.swing.JFrame {
         df.retrieveSubjectNames();
         DefaultTableModel model = new DefaultTableModel();
         try {
-
             model.addColumn("USN");
             model.addColumn("NAME");
             model.addColumn(MainForm.subNamesV.get(0));
@@ -454,7 +470,7 @@ public class MainForm extends javax.swing.JFrame {
             model.addColumn(MainForm.subNamesV.get(7));
             model.addColumn("TOTAL");
             model.addColumn("RESULT");
-            ResultSet r = df.getDetails("ALL");
+            ResultSet r = df.getDetails("SOME");
 
             while (r.next()) {
                 model.insertRow(count++, new Object[]{r.getString(1), r.getString(2), r.getInt(5), r.getInt(9), r.getInt(13), r.getInt(17), r.getInt(21), r.getInt(25), r.getInt(29), r.getInt(33), r.getInt(35), r.getString(36)});

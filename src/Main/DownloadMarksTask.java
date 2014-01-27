@@ -25,11 +25,13 @@ public class DownloadMarksTask extends SwingWorker<Integer, Integer> {
     public DownloadMarksTask() {
         //initialize 
         Connection con = DBConnect.connection;
-        String sql = " DELETE from RESULTTABLE ";
+
+        // String sql = " DELETE from RESULTTABLE ";
         String query = "INSERT INTO RESULTTABLE values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         try {
-            stmt = con.createStatement();
-            stmt.executeUpdate(sql);
+          //  stmt = con.createStatement();
+            //  stmt.executeUpdate(sql);
+
             pstmt = con.prepareStatement(query);
         } catch (SQLException ex) {
             Logger.getLogger(DownloadMarksTask.class.getName()).log(Level.SEVERE, null, ex);

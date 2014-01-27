@@ -47,14 +47,14 @@ public class SubjectWiseResult extends javax.swing.JFrame {
         model.addColumn("TOTAL");
         model.addColumn("CLASS");
         bSubmit.doClick();
-        studentMarksTable.setAutoCreateRowSorter(true);
-        studentMarksTable.getColumn("USN").setPreferredWidth(100);
-        studentMarksTable.getColumn("NAME").setPreferredWidth(150);
-        studentMarksTable.getColumn("INTERNAL").setPreferredWidth(50);
-        studentMarksTable.getColumn("EXTERNAL").setPreferredWidth(50);
-        studentMarksTable.getColumn("TOTAL").setPreferredWidth(40);
-        studentMarksTable.getColumn("CLASS").setPreferredWidth(40);
-        examType.setSelectedIndex(2);
+        tablestudentMarks.setAutoCreateRowSorter(true);
+        tablestudentMarks.getColumn("USN").setPreferredWidth(100);
+        tablestudentMarks.getColumn("NAME").setPreferredWidth(150);
+        tablestudentMarks.getColumn("INTERNAL").setPreferredWidth(50);
+        tablestudentMarks.getColumn("EXTERNAL").setPreferredWidth(50);
+        tablestudentMarks.getColumn("TOTAL").setPreferredWidth(40);
+        tablestudentMarks.getColumn("CLASS").setPreferredWidth(40);
+        comboExamType.setSelectedIndex(2);
     }
 
     /**
@@ -68,16 +68,16 @@ public class SubjectWiseResult extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
-        subjectCombo = new javax.swing.JComboBox();
+        comboSubject = new javax.swing.JComboBox();
         jLabel2 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         bSubmit = new javax.swing.JButton();
-        lastValue = new javax.swing.JSpinner();
-        firstValue = new javax.swing.JSpinner();
-        examType = new javax.swing.JComboBox();
+        SpinnerLastValue = new javax.swing.JSpinner();
+        spinnerFirstValue = new javax.swing.JSpinner();
+        comboExamType = new javax.swing.JComboBox();
         jLabel4 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        studentMarksTable = new javax.swing.JTable();
+        tablestudentMarks = new javax.swing.JTable();
         lcount = new javax.swing.JLabel();
         bSave = new javax.swing.JButton();
         bClose = new javax.swing.JButton();
@@ -88,11 +88,11 @@ public class SubjectWiseResult extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel3.setText("in");
 
-        subjectCombo.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        subjectCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "All", "Any" }));
-        subjectCombo.addActionListener(new java.awt.event.ActionListener() {
+        comboSubject.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        comboSubject.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "All", "Any" }));
+        comboSubject.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                subjectComboActionPerformed(evt);
+                comboSubjectActionPerformed(evt);
             }
         });
 
@@ -110,17 +110,17 @@ public class SubjectWiseResult extends javax.swing.JFrame {
             }
         });
 
-        lastValue.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        lastValue.setModel(new javax.swing.SpinnerNumberModel(125, 0, 200, 1));
+        SpinnerLastValue.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        SpinnerLastValue.setModel(new javax.swing.SpinnerNumberModel(125, 0, 200, 1));
 
-        firstValue.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        firstValue.setModel(new javax.swing.SpinnerNumberModel(50, 0, 125, 1));
+        spinnerFirstValue.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        spinnerFirstValue.setModel(new javax.swing.SpinnerNumberModel(50, 0, 125, 1));
 
-        examType.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        examType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Internal", "External", "Total" }));
-        examType.addActionListener(new java.awt.event.ActionListener() {
+        comboExamType.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        comboExamType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Internal", "External", "Total" }));
+        comboExamType.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                examTypeActionPerformed(evt);
+                comboExamTypeActionPerformed(evt);
             }
         });
 
@@ -135,49 +135,49 @@ public class SubjectWiseResult extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(53, 53, 53)
-                        .addComponent(subjectCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(comboSubject, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(46, 46, 46)
                         .addComponent(bSubmit, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(26, 26, 26)
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(examType, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(comboExamType, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jLabel4)
                         .addGap(18, 18, 18)
-                        .addComponent(firstValue, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(spinnerFirstValue, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jLabel2)
                         .addGap(18, 18, 18)
-                        .addComponent(lastValue, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(SpinnerLastValue, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(24, Short.MAX_VALUE))
         );
 
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {firstValue, lastValue});
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {SpinnerLastValue, spinnerFirstValue});
 
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(firstValue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(spinnerFirstValue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1)
                     .addComponent(jLabel2)
-                    .addComponent(lastValue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(SpinnerLastValue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
-                    .addComponent(examType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(comboExamType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(subjectCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(comboSubject, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(bSubmit))
                 .addContainerGap(29, Short.MAX_VALUE))
         );
 
-        studentMarksTable.setModel(new javax.swing.table.DefaultTableModel(
+        tablestudentMarks.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
                 {null, null, null, null, null},
@@ -196,7 +196,7 @@ public class SubjectWiseResult extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(studentMarksTable);
+        jScrollPane1.setViewportView(tablestudentMarks);
 
         lcount.setForeground(new java.awt.Color(0, 0, 255));
         lcount.setText("COUNT WILL BE DIPLAYED HERE");
@@ -261,9 +261,9 @@ public class SubjectWiseResult extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void subjectComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subjectComboActionPerformed
+    private void comboSubjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboSubjectActionPerformed
         bSubmit.doClick();
-    }//GEN-LAST:event_subjectComboActionPerformed
+    }//GEN-LAST:event_comboSubjectActionPerformed
 
     private void bSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSubmitActionPerformed
 
@@ -271,29 +271,29 @@ public class SubjectWiseResult extends javax.swing.JFrame {
         ResultSet rs = null;
         String query = "";
         Connection con = DBConnect.connection;
-        int lowLimit = Integer.parseInt(firstValue.getValue().toString()) - 1;
-        int highLimit = Integer.parseInt(lastValue.getValue().toString()) + 1;
-        int typeValue = examType.getSelectedIndex() + 1;
+        int lowLimit = Integer.parseInt(spinnerFirstValue.getValue().toString()) - 1;
+        int highLimit = Integer.parseInt(SpinnerLastValue.getValue().toString()) + 1;
+        int typeValue = comboExamType.getSelectedIndex() + 1;
         //get USN from user
 
         model.setRowCount(0);
-        studentMarksTable.setModel(model);
+        tablestudentMarks.setModel(model);
 
-        if (subjectCombo.getSelectedIndex() == 8 || subjectCombo.getSelectedIndex() == 9) {
+        if (comboSubject.getSelectedIndex() == 8 || comboSubject.getSelectedIndex() == 9) {
 
-            studentMarksTable.getColumn("USN").setPreferredWidth(100);
-            studentMarksTable.getColumn("NAME").setPreferredWidth(150);
-            studentMarksTable.getColumn("INTERNAL").setPreferredWidth(10);
-            studentMarksTable.getColumn("EXTERNAL").setPreferredWidth(10);
-            studentMarksTable.getColumn("TOTAL").setPreferredWidth(40);
-            studentMarksTable.getColumn("CLASS").setPreferredWidth(100);
+            tablestudentMarks.getColumn("USN").setPreferredWidth(100);
+            tablestudentMarks.getColumn("NAME").setPreferredWidth(150);
+            tablestudentMarks.getColumn("INTERNAL").setPreferredWidth(10);
+            tablestudentMarks.getColumn("EXTERNAL").setPreferredWidth(10);
+            tablestudentMarks.getColumn("TOTAL").setPreferredWidth(40);
+            tablestudentMarks.getColumn("CLASS").setPreferredWidth(100);
         } else {
-            studentMarksTable.getColumn("USN").setPreferredWidth(100);
-            studentMarksTable.getColumn("NAME").setPreferredWidth(150);
-            studentMarksTable.getColumn("INTERNAL").setPreferredWidth(50);
-            studentMarksTable.getColumn("EXTERNAL").setPreferredWidth(50);
-            studentMarksTable.getColumn("TOTAL").setPreferredWidth(40);
-            studentMarksTable.getColumn("CLASS").setPreferredWidth(40);
+            tablestudentMarks.getColumn("USN").setPreferredWidth(100);
+            tablestudentMarks.getColumn("NAME").setPreferredWidth(150);
+            tablestudentMarks.getColumn("INTERNAL").setPreferredWidth(50);
+            tablestudentMarks.getColumn("EXTERNAL").setPreferredWidth(50);
+            tablestudentMarks.getColumn("TOTAL").setPreferredWidth(40);
+            tablestudentMarks.getColumn("CLASS").setPreferredWidth(40);
         }
 
         query = "select DISTINCT * from RESULTTABLE";
@@ -304,10 +304,10 @@ public class SubjectWiseResult extends javax.swing.JFrame {
             rs = stmt.executeQuery(query);
             int rowCount = 0;
             while (rs.next()) {
-                if (subjectCombo.getSelectedIndex() == 8) {
+                if (comboSubject.getSelectedIndex() == 8) {
 
                     int flag = 0;
-                    for (int i = 3 + examType.getSelectedIndex(); i < 35; i += 4) {
+                    for (int i = 3 + comboExamType.getSelectedIndex(); i < 35; i += 4) {
                         if (Integer.parseInt(rs.getString(i)) < lowLimit || Integer.parseInt(rs.getString(i)) > highLimit) {
                             flag = 1;
                             //           System.out.println("i is " + i + "value at ith row is :  "+rs.getString(i));
@@ -318,9 +318,9 @@ public class SubjectWiseResult extends javax.swing.JFrame {
                         model.insertRow(rowCount++, new Object[]{rs.getString(1), rs.getString(2), null, null, rs.getString(35), rs.getString(36)});
                     }
 
-                } else if (subjectCombo.getSelectedIndex() == 9) {
+                } else if (comboSubject.getSelectedIndex() == 9) {
                     int flag = 0;
-                    for (int i = 3 + examType.getSelectedIndex(); i < 35; i += 4) {
+                    for (int i = 3 + comboExamType.getSelectedIndex(); i < 35; i += 4) {
                         if (Integer.parseInt(rs.getString(i)) > lowLimit && Integer.parseInt(rs.getString(i)) < highLimit) {
                             flag = 1;
                             break;
@@ -330,7 +330,7 @@ public class SubjectWiseResult extends javax.swing.JFrame {
                         model.insertRow(rowCount++, new Object[]{rs.getString(1), rs.getString(2), null, null, rs.getString(35), rs.getString(36)});
                     }
                 } else {
-                    whichROw = subjectCombo.getSelectedIndex() * 4 + 3;
+                    whichROw = comboSubject.getSelectedIndex() * 4 + 3;
                     // System.out.println("whichROw : "+ whichROw );
                     //System.out.println("typeValue : "+ typeValue);
                     //System.out.println(rs.getString(1) + "  " + rs.getString(whichROw) + " " + rs.getString(whichROw + 1) + " " + rs.getString(whichROw + 2) + " " + rs.getString(whichROw + 3));
@@ -351,7 +351,7 @@ public class SubjectWiseResult extends javax.swing.JFrame {
         } catch (SQLException ex) {
             System.out.println("Error : " + ex);
         }
-        lcount.setText(Integer.toString(model.getRowCount()) + " of them scored between " + firstValue.getValue() + " and " + lastValue.getValue() + " in  " + examType.getSelectedItem().toString() + " of " + subjectCombo.getSelectedItem().toString());
+        lcount.setText(Integer.toString(model.getRowCount()) + " of them scored between " + spinnerFirstValue.getValue() + " and " + SpinnerLastValue.getValue() + " in  " + comboExamType.getSelectedItem().toString() + " of " + comboSubject.getSelectedItem().toString());
     }//GEN-LAST:event_bSubmitActionPerformed
 
     private void bCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCloseActionPerformed
@@ -362,20 +362,20 @@ public class SubjectWiseResult extends javax.swing.JFrame {
         SaveTable ST = new SaveTable(model);
     }//GEN-LAST:event_bSaveActionPerformed
 
-    private void examTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_examTypeActionPerformed
-        if (examType.getSelectedIndex() == 0) {
-            firstValue.setValue(15);
-            lastValue.setValue(25);
-        } else if (examType.getSelectedIndex() == 1) {
-            firstValue.setValue(35);
-            lastValue.setValue(100);
+    private void comboExamTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboExamTypeActionPerformed
+        if (comboExamType.getSelectedIndex() == 0) {
+            spinnerFirstValue.setValue(15);
+            SpinnerLastValue.setValue(25);
+        } else if (comboExamType.getSelectedIndex() == 1) {
+            spinnerFirstValue.setValue(35);
+            SpinnerLastValue.setValue(100);
         } else {
-            firstValue.setValue(50);
-            lastValue.setValue(125);
+            spinnerFirstValue.setValue(50);
+            SpinnerLastValue.setValue(125);
         }
         bSubmit.doClick();
 
-    }//GEN-LAST:event_examTypeActionPerformed
+    }//GEN-LAST:event_comboExamTypeActionPerformed
 
     /**
      * @param args the command line arguments
@@ -413,21 +413,21 @@ public class SubjectWiseResult extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JSpinner SpinnerLastValue;
     private javax.swing.JButton bClose;
     private javax.swing.JButton bSave;
     private javax.swing.JButton bSubmit;
-    private javax.swing.JComboBox examType;
-    private javax.swing.JSpinner firstValue;
+    private javax.swing.JComboBox comboExamType;
+    private javax.swing.JComboBox comboSubject;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JSpinner lastValue;
     private javax.swing.JLabel lcount;
-    private javax.swing.JTable studentMarksTable;
-    private javax.swing.JComboBox subjectCombo;
+    private javax.swing.JSpinner spinnerFirstValue;
+    private javax.swing.JTable tablestudentMarks;
     // End of variables declaration//GEN-END:variables
 
     private void fillSubjectCombo() {
@@ -441,7 +441,7 @@ public class SubjectWiseResult extends javax.swing.JFrame {
         comboBoxItems.add("Any theory sub");
         DefaultComboBoxModel model = new DefaultComboBoxModel(comboBoxItems);
 
-        subjectCombo.setModel(model);
+        comboSubject.setModel(model);
 
     }
 

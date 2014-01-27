@@ -25,7 +25,7 @@ public class DownloadDetailsForm extends javax.swing.JFrame {
         row = 0;
         model = new DefaultTableModel();
 
-        DetailsTable.setModel(model);
+        tableDownloadDetails.setModel(model);
         model.addColumn("USN");
         model.addColumn("status");
     }
@@ -40,7 +40,7 @@ public class DownloadDetailsForm extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        DetailsTable = new javax.swing.JTable();
+        tableDownloadDetails = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -51,7 +51,7 @@ public class DownloadDetailsForm extends javax.swing.JFrame {
             }
         });
 
-        DetailsTable.setModel(new javax.swing.table.DefaultTableModel(
+        tableDownloadDetails.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null}
             },
@@ -67,8 +67,8 @@ public class DownloadDetailsForm extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        DetailsTable.getTableHeader().setReorderingAllowed(false);
-        jScrollPane1.setViewportView(DetailsTable);
+        tableDownloadDetails.getTableHeader().setReorderingAllowed(false);
+        jScrollPane1.setViewportView(tableDownloadDetails);
 
         jLabel1.setText("Marks Fetching Details :");
 
@@ -135,9 +135,9 @@ public class DownloadDetailsForm extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTable DetailsTable;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tableDownloadDetails;
     // End of variables declaration//GEN-END:variables
 
     public void setStatus(String usn, String state) {

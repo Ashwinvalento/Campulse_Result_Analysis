@@ -91,6 +91,12 @@ public class DownloadMarksTask extends SwingWorker<Integer, Integer> {
     }
 
     public void stopFetching() {
-        this.cancel(true);
+        try {
+            this.wait();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(DownloadMarksTask.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        //task.notify();
+        //this.cancel(true);
     }
 }

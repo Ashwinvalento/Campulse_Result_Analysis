@@ -113,6 +113,7 @@ public class ProxyForm extends javax.swing.JFrame {
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), "Configure Proxy to access Internet", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
 
         BG_Proxy.add(RB_noProxy);
+        RB_noProxy.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         RB_noProxy.setText("No Proxy");
         RB_noProxy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -126,6 +127,7 @@ public class ProxyForm extends javax.swing.JFrame {
         });
 
         BG_Proxy.add(RB_manProxy);
+        RB_manProxy.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         RB_manProxy.setText("Manual Proxy Configuaration");
         RB_manProxy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -135,11 +137,19 @@ public class ProxyForm extends javax.swing.JFrame {
 
         jLabel1.setText("HTTP proxy :");
 
+        TF_ProxyIp.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+
         jLabel2.setText("Port :");
+
+        Spin_ProxyPort.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
 
         jLabel3.setText("Secure proxy :");
 
+        TF_secureIp.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+
         jLabel4.setText("Port :");
+
+        Spin_SecurePort.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
 
         CB_sameProxy.setText("Use the same for secure proxy");
         CB_sameProxy.addActionListener(new java.awt.event.ActionListener() {
@@ -163,6 +173,7 @@ public class ProxyForm extends javax.swing.JFrame {
         });
 
         BG_Proxy.add(RB_sysProxy);
+        RB_sysProxy.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         RB_sysProxy.setText("Use System Proxy");
         RB_sysProxy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -177,6 +188,7 @@ public class ProxyForm extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(RB_manProxy)
                     .addComponent(RB_sysProxy)
                     .addComponent(CB_sameProxy)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -187,7 +199,6 @@ public class ProxyForm extends javax.swing.JFrame {
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(Spin_ProxyPort, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(RB_manProxy)
                     .addComponent(RB_noProxy)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -209,11 +220,11 @@ public class ProxyForm extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(RB_noProxy)
+                .addGap(4, 4, 4)
+                .addComponent(RB_sysProxy)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(RB_manProxy)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(RB_sysProxy)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(TF_ProxyIp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)

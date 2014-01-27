@@ -84,19 +84,19 @@ public class DisplayForm extends javax.swing.JFrame {
             } catch (SQLException ex) {
                 Logger.getLogger(DisplayForm.class.getName()).log(Level.SEVERE, null, ex);
             }
-            StudDetails.setModel(firstTableModel);
-            StudentNumberInfo.setText(StudDetails.getRowCount() + " Student Records found");
-            StudDetails.getColumn("Rank").setPreferredWidth(50);
-            StudDetails.getColumn("USN").setPreferredWidth(100);
-            StudDetails.getColumn("Name").setPreferredWidth(150);
-            StudDetails.getColumn("Total").setPreferredWidth(50);
-            StudDetails.getColumn("Class").setPreferredWidth(50);
-            StudDetails.setAutoCreateRowSorter(true);
+            tableStudDetails.setModel(firstTableModel);
+            lStudentNumberInfo.setText(tableStudDetails.getRowCount() + " Student Records found");
+            tableStudDetails.getColumn("Rank").setPreferredWidth(50);
+            tableStudDetails.getColumn("USN").setPreferredWidth(100);
+            tableStudDetails.getColumn("Name").setPreferredWidth(150);
+            tableStudDetails.getColumn("Total").setPreferredWidth(50);
+            tableStudDetails.getColumn("Class").setPreferredWidth(50);
+            tableStudDetails.setAutoCreateRowSorter(true);
         }
 
         retrieveSubjectNames();
         if (firstTableModel.getRowCount() != 0) {
-            fillMarksTable(StudDetails.getValueAt(0, 1).toString());
+            fillMarksTable(tableStudDetails.getValueAt(0, 1).toString());
         }
     }
 
@@ -110,13 +110,13 @@ public class DisplayForm extends javax.swing.JFrame {
     private void initComponents() {
 
         Panel1 = new javax.swing.JPanel();
-        StudentNumberInfo = new javax.swing.JLabel();
+        lStudentNumberInfo = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        StudDetails = new javax.swing.JTable();
-        ClassCombo = new javax.swing.JComboBox();
+        tableStudDetails = new javax.swing.JTable();
+        comboMarkClass = new javax.swing.JComboBox();
         Panel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        StudentMarksTable = new javax.swing.JTable();
+        tableStudentMarks = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         NameLabel = new javax.swing.JLabel();
         jlabel2 = new javax.swing.JLabel();
@@ -130,10 +130,10 @@ public class DisplayForm extends javax.swing.JFrame {
 
         Panel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), "Student Record", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
 
-        StudentNumberInfo.setForeground(new java.awt.Color(0, 51, 255));
-        StudentNumberInfo.setText("Select Students based on class");
+        lStudentNumberInfo.setForeground(new java.awt.Color(0, 51, 255));
+        lStudentNumberInfo.setText("Select Students based on class");
 
-        StudDetails.setModel(new javax.swing.table.DefaultTableModel(
+        tableStudDetails.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -152,40 +152,40 @@ public class DisplayForm extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        StudDetails.addMouseListener(new java.awt.event.MouseAdapter() {
+        tableStudDetails.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                StudDetailsMouseClicked(evt);
+                tableStudDetailsMouseClicked(evt);
             }
         });
-        StudDetails.addKeyListener(new java.awt.event.KeyAdapter() {
+        tableStudDetails.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                StudDetailsKeyPressed(evt);
+                tableStudDetailsKeyPressed(evt);
             }
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                StudDetailsKeyReleased(evt);
+                tableStudDetailsKeyReleased(evt);
             }
         });
-        jScrollPane1.setViewportView(StudDetails);
+        jScrollPane1.setViewportView(tableStudDetails);
 
-        ClassCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "ALL", "FIRST CLASS WITH DISTINCTION", "FIRST CLASS", "SECOND CLASS", "FAIL" }));
-        ClassCombo.addMouseListener(new java.awt.event.MouseAdapter() {
+        comboMarkClass.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "ALL", "FIRST CLASS WITH DISTINCTION", "FIRST CLASS", "SECOND CLASS", "FAIL" }));
+        comboMarkClass.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                ClassComboMouseClicked(evt);
+                comboMarkClassMouseClicked(evt);
             }
         });
-        ClassCombo.addItemListener(new java.awt.event.ItemListener() {
+        comboMarkClass.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                ClassComboItemStateChanged(evt);
+                comboMarkClassItemStateChanged(evt);
             }
         });
-        ClassCombo.addActionListener(new java.awt.event.ActionListener() {
+        comboMarkClass.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ClassComboActionPerformed(evt);
+                comboMarkClassActionPerformed(evt);
             }
         });
-        ClassCombo.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+        comboMarkClass.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                ClassComboPropertyChange(evt);
+                comboMarkClassPropertyChange(evt);
             }
         });
 
@@ -199,8 +199,8 @@ public class DisplayForm extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(Panel1Layout.createSequentialGroup()
                         .addGroup(Panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(StudentNumberInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ClassCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lStudentNumberInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(comboMarkClass, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 152, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -208,9 +208,9 @@ public class DisplayForm extends javax.swing.JFrame {
             Panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(Panel1Layout.createSequentialGroup()
                 .addGap(6, 6, 6)
-                .addComponent(ClassCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(comboMarkClass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(StudentNumberInfo)
+                .addComponent(lStudentNumberInfo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addContainerGap())
@@ -218,8 +218,8 @@ public class DisplayForm extends javax.swing.JFrame {
 
         Panel2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), "Student Marks"));
 
-        StudentMarksTable.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        StudentMarksTable.setModel(new javax.swing.table.DefaultTableModel(
+        tableStudentMarks.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        tableStudentMarks.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
                 {null, null, null, null, null},
@@ -242,11 +242,11 @@ public class DisplayForm extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        StudentMarksTable.setRowHeight(33);
-        StudentMarksTable.setRowSelectionAllowed(false);
-        jScrollPane2.setViewportView(StudentMarksTable);
-        if (StudentMarksTable.getColumnModel().getColumnCount() > 0) {
-            StudentMarksTable.getColumnModel().getColumn(4).setMinWidth(2);
+        tableStudentMarks.setRowHeight(33);
+        tableStudentMarks.setRowSelectionAllowed(false);
+        jScrollPane2.setViewportView(tableStudentMarks);
+        if (tableStudentMarks.getColumnModel().getColumnCount() > 0) {
+            tableStudentMarks.getColumnModel().getColumn(4).setMinWidth(2);
         }
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -351,19 +351,19 @@ public class DisplayForm extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void ClassComboPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_ClassComboPropertyChange
+    private void comboMarkClassPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_comboMarkClassPropertyChange
 
-    }//GEN-LAST:event_ClassComboPropertyChange
+    }//GEN-LAST:event_comboMarkClassPropertyChange
 
-    private void ClassComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ClassComboActionPerformed
+    private void comboMarkClassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboMarkClassActionPerformed
         ResultSet rs;
         int rowCount = 0;
         boolean set = false;
         firstTableModel.setRowCount(0);
-        if (ClassCombo.getSelectedIndex() == 1) {
+        if (comboMarkClass.getSelectedIndex() == 1) {
             set = true;
         }
-        if ((rs = getDetails(ClassCombo.getSelectedItem().toString())) != null) {
+        if ((rs = getDetails(comboMarkClass.getSelectedItem().toString())) != null) {
             try {
                 while (rs.next()) {
                     set = true;
@@ -385,59 +385,59 @@ public class DisplayForm extends javax.swing.JFrame {
             } catch (SQLException ex) {
                 Logger.getLogger(DisplayForm.class.getName()).log(Level.SEVERE, null, ex);
             }
-            StudDetails.setModel(firstTableModel);
-            StudentNumberInfo.setText(StudDetails.getRowCount() + " Student Records found");
-            StudDetails.getColumn("Rank").setPreferredWidth(50);
-            StudDetails.getColumn("USN").setPreferredWidth(100);
-            StudDetails.getColumn("Name").setPreferredWidth(150);
-            StudDetails.getColumn("Total").setPreferredWidth(50);
-            StudDetails.getColumn("Class").setPreferredWidth(50);
-            StudDetails.setAutoCreateRowSorter(true);
-            StudentNumberInfo.setText(StudDetails.getRowCount() + " Student Records found");
+            tableStudDetails.setModel(firstTableModel);
+            lStudentNumberInfo.setText(tableStudDetails.getRowCount() + " Student Records found");
+            tableStudDetails.getColumn("Rank").setPreferredWidth(50);
+            tableStudDetails.getColumn("USN").setPreferredWidth(100);
+            tableStudDetails.getColumn("Name").setPreferredWidth(150);
+            tableStudDetails.getColumn("Total").setPreferredWidth(50);
+            tableStudDetails.getColumn("Class").setPreferredWidth(50);
+            tableStudDetails.setAutoCreateRowSorter(true);
+            lStudentNumberInfo.setText(tableStudDetails.getRowCount() + " Student Records found");
         }
         if (set) {
-            fillMarksTable(StudDetails.getValueAt(0, 1).toString());
+            fillMarksTable(tableStudDetails.getValueAt(0, 1).toString());
         } else {
             NameLabel.setText("");
             ResultLabel.setText("");
             TotalLabel.setText("");
             model.setRowCount(0);
-            JOptionPane.showMessageDialog(null, "No " + ClassCombo.getSelectedItem().toString() + " Students found");
+            JOptionPane.showMessageDialog(null, "No " + comboMarkClass.getSelectedItem().toString() + " Students found");
         }
-    }//GEN-LAST:event_ClassComboActionPerformed
+    }//GEN-LAST:event_comboMarkClassActionPerformed
 
-    private void ClassComboItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_ClassComboItemStateChanged
+    private void comboMarkClassItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboMarkClassItemStateChanged
         // TODO add your handling code here:
 
-    }//GEN-LAST:event_ClassComboItemStateChanged
+    }//GEN-LAST:event_comboMarkClassItemStateChanged
 
-    private void ClassComboMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ClassComboMouseClicked
+    private void comboMarkClassMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_comboMarkClassMouseClicked
         // TODO add your handling code here:
 
-    }//GEN-LAST:event_ClassComboMouseClicked
+    }//GEN-LAST:event_comboMarkClassMouseClicked
 
-    private void StudDetailsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_StudDetailsMouseClicked
-        int selRow = StudDetails.getSelectedRow();
-        String usn = (String) StudDetails.getValueAt(selRow, 1);
+    private void tableStudDetailsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableStudDetailsMouseClicked
+        int selRow = tableStudDetails.getSelectedRow();
+        String usn = (String) tableStudDetails.getValueAt(selRow, 1);
         fillMarksTable(usn);
-    }//GEN-LAST:event_StudDetailsMouseClicked
+    }//GEN-LAST:event_tableStudDetailsMouseClicked
 
     private void bSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSaveActionPerformed
         Main.SaveTable saveTable = new Main.SaveTable(model);
     }//GEN-LAST:event_bSaveActionPerformed
 
-    private void StudDetailsKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_StudDetailsKeyPressed
+    private void tableStudDetailsKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tableStudDetailsKeyPressed
 
-    }//GEN-LAST:event_StudDetailsKeyPressed
+    }//GEN-LAST:event_tableStudDetailsKeyPressed
 
-    private void StudDetailsKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_StudDetailsKeyReleased
+    private void tableStudDetailsKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tableStudDetailsKeyReleased
 
         if (evt.getKeyCode() == KeyEvent.VK_DOWN || evt.getKeyCode() == KeyEvent.VK_UP) {
-            int selRow = StudDetails.getSelectedRow();
-            String usn = (String) StudDetails.getModel().getValueAt(selRow, 1).toString();
+            int selRow = tableStudDetails.getSelectedRow();
+            String usn = (String) tableStudDetails.getModel().getValueAt(selRow, 1).toString();
             fillMarksTable(usn);
         }
-    }//GEN-LAST:event_StudDetailsKeyReleased
+    }//GEN-LAST:event_tableStudDetailsKeyReleased
 
     /**
      * @param args the command line arguments
@@ -505,21 +505,21 @@ public class DisplayForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox ClassCombo;
     private javax.swing.JLabel NameLabel;
     private javax.swing.JPanel Panel1;
     private javax.swing.JPanel Panel2;
     private javax.swing.JLabel ResultLabel;
-    private javax.swing.JTable StudDetails;
-    private javax.swing.JTable StudentMarksTable;
-    private javax.swing.JLabel StudentNumberInfo;
     private javax.swing.JLabel TotalLabel;
     private javax.swing.JButton bSave;
+    private javax.swing.JComboBox comboMarkClass;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel jlabel2;
+    private javax.swing.JLabel lStudentNumberInfo;
+    private javax.swing.JTable tableStudDetails;
+    private javax.swing.JTable tableStudentMarks;
     // End of variables declaration//GEN-END:variables
 
     private void fillMarksTable(String usn) {
@@ -527,7 +527,7 @@ public class DisplayForm extends javax.swing.JFrame {
         String query = null;
         Statement stmt = null;
         model.setRowCount(0);
-        StudentMarksTable.setModel(model);
+        tableStudentMarks.setModel(model);
         query = "select * from RESULTTABLE where USN='" + usn + "'";
 
         try {
@@ -544,7 +544,7 @@ public class DisplayForm extends javax.swing.JFrame {
             TotalLabel.setText(Integer.toString(res.getInt(35)));
             ResultLabel.setText(res.getString(36));
 
-            StudentMarksTable.getColumn("SUBJECT").setPreferredWidth(300);
+            tableStudentMarks.getColumn("SUBJECT").setPreferredWidth(300);
 
         } catch (SQLException ex) {
             System.out.println("Error : " + ex);

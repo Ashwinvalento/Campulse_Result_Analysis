@@ -87,6 +87,9 @@ public class DownloadMarksTask extends SwingWorker<Integer, Integer> {
         MainForm.objCopy.clickStop();
         System.out.println("DONE!!!");
         MainForm.setCurStatusLabel("DOWNLOAD COMPLETE");
+        if (MainForm.autoRetry) {
+            MainForm.objCopy.clickRestart();
+        }
 
     }
 

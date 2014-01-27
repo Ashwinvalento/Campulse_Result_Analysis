@@ -12,16 +12,15 @@ import java.beans.PropertyChangeListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 public class MainForm extends javax.swing.JFrame {
-    
+
     public static int timeout = 10;
+    public static boolean autoRetry = true;
     public static Vector<String> usnList = new Vector<String>();
     public static Vector<String> subNamesV = new Vector<String>();
     public static Vector<String> RetryList = new Vector<String>();
@@ -30,13 +29,15 @@ public class MainForm extends javax.swing.JFrame {
     private final int fetchCount;
     public static MainForm objCopy;
     DownloadMarksTask task;
-    
+
     public MainForm() {
         run.DBConnect.getConnection();
         initComponents();
         usnProgressBar.hide();
         curUsnDownloadLabel.hide();
         stopbtn.setEnabled(false);
+        b_retry.setEnabled(false);
+        CBMenu_AutoRetry.setSelected(true);
         this.setLocationRelativeTo(null);
         fetchCount = 0;
     }
@@ -74,6 +75,7 @@ public class MainForm extends javax.swing.JFrame {
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
+        CBMenu_AutoRetry = new javax.swing.JCheckBoxMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
         setTimeOutMenu = new javax.swing.JMenuItem();
 
@@ -263,6 +265,15 @@ public class MainForm extends javax.swing.JFrame {
 
         jMenu2.setText("Tools");
 
+        CBMenu_AutoRetry.setSelected(true);
+        CBMenu_AutoRetry.setText("Auto Retry");
+        CBMenu_AutoRetry.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CBMenu_AutoRetryActionPerformed(evt);
+            }
+        });
+        jMenu2.add(CBMenu_AutoRetry);
+
         jMenuItem2.setText("Set Proxy");
         jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -348,7 +359,7 @@ public class MainForm extends javax.swing.JFrame {
     private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
         DF.reset();
         usnProgressBar.setValue(usnProgressBar.getMinimum());
-        
+
         if (usnList.size() == 0) {
             JOptionPane.showMessageDialog(null, "Please Add at least 1 USN");
         } else {
@@ -383,9 +394,9 @@ public class MainForm extends javax.swing.JFrame {
         } else if (!m.matches()) {
             JOptionPane.showMessageDialog(null, "Invalid USN Format");
         } else {
-            
+
             resultUrl = "http://results.vtu.ac.in/vitavi.php?submit=true&rid=" + TF_usn.getText();
-            
+
             Runtime rt = Runtime.getRuntime();
             try {
                 Process clientProcess = rt.exec(new String[]{"C:\\Program Files\\Mozilla Firefox\\firefox.exe", "-new-window", resultUrl});
@@ -408,7 +419,7 @@ public class MainForm extends javax.swing.JFrame {
         df.retrieveSubjectNames();
         DefaultTableModel model = new DefaultTableModel();
         try {
-            
+
             model.addColumn("USN");
             model.addColumn("NAME");
             model.addColumn(MainForm.subNamesV.get(0));
@@ -422,10 +433,10 @@ public class MainForm extends javax.swing.JFrame {
             model.addColumn("TOTAL");
             model.addColumn("RESULT");
             ResultSet r = df.getDetails("ALL");
-            
+
             while (r.next()) {
                 model.insertRow(count++, new Object[]{r.getString(1), r.getString(2), r.getInt(5), r.getInt(9), r.getInt(13), r.getInt(17), r.getInt(21), r.getInt(25), r.getInt(29), r.getInt(33), r.getInt(35), r.getString(36)});
-                
+
             }
             SaveTable ST = new SaveTable(model);
         } catch (SQLException ex) {
@@ -445,13 +456,13 @@ public class MainForm extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        
+
         DF.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void setTimeOutMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setTimeOutMenuActionPerformed
         Object[] timeArray = {"5", "10", "15", "20", "25"};
-        
+
         Object str = JOptionPane.showInputDialog(null, "Select the timeout (in seconds) : ", "Set time out", JOptionPane.QUESTION_MESSAGE, null, timeArray, timeArray[1]);
         System.out.println("str is : " + str);
         timeout = Integer.parseInt(str.toString());
@@ -468,13 +479,22 @@ public class MainForm extends javax.swing.JFrame {
             System.out.println(RetryList.get(i));
             usnList.add(RetryList.get(i));
         }
-        
+        RetryList.clear();
         usnProgressBar.setValue(usnProgressBar.getMinimum());
         stopFlag = false;
         submitButton.setEnabled(false);
         stopbtn.setEnabled(true);
         updateProgress();
     }//GEN-LAST:event_b_retryActionPerformed
+
+    private void CBMenu_AutoRetryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CBMenu_AutoRetryActionPerformed
+        // TODO add your handling code here:
+        if (CBMenu_AutoRetry.isSelected()) {
+            autoRetry = true;
+        } else {
+            autoRetry = false;
+        }
+    }//GEN-LAST:event_CBMenu_AutoRetryActionPerformed
 
     /**
      * @param args the command line arguments
@@ -519,7 +539,7 @@ public class MainForm extends javax.swing.JFrame {
          * Create and display the form
          */
         java.awt.EventQueue.invokeLater(new Runnable() {
-            
+
             public void run() {
                 objCopy = new MainForm();
                 objCopy.setVisible(true);
@@ -530,6 +550,7 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.ButtonGroup BGinput;
     private javax.swing.JButton B_GetResult;
     private javax.swing.JButton B_UsnSelect;
+    private javax.swing.JCheckBoxMenuItem CBMenu_AutoRetry;
     private javax.swing.JTextField TF_usn;
     private javax.swing.JButton bSubjectWise;
     private javax.swing.JButton bView;
@@ -558,9 +579,9 @@ public class MainForm extends javax.swing.JFrame {
     public static void setCurStatusLabel(String str) {
         curUsnDownloadLabel.setText(str);
     }
-    
+
     private void updateProgress() {
-        
+
         usnProgressBar.show();
         usnProgressBar.setMinimum(0);
         usnProgressBar.setMaximum(100);
@@ -569,18 +590,22 @@ public class MainForm extends javax.swing.JFrame {
         task = new Main.DownloadMarksTask();
         task.addPropertyChangeListener(
                 new PropertyChangeListener() {
-                    
+
                     public void propertyChange(PropertyChangeEvent evt) {
                         if ("progress".equals(evt.getPropertyName())) {
                             usnProgressBar.setValue((Integer) evt.getNewValue());
                         }
                     }
                 });
-        
+
         task.execute();
     }
-    
+
     public void clickStop() {
         stopbtn.doClick();
+    }
+
+    public void clickRestart() {
+        b_retry.doClick();
     }
 }

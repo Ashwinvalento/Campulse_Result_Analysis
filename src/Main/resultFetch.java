@@ -16,7 +16,6 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
-import javax.swing.JOptionPane;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -35,6 +34,7 @@ public class resultFetch {
     public boolean fetchSubjectNames(String usn, int sem) {
 
         //get proxy Settings
+        System.out.println("fetching subject names ! ");
         setProxy();
         String url = "http://results.vtualerts.com/get_res.php?usn=" + usn;
         if (Forms.EnterUsnForm.sem > 0 && Forms.EnterUsnForm.sem < 9) {
@@ -135,14 +135,13 @@ public class resultFetch {
     }
 
     private void setProxy() {
-
         try {
             String ProxyIP, SecureIP, ProxyPort, SecurePort;
             Properties prop = new Properties();
             prop.load(new FileInputStream("config.ini"));
 
             if (prop.getProperty("NoProxy").equals("true")) {
-                System.out.println("No proxy is set");
+                System.out.println("No proxy is set");              
             } else if (prop.getProperty("SysProxy").equals("true")) {
                 System.out.println("Proxy set to system proxy");
                 setSysProx();

@@ -88,8 +88,10 @@ public class DownloadMarksTask extends SwingWorker<Integer, Integer> {
         // MainForm.objCopy.usnProgressBar.hide();
         MainForm.objCopy.clickStop();
         System.out.println("DONE!!!");
+        MainForm.log("Download Completed.");
+        MainForm.log("Please check download details to see list of USN failed to fetch.");
         MainForm.setCurStatusLabel("DOWNLOAD COMPLETE");
-        if (MainForm.autoRetry) {
+        if (MainForm.autoRetry && MainForm.stopFlag==false) {
             MainForm.objCopy.clickRestart();
         }
 

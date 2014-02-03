@@ -18,7 +18,7 @@ import javax.swing.table.DefaultTableModel;
 import run.DBConnect;
 
 public class DisplayForm extends javax.swing.JFrame {
-
+    
     ResultSet rs = null;
     Connection con = DBConnect.connection;
     DefaultTableModel model;
@@ -28,32 +28,32 @@ public class DisplayForm extends javax.swing.JFrame {
      * Creates new form DisplayForm
      */
     public DisplayForm(String x) {
-
+        
     }
-
+    
     public DisplayForm() {
-
+        
         int rowCount = 0;
         model = new DefaultTableModel();
-
+        
         firstTableModel = new DefaultTableModel() {
             Class[] types = new Class[]{
                 //COL. TYPES ARE HERE!!!  
                 java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class
             };
-
+            
             @Override
             public Class getColumnClass(int columnIndex) {
                 return types[columnIndex];
             }
         };
-
+        
         model.addColumn("SUBJECT");
         model.addColumn("INTERNAL");
         model.addColumn("EXTERNAL");
         model.addColumn("TOTAL");
         model.addColumn("RESULT");
-
+        
         initComponents();
         this.setLocationRelativeTo(null);
         if ((rs = getDetails("ALL")) != null) {
@@ -64,7 +64,7 @@ public class DisplayForm extends javax.swing.JFrame {
             firstTableModel.addColumn("Name");
             firstTableModel.addColumn("Total");
             firstTableModel.addColumn("Class");
-
+            
             try {
                 while (rs.next()) {
                     String temp = rs.getString(4);
@@ -92,7 +92,7 @@ public class DisplayForm extends javax.swing.JFrame {
             StudDetails.getColumn("Class").setPreferredWidth(50);
             StudDetails.setAutoCreateRowSorter(true);
         }
-
+        
         retrieveSubjectNames();
         if (firstTableModel.getRowCount() != 0) {
             fillMarksTable(StudDetails.getValueAt(0, 1).toString());
@@ -377,9 +377,9 @@ public class DisplayForm extends javax.swing.JFrame {
                     } else if (temp.equalsIgnoreCase("FAIL ")) {
                         ToBEInserted = "FAIL";
                     }
-
+                    
                     firstTableModel.insertRow(rowCount++, new Object[]{rowCount, rs.getString(2), rs.getString(1), rs.getString(3), ToBEInserted});
-
+                    
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(DisplayForm.class.getName()).log(Level.SEVERE, null, ex);
@@ -430,7 +430,7 @@ public class DisplayForm extends javax.swing.JFrame {
     }//GEN-LAST:event_StudDetailsKeyPressed
 
     private void StudDetailsKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_StudDetailsKeyReleased
-
+        
         if (evt.getKeyCode() == KeyEvent.VK_DOWN || evt.getKeyCode() == KeyEvent.VK_UP) {
             int selRow = StudDetails.getSelectedRow();
             String usn = (String) StudDetails.getModel().getValueAt(selRow, 1).toString();
@@ -452,7 +452,7 @@ public class DisplayForm extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
-
+                    
                 }
             }
         } catch (ClassNotFoundException ex) {
@@ -477,14 +477,13 @@ public class DisplayForm extends javax.swing.JFrame {
             }
         });
     }
-
+    
     public ResultSet getDetails(String StdClass) {
         Statement stmt = null;
         ResultSet rs = null;
         String query = "";
         //get USN from user
 
-        System.out.println("after trim " + StdClass.trim());
         if (StdClass.equals("ALL")) {
             query = "select DISTINCT NAME,USN,TOTAL,MARKCLASS from RESULTTABLE ORDER BY TOTAL DESC";
         } else if (StdClass.equals("SOME")) {
@@ -492,13 +491,14 @@ public class DisplayForm extends javax.swing.JFrame {
         } else {
             query = "select DISTINCT NAME,USN,TOTAL,MARKCLASS from RESULTTABLE WHERE MARKCLASS = '" + StdClass.trim() + " ' ORDER BY TOTAL DESC";
         }
-
+        
         try {
             stmt = con.createStatement();
             rs = stmt.executeQuery(query);
-
+            
         } catch (SQLException ex) {
             System.out.println("Error : " + ex);
+            MainForm.logError("Error : " + ex);
         }
         return rs;
     }
@@ -528,28 +528,29 @@ public class DisplayForm extends javax.swing.JFrame {
         model.setRowCount(0);
         StudentMarksTable.setModel(model);
         query = "select * from RESULTTABLE where USN='" + usn + "'";
-
+        
         try {
             stmt = con.createStatement();
             res = stmt.executeQuery(query);
             res.next();
             int rowCount = 0;
-
+            
             for (int row = 3; row < 35; row += 4) {
-
+                
                 model.insertRow(rowCount, new Object[]{MainForm.subNamesV.get(rowCount++), res.getInt(row), res.getInt(row + 1), res.getInt(row + 2), res.getString(row + 3)});
             }
             NameLabel.setText(res.getString(2));
             TotalLabel.setText(Integer.toString(res.getInt(35)));
             ResultLabel.setText(res.getString(36));
-
+            
             StudentMarksTable.getColumn("SUBJECT").setPreferredWidth(300);
-
+            
         } catch (SQLException ex) {
             System.out.println("Error : " + ex);
+            MainForm.logError("Error : " + ex);
         }
     }
-
+    
     public void retrieveSubjectNames() {
         MainForm.subNamesV.clear();
         Connection con = DBConnect.connection;
@@ -558,14 +559,14 @@ public class DisplayForm extends javax.swing.JFrame {
         try {
             Statement stmt = con.createStatement();
             rs = stmt.executeQuery(sql);
-
+            
             while (rs.next()) {
                 MainForm.subNamesV.add(rs.getString(1));
             }
         } catch (SQLException ex) {
             Logger.getLogger(resultFetch.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        
     }
-
+    
 }

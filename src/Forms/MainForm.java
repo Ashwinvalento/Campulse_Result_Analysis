@@ -7,6 +7,7 @@ package Forms;
 import Main.DownloadMarksTask;
 import Main.SaveTable;
 import Main.resultFetch;
+import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.Connection;
@@ -20,6 +21,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
 import run.DBConnect;
 
 public class MainForm extends javax.swing.JFrame {
@@ -44,9 +49,11 @@ public class MainForm extends javax.swing.JFrame {
         curUsnDownloadLabel.hide();
         stopbtn.setEnabled(false);
         b_retry.setEnabled(false);
-        CBMenu_AutoRetry.setSelected(true);
+        menuAutoRetry.setSelected(true);
         this.setLocationRelativeTo(null);
         fetchCount = 0;
+        //textAreaLog.setText("Welcome to Result extractor.");
+
     }
 
     /**
@@ -77,14 +84,17 @@ public class MainForm extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         TF_usn = new javax.swing.JTextField();
         B_GetResult = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        textAreaLog = new javax.swing.JTextPane();
         jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
+        menuAboutUs = new javax.swing.JMenu();
         jMenuItem3 = new javax.swing.JMenuItem();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        menuExit = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
-        CBMenu_AutoRetry = new javax.swing.JCheckBoxMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
-        setTimeOutMenu = new javax.swing.JMenuItem();
+        menuAutoRetry = new javax.swing.JCheckBoxMenuItem();
+        menuSetProxy = new javax.swing.JMenuItem();
+        menuSetTimeOut = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Vtu Marks Downloader");
@@ -248,7 +258,22 @@ public class MainForm extends javax.swing.JFrame {
             }
         });
 
-        jMenu1.setText("File");
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), "Details ", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+
+        jScrollPane2.setViewportView(textAreaLog);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
+        );
+
+        menuAboutUs.setText("File");
 
         jMenuItem3.setText("About Us");
         jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
@@ -256,44 +281,44 @@ public class MainForm extends javax.swing.JFrame {
                 jMenuItem3ActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem3);
+        menuAboutUs.add(jMenuItem3);
 
-        jMenuItem1.setText("Exit");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        menuExit.setText("Exit");
+        menuExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                menuExitActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem1);
+        menuAboutUs.add(menuExit);
 
-        jMenuBar1.add(jMenu1);
+        jMenuBar1.add(menuAboutUs);
 
         jMenu2.setText("Tools");
 
-        CBMenu_AutoRetry.setSelected(true);
-        CBMenu_AutoRetry.setText("Auto Retry");
-        CBMenu_AutoRetry.addActionListener(new java.awt.event.ActionListener() {
+        menuAutoRetry.setSelected(true);
+        menuAutoRetry.setText("Auto Retry");
+        menuAutoRetry.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CBMenu_AutoRetryActionPerformed(evt);
+                menuAutoRetryActionPerformed(evt);
             }
         });
-        jMenu2.add(CBMenu_AutoRetry);
+        jMenu2.add(menuAutoRetry);
 
-        jMenuItem2.setText("Set Proxy");
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+        menuSetProxy.setText("Set Proxy");
+        menuSetProxy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem2ActionPerformed(evt);
+                menuSetProxyActionPerformed(evt);
             }
         });
-        jMenu2.add(jMenuItem2);
+        jMenu2.add(menuSetProxy);
 
-        setTimeOutMenu.setText("Set Time Out");
-        setTimeOutMenu.addActionListener(new java.awt.event.ActionListener() {
+        menuSetTimeOut.setText("Set Time Out");
+        menuSetTimeOut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                setTimeOutMenuActionPerformed(evt);
+                menuSetTimeOutActionPerformed(evt);
             }
         });
-        jMenu2.add(setTimeOutMenu);
+        jMenu2.add(menuSetTimeOut);
 
         jMenuBar1.add(jMenu2);
 
@@ -304,7 +329,7 @@ public class MainForm extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(20, Short.MAX_VALUE)
+                .addContainerGap(31, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -320,6 +345,10 @@ public class MainForm extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(usnProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(19, 19, 19))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -335,7 +364,9 @@ public class MainForm extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(usnProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 21, Short.MAX_VALUE)
                     .addComponent(curUsnDownloadLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -347,12 +378,9 @@ public class MainForm extends javax.swing.JFrame {
     }//GEN-LAST:event_B_UsnSelectActionPerformed
 
     private void stopbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopbtnActionPerformed
-        curUsnDownloadLabel.setText("");
+        logError("Result Fetching Interrupted");
         stopFlag = true;
-        submitButton.setEnabled(true);
-        stopbtn.setEnabled(false);
-        task.stopFetching();
-        b_retry.setEnabled(true);
+        clickStop();
     }//GEN-LAST:event_stopbtnActionPerformed
 
     private void bViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bViewActionPerformed
@@ -361,7 +389,8 @@ public class MainForm extends javax.swing.JFrame {
 
     private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
         DF.reset();
-
+        log("Result fetching started ...");
+        log("Please wait till fetching has compleeted.");
         Connection con = DBConnect.connection;
         Statement stmt;
         String sql = " DELETE from RESULTTABLE ";
@@ -379,6 +408,7 @@ public class MainForm extends javax.swing.JFrame {
 
         if (usnList.size() == 0) {
             JOptionPane.showMessageDialog(null, "Please Add at least 1 USN");
+            logError("Please Add atleast 1 USN to fetch result");
         } else {
             stopFlag = false;
             submitButton.setEnabled(false);
@@ -392,9 +422,9 @@ public class MainForm extends javax.swing.JFrame {
                             JOptionPane.showMessageDialog(null, "Error connecting to internet");
                             stopbtn.doClick();
                         } else {
-                            System.out.println("in here !!" + subjectFetchTries);
+                            System.out.println("Subject attemt : " + subjectFetchTries);
                             curUsnDownloadLabel.setVisible(true);
-                            curUsnDownloadLabel.setText("Please wait While we fetch subject details.");
+                            curUsnDownloadLabel.setText("Please wait While we fetch subject details. Attepmt : " + (6 - subjectFetchTries));
                             subjectFetched = r.fetchSubjectNames(usnList.get(0), EnterUsnForm.sem);
                             if (subjectFetched) {
                                 break;
@@ -413,13 +443,13 @@ public class MainForm extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_submitButtonActionPerformed
 
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+    private void menuSetProxyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuSetProxyActionPerformed
         new ProxyForm().setVisible(true);
-    }//GEN-LAST:event_jMenuItem2ActionPerformed
+    }//GEN-LAST:event_menuSetProxyActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void menuExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuExitActionPerformed
         System.exit(0);
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_menuExitActionPerformed
 
     private void B_GetResultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B_GetResultActionPerformed
         String resultUrl = "http://results.vtu.ac.in";
@@ -454,7 +484,7 @@ public class MainForm extends javax.swing.JFrame {
     private void btn_saveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_saveActionPerformed
         int count = 0;
         DisplayForm df = new DisplayForm("Dummy");
-        initComponents();
+        //   initComponents();
         df.retrieveSubjectNames();
         DefaultTableModel model = new DefaultTableModel();
         try {
@@ -494,11 +524,10 @@ public class MainForm extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-
         DF.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void setTimeOutMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setTimeOutMenuActionPerformed
+    private void menuSetTimeOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuSetTimeOutActionPerformed
         Object[] timeArray = {"5", "10", "15", "20", "25"};
 
         Object str = JOptionPane.showInputDialog(null, "Select the timeout (in seconds) : ", "Set time out", JOptionPane.QUESTION_MESSAGE, null, timeArray, timeArray[4]);
@@ -512,32 +541,22 @@ public class MainForm extends javax.swing.JFrame {
         } else {
             System.out.println("cancelled");
         }
-    }//GEN-LAST:event_setTimeOutMenuActionPerformed
+    }//GEN-LAST:event_menuSetTimeOutActionPerformed
 
     private void b_retryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_retryActionPerformed
-        b_retry.setEnabled(false);
-        System.out.println("retrying !!");
-        usnList.clear();
-        for (int i = 0; i < RetryList.size(); i++) {
-            System.out.println(RetryList.get(i));
-            usnList.add(RetryList.get(i));
-        }
-        RetryList.clear();
-        usnProgressBar.setValue(usnProgressBar.getMinimum());
-        stopFlag = false;
-        submitButton.setEnabled(false);
-        stopbtn.setEnabled(true);
-        updateProgress();
+        clickRestart();
     }//GEN-LAST:event_b_retryActionPerformed
 
-    private void CBMenu_AutoRetryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CBMenu_AutoRetryActionPerformed
+    private void menuAutoRetryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuAutoRetryActionPerformed
         // TODO add your handling code here:
-        if (CBMenu_AutoRetry.isSelected()) {
+        if (menuAutoRetry.isSelected()) {
             autoRetry = true;
+            log("Auto retry is Enabled. USN failed to fetch will be retried automatically");
         } else {
             autoRetry = false;
+            log("Auto retry is Disabled. Please Click retry to fetch failed USN list");
         }
-    }//GEN-LAST:event_CBMenu_AutoRetryActionPerformed
+    }//GEN-LAST:event_menuAutoRetryActionPerformed
 
     /**
      * @param args the command line arguments
@@ -586,6 +605,7 @@ public class MainForm extends javax.swing.JFrame {
             public void run() {
                 objCopy = new MainForm();
                 objCopy.setVisible(true);
+                log("Welcome to Result extractor.");
             }
         });
     }
@@ -593,7 +613,6 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.ButtonGroup BGinput;
     private javax.swing.JButton B_GetResult;
     private javax.swing.JButton B_UsnSelect;
-    private javax.swing.JCheckBoxMenuItem CBMenu_AutoRetry;
     private javax.swing.JTextField TF_usn;
     private javax.swing.JButton bSubjectWise;
     private javax.swing.JButton bView;
@@ -606,16 +625,20 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JMenuItem setTimeOutMenu;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JMenu menuAboutUs;
+    private javax.swing.JCheckBoxMenuItem menuAutoRetry;
+    private javax.swing.JMenuItem menuExit;
+    private javax.swing.JMenuItem menuSetProxy;
+    private javax.swing.JMenuItem menuSetTimeOut;
     private javax.swing.JButton stopbtn;
     private javax.swing.JButton submitButton;
+    private javax.swing.JTextPane textAreaLog;
     public javax.swing.JProgressBar usnProgressBar;
     // End of variables declaration//GEN-END:variables
 
@@ -645,10 +668,48 @@ public class MainForm extends javax.swing.JFrame {
     }
 
     public void clickStop() {
-        stopbtn.doClick();
+        curUsnDownloadLabel.setText("");
+        submitButton.setEnabled(true);
+        // stopbtn.setEnabled(false);
+        task.stopFetching();
+        b_retry.setEnabled(true);
     }
 
     public void clickRestart() {
-        b_retry.doClick();
+        b_retry.setEnabled(false);
+        log("Retrying to fetch Failed Usn list.");
+        log("Please Wait !");
+        System.out.println("retrying !!");
+        usnList.clear();
+        for (int i = 0; i < RetryList.size(); i++) {
+            System.out.println(RetryList.get(i));
+            usnList.add(RetryList.get(i));
+        }
+        RetryList.clear();
+        usnProgressBar.setValue(usnProgressBar.getMinimum());
+        stopFlag = false;
+        submitButton.setEnabled(false);
+        stopbtn.setEnabled(true);
+        updateProgress();
+    }
+
+    public static void log(String text) {  // normal log with black text
+        // objCopy.textAreaLog.setText(objCopy.textAreaLog.getText() + text + "\n");
+        objCopy.appendToPane("> " + text + "\n", Color.BLACK);
+    }
+
+    public static void logError(String text) { // error log with red text
+        objCopy.appendToPane("> " + text + "\n", Color.RED);
+    }
+
+    private void appendToPane(String msg, Color c) { // used by error log to make text red
+        StyleContext sc = StyleContext.getDefaultStyleContext();
+        AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, c);
+        aset = sc.addAttribute(aset, StyleConstants.FontFamily, "Lucida Console");
+        aset = sc.addAttribute(aset, StyleConstants.Alignment, StyleConstants.ALIGN_JUSTIFIED);
+        int len = textAreaLog.getDocument().getLength();
+        textAreaLog.setCaretPosition(len);
+        textAreaLog.setCharacterAttributes(aset, false);
+        textAreaLog.replaceSelection(msg);
     }
 }

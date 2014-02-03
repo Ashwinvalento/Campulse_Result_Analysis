@@ -46,6 +46,7 @@ public class SubjectWiseResult extends javax.swing.JFrame {
         model.addColumn("EXTERNAL");
         model.addColumn("TOTAL");
         model.addColumn("CLASS");
+
         bSubmit.doClick();
         studentMarksTable.setAutoCreateRowSorter(true);
         studentMarksTable.getColumn("USN").setPreferredWidth(100);
@@ -115,7 +116,7 @@ public class SubjectWiseResult extends javax.swing.JFrame {
         lastValue.setModel(new javax.swing.SpinnerNumberModel(125, 0, 200, 1));
 
         firstValue.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        firstValue.setModel(new javax.swing.SpinnerNumberModel(50, 0, 125, 1));
+        firstValue.setModel(new javax.swing.SpinnerNumberModel(0, 0, 125, 1));
 
         examType.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         examType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Internal", "External", "Total", "Failed" }));
@@ -305,7 +306,7 @@ public class SubjectWiseResult extends javax.swing.JFrame {
             rs = stmt.executeQuery(query);
             int rowCount = 0;
             while (rs.next()) {
-                if (examType.getSelectedIndex() == 3 && subjectCombo.getSelectedIndex()<8) {
+                if (examType.getSelectedIndex() == 3 && subjectCombo.getSelectedIndex() < 8) {
                     int RowNum = subjectCombo.getSelectedIndex() * 4 + 6;
                     if (rs.getString(RowNum).equalsIgnoreCase("f")) {
                         model.insertRow(rowCount++, new Object[]{rs.getString(1), rs.getString(2), Integer.parseInt(rs.getString(RowNum - 3)), Integer.parseInt(rs.getString(RowNum - 2)), Integer.parseInt(rs.getString(RowNum - 1)), rs.getString(RowNum)});

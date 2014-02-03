@@ -27,7 +27,7 @@ import javax.swing.JOptionPane;
  */
 public class EnterUsnForm extends javax.swing.JFrame {
 
-    public static Vector<String> localUsnList = new Vector<>();
+    boolean modified = false;
     public static int sem = 0;
     DefaultListModel list = new DefaultListModel();
     extractUSN e;
@@ -45,7 +45,7 @@ public class EnterUsnForm extends javax.swing.JFrame {
 
         list.clear();
         for (int i = 0; i < MainForm.usnList.size(); i++) {
-           // System.out.println(MainForm.usnList.get(i));
+            // System.out.println(MainForm.usnList.get(i));
             list.addElement(MainForm.usnList.get(i));
         }
         List_Usn.setModel(list);
@@ -352,8 +352,10 @@ public class EnterUsnForm extends javax.swing.JFrame {
     }//GEN-LAST:event_TF_fromActionPerformed
 
     private void B_multipleAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B_multipleAddActionPerformed
+        Vector<String> localUsnList = new Vector<>();
         String fromUsn = TF_from.getText();
         String toUsn = TF_to.getText();
+
         //Pattern p = Pattern.compile("4[pP][aA][0-9]{2}[a-zA-Z]{2}[0-9]{3}");
         Pattern p = Pattern.compile("4[a-zA-Z][a-zA-Z][0-9]{2}[a-zA-Z]{2}[0-9]{3}");
         Matcher mFr = p.matcher(fromUsn);
@@ -385,24 +387,24 @@ public class EnterUsnForm extends javax.swing.JFrame {
             }
 
             for (int i = 0; i < localUsnList.size(); i++) {
-                System.out.println(localUsnList.get(i));
                 list.addElement(localUsnList.get(i));
-
             }
             List_Usn.setModel(list);
+
+            modified = true;
+            MainForm.log("Adding USN from " + fromUsn + " to " + toUsn);
         }
-        System.out.println("usn matcher is " + usnMatcher);
     }//GEN-LAST:event_B_multipleAddActionPerformed
 
     private void B_singleAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B_singleAddActionPerformed
-        // Pattern p = Pattern.compile("4[pP][aA][0-9]{2}[a-zA-Z]{2}[0-9]{3}");
+
+// Pattern p = Pattern.compile("4[pP][aA][0-9]{2}[a-zA-Z]{2}[0-9]{3}");
         Pattern p = Pattern.compile("4[a-zA-Z][a-zA-Z][0-9]{2}[a-zA-Z]{2}[0-9]{3}");
         String Str_singleUsn = TF_SingleUsn.getText();
         String trimmedUsn = null;
         Matcher m = p.matcher(Str_singleUsn);
         if (!Str_singleUsn.equals("")) {
             trimmedUsn = Str_singleUsn.substring(0, 7);
-            System.out.println("trimmed usn = " + trimmedUsn);
         }
         if (Str_singleUsn.equals("")) {
             JOptionPane.showMessageDialog(null, "Please Enter The USN ");
@@ -418,13 +420,15 @@ public class EnterUsnForm extends javax.swing.JFrame {
             }
             list.addElement(Str_singleUsn);
             List_Usn.setModel(list);
+            modified = true;
+            MainForm.log("Adding USN " + Str_singleUsn);
         }
-        System.out.println("usn matcher is " + usnMatcher);
     }//GEN-LAST:event_B_singleAddActionPerformed
 
     private void ipFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ipFileButtonActionPerformed
         //extractUSN.usnList.clear();
         //Create a file chooser
+        Vector<String> FileUsn = new Vector<>();
         JFileChooser fc = null;
         String inFile;
         try {
@@ -440,13 +444,16 @@ public class EnterUsnForm extends javax.swing.JFrame {
             //This is where a real application would open the file.
             inFile = file.getAbsolutePath();
             saveCurrentDirectory(file.getParentFile().getAbsolutePath());
-            e = new extractUSN(inFile);
-            list.clear();
-            for (int i = 0; i < localUsnList.size(); i++) {
-                System.out.println(localUsnList.get(i));
-                list.addElement(localUsnList.get(i));
+            //e = new extractUSN(inFile);
+            e = new extractUSN();
+            FileUsn = e.getUsnFromFile(inFile);
+            //list.clear();
+            for (int i = 0; i < FileUsn.size(); i++) {
+                //localUsnList.add(FileUsn.get(i));
+                list.addElement(FileUsn.get(i));
             }
             List_Usn.setModel(list);
+            modified = true;
 
         } else {
             System.out.println("Open command cancelled by user.");
@@ -454,11 +461,15 @@ public class EnterUsnForm extends javax.swing.JFrame {
     }//GEN-LAST:event_ipFileButtonActionPerformed
 
     private void B_doneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B_doneActionPerformed
-        sem = Integer.parseInt(Combo_sem.getSelectedItem().toString());
-        for (int i = 0; i < list.size(); i++) {
-            MainForm.usnList.add(list.getElementAt(i).toString());
-            this.dispose();
+        if (modified) {
+            MainForm.usnList.clear();
+            sem = Integer.parseInt(Combo_sem.getSelectedItem().toString());
+            for (int i = 0; i < list.size(); i++) {
+                MainForm.usnList.add(list.getElementAt(i).toString());
+            }
         }
+        this.dispose();
+
     }//GEN-LAST:event_B_doneActionPerformed
 
     private void B_cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B_cancelActionPerformed
@@ -468,11 +479,17 @@ public class EnterUsnForm extends javax.swing.JFrame {
     private void bClearAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bClearAllActionPerformed
         list.removeAllElements();
         MainForm.usnList.clear();
+        modified = true;
         usnMatcher = "";
+        MainForm.log("All USN cleared");
     }//GEN-LAST:event_bClearAllActionPerformed
 
     private void bDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bDeleteActionPerformed
-        list.removeElementAt(List_Usn.getSelectedIndex());
+        if (List_Usn.getSelectedIndex() != -1) {
+            MainForm.logError("Deleted USN : " + List_Usn.getSelectedValue());
+            list.removeElementAt(List_Usn.getSelectedIndex());
+            modified = true;
+        }
     }//GEN-LAST:event_bDeleteActionPerformed
 
     private void saveCurrentDirectory(String absolutePath) {
@@ -518,16 +535,21 @@ public class EnterUsnForm extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(EnterUsnForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EnterUsnForm.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(EnterUsnForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EnterUsnForm.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(EnterUsnForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EnterUsnForm.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(EnterUsnForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EnterUsnForm.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 

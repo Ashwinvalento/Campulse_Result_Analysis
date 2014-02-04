@@ -104,7 +104,7 @@ public class resultFetch {
             Element StdName = doc.select("div").select("B:eq(0)").first();
             name = StdName.toString().split(">")[1].split(Pattern.quote("("))[0];
             System.out.println("name is : " + name);
-
+            
             Element markclass = doc.select("table:eq(1)").select("td:eq(3)").select("b:eq(0)").first();
             mk = markclass.toString().split(";")[2].split("<")[0];
             Element firstTableMarks = doc.select("table:eq(3)").first();

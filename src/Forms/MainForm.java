@@ -52,8 +52,6 @@ public class MainForm extends javax.swing.JFrame {
         menuAutoRetry.setSelected(true);
         this.setLocationRelativeTo(null);
         fetchCount = 0;
-        //textAreaLog.setText("Welcome to Result extractor.");
-
     }
 
     /**
@@ -260,6 +258,7 @@ public class MainForm extends javax.swing.JFrame {
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), "Details ", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
 
+        textAreaLog.setBackground(new java.awt.Color(0, 0, 0));
         jScrollPane2.setViewportView(textAreaLog);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -694,7 +693,6 @@ public class MainForm extends javax.swing.JFrame {
     }
 
     public static void log(String text) {  // normal log with black text
-        // objCopy.textAreaLog.setText(objCopy.textAreaLog.getText() + text + "\n");
         objCopy.appendToPane("> " + text + "\n", Color.BLACK);
     }
 
@@ -702,7 +700,7 @@ public class MainForm extends javax.swing.JFrame {
         objCopy.appendToPane("> " + text + "\n", Color.RED);
     }
 
-    private void appendToPane(String msg, Color c) { // used by error log to make text red
+    private void appendToPane(String msg, Color c) { // used by error log to make text red        
         StyleContext sc = StyleContext.getDefaultStyleContext();
         AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, c);
         aset = sc.addAttribute(aset, StyleConstants.FontFamily, "Lucida Console");

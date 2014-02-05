@@ -72,18 +72,21 @@ public final class DBConnect {
                 + ")";
 
         String query2 = "CREATE TABLE \"SUBJECTTABLE\" (\"subjectname\" VARCHAR DEFAULT \"SUBJECT\" )";
+
+        String query3 = "CREATE TABLE \"sub_table\" (\"usn\" VARCHAR NOT NULL , \"subname\" VARCHAR NOT NULL , \"internal\" INTEGER, \"external\" INTEGER, \"total\" INTEGER, \"result\" CHAR, PRIMARY KEY (\"usn\", \"subname\"))";
+        String query4 = "CREATE TABLE \"main\" (\"usn\" VARCHAR, \"name \" VARCHAR, \"f_total\" INTEGER, \"f_result\" VARCHAR)";
         try {
             stmt = connection.createStatement();
             stmt1 = connection.createStatement();
 
-            stmt.executeUpdate(query1);
+            stmt.executeUpdate(query3);
             System.out.println("Result Table created");
-            stmt1.executeUpdate(query2);
+            stmt1.executeUpdate(query4);
             System.out.println("Subject table created");
-            
+
         } catch (SQLException ex) {
             //Logger.getLogger(DBConnect.class.getName()).log(Level.SEVERE, null, ex);
-            
+
             System.out.println("Table already exists .");
         }
 

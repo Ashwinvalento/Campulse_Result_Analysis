@@ -6,7 +6,6 @@ package Forms;
  */
 import Main.DownloadMarksTask;
 import Main.SaveTable;
-import Main.resultFetch;
 import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -390,7 +389,7 @@ public class MainForm extends javax.swing.JFrame {
         DF.reset();
         log("Result fetching started ...");
         log("Please wait till fetching has compleeted.");
-        Connection con = DBConnect.connection;
+      /*  Connection con = DBConnect.connection;
         Statement stmt;
         String sql = " DELETE from RESULTTABLE ";
         try {
@@ -398,11 +397,51 @@ public class MainForm extends javax.swing.JFrame {
             stmt.executeUpdate(sql);
 
         } catch (SQLException ex) {
+            log("Deleting previous records !");
             Logger.getLogger(DownloadMarksTask.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
+        /*
+         subjectFetchTries = 5;
+         subjectFetched = false;
+         usnProgressBar.setValue(usnProgressBar.getMinimum());
 
-        subjectFetchTries = 5;
-        subjectFetched = false;
+         if (usnList.size() == 0) {
+         JOptionPane.showMessageDialog(null, "Please Add at least 1 USN");
+         logError("Please Add atleast 1 USN to fetch result");
+         } else {
+         stopFlag = false;
+         submitButton.setEnabled(false);
+         stopbtn.setEnabled(true);
+         final resultFetch r = new resultFetch();
+         new Thread() {
+         public void run() {
+         while (subjectFetchTries >= 0 && !subjectFetched) {
+         if (subjectFetchTries == 0) {
+         System.out.println("Subject fetching terminated");
+         JOptionPane.showMessageDialog(null, "Error connecting to internet");
+         stopbtn.doClick();
+         } else {
+         System.out.println("Subject attemt : " + subjectFetchTries);
+         curUsnDownloadLabel.setVisible(true);
+         curUsnDownloadLabel.setText("Please wait While we fetch subject details. Attepmt : " + (6 - subjectFetchTries));
+         subjectFetched = r.fetchSubjectNames(usnList.get(0), EnterUsnForm.sem);
+         if (subjectFetched) {
+         break;
+         }
+         }
+         subjectFetchTries--;
+         }
+         if (subjectFetched) {
+         curUsnDownloadLabel.setText("Subject names downloaded.");
+         System.out.println("Subject fetched ");
+         updateProgress();
+         }
+
+         }
+         }.start();
+         }*/
+
+        //*--------------- new code starts here ----------------------*
         usnProgressBar.setValue(usnProgressBar.getMinimum());
 
         if (usnList.size() == 0) {
@@ -412,34 +451,9 @@ public class MainForm extends javax.swing.JFrame {
             stopFlag = false;
             submitButton.setEnabled(false);
             stopbtn.setEnabled(true);
-            final resultFetch r = new resultFetch();
-            new Thread() {
-                public void run() {
-                    while (subjectFetchTries >= 0 && !subjectFetched) {
-                        if (subjectFetchTries == 0) {
-                            System.out.println("Subject fetching terminated");
-                            JOptionPane.showMessageDialog(null, "Error connecting to internet");
-                            stopbtn.doClick();
-                        } else {
-                            System.out.println("Subject attemt : " + subjectFetchTries);
-                            curUsnDownloadLabel.setVisible(true);
-                            curUsnDownloadLabel.setText("Please wait While we fetch subject details. Attepmt : " + (6 - subjectFetchTries));
-                            subjectFetched = r.fetchSubjectNames(usnList.get(0), EnterUsnForm.sem);
-                            if (subjectFetched) {
-                                break;
-                            }
-                        }
-                        subjectFetchTries--;
-                    }
-                    if (subjectFetched) {
-                        curUsnDownloadLabel.setText("Subject names downloaded.");
-                        System.out.println("Subject fetched ");
-                        updateProgress();
-                    }
-
-                }
-            }.start();
+            updateProgress();
         }
+
     }//GEN-LAST:event_submitButtonActionPerformed
 
     private void menuSetProxyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuSetProxyActionPerformed

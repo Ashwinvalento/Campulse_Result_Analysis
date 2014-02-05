@@ -5,12 +5,10 @@ package Forms;
  * and open the template in the editor.
  */
 import Main.DownloadMarksTask;
-import Main.SaveTable;
 import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Vector;
@@ -19,21 +17,23 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.text.AttributeSet;
+import javax.swing.text.DefaultCaret;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import run.DBConnect;
+import run.DBInterface;
 
-public class MainForm extends javax.swing.JFrame {
+public class MainForm extends javax.swing.JFrame implements DBInterface {
 
     public static int timeout = 25;
     public static boolean autoRetry = true;
+    public static int retrylimit = 10;
     public static Vector<String> usnList = new Vector<String>();
     public static Vector<String> subNamesV = new Vector<String>();
     public static Vector<String> RetryList = new Vector<String>();
-    public static boolean stopFlag = false;
+    public static boolean stopFlag = true;
     public static DownloadDetailsForm DF = new DownloadDetailsForm();
     private final int fetchCount;
     public static MainForm objCopy;
@@ -44,8 +44,8 @@ public class MainForm extends javax.swing.JFrame {
     public MainForm() {
         run.DBConnect.getConnection();
         initComponents();
-        usnProgressBar.hide();
-        curUsnDownloadLabel.hide();
+        DefaultCaret caret = (DefaultCaret) textAreaLog.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
         stopbtn.setEnabled(false);
         b_retry.setEnabled(false);
         menuAutoRetry.setSelected(true);
@@ -76,7 +76,6 @@ public class MainForm extends javax.swing.JFrame {
         btn_save = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         b_retry = new javax.swing.JButton();
-        curUsnDownloadLabel = new javax.swing.JLabel();
         usnProgressBar = new javax.swing.JProgressBar(0,100);
         jLabel3 = new javax.swing.JLabel();
         TF_usn = new javax.swing.JTextField();
@@ -327,26 +326,24 @@ public class MainForm extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(31, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(37, 37, 37)
-                            .addComponent(jLabel3)
-                            .addGap(18, 18, 18)
-                            .addComponent(TF_usn, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(18, 18, 18)
-                            .addComponent(B_GetResult, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(curUsnDownloadLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(usnProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(19, 19, 19))
-            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(37, 37, 37)
+                                .addComponent(jLabel3)
+                                .addGap(18, 18, 18)
+                                .addComponent(TF_usn, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(B_GetResult, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(usnProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 419, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(19, 19, 19))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -359,9 +356,7 @@ public class MainForm extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(usnProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 21, Short.MAX_VALUE)
-                    .addComponent(curUsnDownloadLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(usnProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -387,66 +382,29 @@ public class MainForm extends javax.swing.JFrame {
 
     private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
         DF.reset();
+        log("Deleting previous records !");
         log("Result fetching started ...");
         log("Please wait till fetching has compleeted.");
-      /*  Connection con = DBConnect.connection;
-        Statement stmt;
-        String sql = " DELETE from RESULTTABLE ";
+        Connection con = DBConnect.connection;
+        Statement stmt, stmt1;
+        String query1 = " DELETE from " + STUDENT_DETAILS;
+        String query2 = "DELETE FROM " + SUBJECT_DETAILS;
         try {
             stmt = con.createStatement();
-            stmt.executeUpdate(sql);
+            stmt1 = con.createStatement();
+            stmt.executeUpdate(query1);
+            stmt1.executeUpdate(query2);
 
         } catch (SQLException ex) {
-            log("Deleting previous records !");
+            log(ex.getMessage());
             Logger.getLogger(DownloadMarksTask.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
-        /*
-         subjectFetchTries = 5;
-         subjectFetched = false;
-         usnProgressBar.setValue(usnProgressBar.getMinimum());
-
-         if (usnList.size() == 0) {
-         JOptionPane.showMessageDialog(null, "Please Add at least 1 USN");
-         logError("Please Add atleast 1 USN to fetch result");
-         } else {
-         stopFlag = false;
-         submitButton.setEnabled(false);
-         stopbtn.setEnabled(true);
-         final resultFetch r = new resultFetch();
-         new Thread() {
-         public void run() {
-         while (subjectFetchTries >= 0 && !subjectFetched) {
-         if (subjectFetchTries == 0) {
-         System.out.println("Subject fetching terminated");
-         JOptionPane.showMessageDialog(null, "Error connecting to internet");
-         stopbtn.doClick();
-         } else {
-         System.out.println("Subject attemt : " + subjectFetchTries);
-         curUsnDownloadLabel.setVisible(true);
-         curUsnDownloadLabel.setText("Please wait While we fetch subject details. Attepmt : " + (6 - subjectFetchTries));
-         subjectFetched = r.fetchSubjectNames(usnList.get(0), EnterUsnForm.sem);
-         if (subjectFetched) {
-         break;
-         }
-         }
-         subjectFetchTries--;
-         }
-         if (subjectFetched) {
-         curUsnDownloadLabel.setText("Subject names downloaded.");
-         System.out.println("Subject fetched ");
-         updateProgress();
-         }
-
-         }
-         }.start();
-         }*/
-
+        }
         //*--------------- new code starts here ----------------------*
         usnProgressBar.setValue(usnProgressBar.getMinimum());
 
         if (usnList.size() == 0) {
-            JOptionPane.showMessageDialog(null, "Please Add at least 1 USN");
             logError("Please Add atleast 1 USN to fetch result");
+            JOptionPane.showMessageDialog(null, "Please Add at least 1 USN");
         } else {
             stopFlag = false;
             submitButton.setEnabled(false);
@@ -495,41 +453,41 @@ public class MainForm extends javax.swing.JFrame {
     }//GEN-LAST:event_bSubjectWiseActionPerformed
 
     private void btn_saveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_saveActionPerformed
-        int count = 0;
-        DisplayForm df = new DisplayForm("Dummy");
-        //   initComponents();
-        df.retrieveSubjectNames();
-        DefaultTableModel model = new DefaultTableModel();
-        try {
-            model.addColumn("USN");
-            model.addColumn("NAME");
-            model.addColumn(MainForm.subNamesV.get(0));
-            model.addColumn(MainForm.subNamesV.get(1));
-            model.addColumn(MainForm.subNamesV.get(2));
-            model.addColumn(MainForm.subNamesV.get(3));
-            model.addColumn(MainForm.subNamesV.get(4));
-            model.addColumn(MainForm.subNamesV.get(5));
-            model.addColumn(MainForm.subNamesV.get(6));
-            model.addColumn(MainForm.subNamesV.get(7));
-            model.addColumn("TOTAL");
-            model.addColumn("RESULT");
-            ResultSet r = df.getDetails("SOME");
+        /*int count = 0;
+         DisplayForm df = new DisplayForm("Dummy");
+         //   initComponents();
+         df.retrieveSubjectNames();
+         DefaultTableModel model = new DefaultTableModel();
+         try {
+         model.addColumn("USN");
+         model.addColumn("NAME");
+         model.addColumn(MainForm.subNamesV.get(0));
+         model.addColumn(MainForm.subNamesV.get(1));
+         model.addColumn(MainForm.subNamesV.get(2));
+         model.addColumn(MainForm.subNamesV.get(3));
+         model.addColumn(MainForm.subNamesV.get(4));
+         model.addColumn(MainForm.subNamesV.get(5));
+         model.addColumn(MainForm.subNamesV.get(6));
+         model.addColumn(MainForm.subNamesV.get(7));
+         model.addColumn("TOTAL");
+         model.addColumn("RESULT");
+         ResultSet r = df.getDetails("SOME");
 
-            while (r.next()) {
-                model.insertRow(count++, new Object[]{r.getString(1), r.getString(2), r.getInt(5), r.getInt(9), r.getInt(13), r.getInt(17), r.getInt(21), r.getInt(25), r.getInt(29), r.getInt(33), r.getInt(35), r.getString(36)});
+         while (r.next()) {
+         model.insertRow(count++, new Object[]{r.getString(1), r.getString(2), r.getInt(5), r.getInt(9), r.getInt(13), r.getInt(17), r.getInt(21), r.getInt(25), r.getInt(29), r.getInt(33), r.getInt(35), r.getString(36)});
 
-            }
-            SaveTable ST = new SaveTable(model);
-        } catch (SQLException ex) {
-            //  Logger.getLogger(MainForm.class
-            //          .getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(this, "Couldn't save any data ", "Error!", JOptionPane.ERROR_MESSAGE);
-        } catch (Exception ex) {
-            //  Logger.getLogger(MainForm.class
-            //          .getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(this, "Failed to save :  " + ex.getMessage(), "Error!", JOptionPane.ERROR_MESSAGE);
-        }
-
+         }
+         SaveTable ST = new SaveTable(model);
+         } catch (SQLException ex) {
+         //  Logger.getLogger(MainForm.class
+         //          .getName()).log(Level.SEVERE, null, ex);
+         JOptionPane.showMessageDialog(this, "Couldn't save any data ", "Error!", JOptionPane.ERROR_MESSAGE);
+         } catch (Exception ex) {
+         //  Logger.getLogger(MainForm.class
+         //          .getName()).log(Level.SEVERE, null, ex);
+         JOptionPane.showMessageDialog(this, "Failed to save :  " + ex.getMessage(), "Error!", JOptionPane.ERROR_MESSAGE);
+         }
+         */
     }//GEN-LAST:event_btn_saveActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
@@ -564,6 +522,25 @@ public class MainForm extends javax.swing.JFrame {
         // TODO add your handling code here:
         if (menuAutoRetry.isSelected()) {
             autoRetry = true;
+            Object[] limitArray = {"1", "3", "5", "10", "20", "INF"};
+
+            Object str = JOptionPane.showInputDialog(null, "Select Number of retry Attempts : ", "Set Retry Attempts", JOptionPane.QUESTION_MESSAGE, null, limitArray, limitArray[3]);
+
+            if (str != null) {
+                MainForm.log("Auto Retry Attempts set to : " + str);
+                if (str.equals("INF")) {
+                    retrylimit = 999;
+                } else {
+                    retrylimit = Integer.parseInt(str.toString());
+                }
+                if (retrylimit == 0) {
+                    timeout = 10;
+                }
+
+            } else {
+                System.out.println("cancelled");
+            }
+
             log("Auto retry is Enabled. USN failed to fetch will be retried automatically");
         } else {
             autoRetry = false;
@@ -631,7 +608,6 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JButton bView;
     private javax.swing.JButton b_retry;
     private javax.swing.JButton btn_save;
-    public static javax.swing.JLabel curUsnDownloadLabel;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -655,16 +631,9 @@ public class MainForm extends javax.swing.JFrame {
     public javax.swing.JProgressBar usnProgressBar;
     // End of variables declaration//GEN-END:variables
 
-    public static void setCurStatusLabel(String str) {
-        curUsnDownloadLabel.setText(str);
-    }
-
     private void updateProgress() {
-
-        usnProgressBar.show();
         usnProgressBar.setMinimum(0);
         usnProgressBar.setMaximum(100);
-        //usnProgressBar.setMaximum(extractUSN.usnList.size());
 
         task = new Main.DownloadMarksTask();
         task.addPropertyChangeListener(
@@ -681,7 +650,6 @@ public class MainForm extends javax.swing.JFrame {
     }
 
     public void clickStop() {
-        curUsnDownloadLabel.setText("");
         submitButton.setEnabled(true);
         // stopbtn.setEnabled(false);
         task.stopFetching();

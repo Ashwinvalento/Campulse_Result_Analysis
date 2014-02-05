@@ -7,19 +7,13 @@ import java.net.InetSocketAddress;
 import java.net.ProxySelector;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import run.DBConnect;
 
 public class resultFetch {
 
@@ -31,6 +25,10 @@ public class resultFetch {
     String mk;
     String name;
 
+    public resultFetch() {
+        setProxy();
+    }
+/*
     public boolean fetchSubjectNames(String usn, int sem) {
 
         //get proxy Settings
@@ -84,11 +82,8 @@ public class resultFetch {
         return true;
 
     }
-
-    public resultFetch() {
-        setProxy();
-    }
-
+*/
+    
     public boolean FetchTheresult(String usn, int sem) {
         Document doc;
         //String url = "http://results.vtualerts.com/get_res.php?usn=" + usn ;
@@ -104,7 +99,7 @@ public class resultFetch {
             Element StdName = doc.select("div").select("B:eq(0)").first();
             name = StdName.toString().split(">")[1].split(Pattern.quote("("))[0];
             System.out.println("name is : " + name);
-            
+
             Element markclass = doc.select("table:eq(1)").select("td:eq(3)").select("b:eq(0)").first();
             mk = markclass.toString().split(";")[2].split("<")[0];
             Element firstTableMarks = doc.select("table:eq(3)").first();
@@ -114,7 +109,6 @@ public class resultFetch {
             for (int i = 0; i < 8; i++) {
                 String whichTr = "tr:eq(" + (i + 1) + ")";
                 subjects[i] = tmtbody.select(whichTr).first().child(0).text();
-
                 marks[i][0] = Integer.parseInt(tmtbody.select(whichTr).first().child(1).text());
                 marks[i][1] = Integer.parseInt(tmtbody.select(whichTr).first().child(2).text());
                 marks[i][2] = Integer.parseInt(tmtbody.select(whichTr).first().child(3).text());
@@ -141,7 +135,7 @@ public class resultFetch {
             prop.load(new FileInputStream("config.ini"));
 
             if (prop.getProperty("NoProxy").equals("true")) {
-                System.out.println("No proxy is set");              
+                System.out.println("No proxy is set");
             } else if (prop.getProperty("SysProxy").equals("true")) {
                 System.out.println("Proxy set to system proxy");
                 setSysProx();

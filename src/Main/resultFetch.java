@@ -125,11 +125,13 @@ public class resultFetch {
             }
             MainForm.DF.setStatus(usn, "Success");
         } catch (Exception e) {
+            return checkIfResultisAvailable(usn, sem);
+            /*
             MainForm.RetryList.add(usn);
             System.out.println("usn added for retry !");
             System.out.println("fetch failed for " + usn);
-            MainForm.DF.setStatus(usn, "failed");
-            return false;//if result is not found
+            MainForm.DF.setStatus(usn, "failed");*/
+            ///return false;//if result is not found
         }
         return true;//result is found
     }
@@ -188,5 +190,70 @@ public class resultFetch {
                 }
             }
         }
+    }
+
+    private boolean checkIfResultisAvailable(String usn, int sem) {
+         Document doc;
+         String resultNotAvail="<h3>Sorry Results are not yet available for this university seat number<br />or it might not be a valid university seat number</h3>";
+        String url = "http://results.vtualerts.com/get_res.php?usn=" + usn;
+        if (Forms.EnterUsnForm.sem > 0 && Forms.EnterUsnForm.sem < 9) {
+            url = "http://results.vtualerts.com/get_res.php?usn=" + usn + "&sem=" + sem;
+        }
+        try {
+            doc = Jsoup.connect(url).userAgent("Mozilla").timeout(Forms.MainForm.timeout * 1000).get();
+            Element StdName = doc.select("center").first().child(0);
+            System.out.println(StdName);
+            if(StdName.toString().equals(resultNotAvail)) {
+                MainForm.log("Result not available for " + usn);
+            }
+            MainForm.DF.setStatus(usn, "Success");
+        } catch (Exception e) {
+            return checkIfHeHasBackPaper(usn,sem);
+            /*MainForm.RetryList.add(usn);
+            System.out.println("usn added for retry !");
+            System.out.println("fetch failed for " + usn);
+            MainForm.DF.setStatus(usn, "failed");
+            */
+        }
+        return false;
+    }
+
+    private boolean checkIfHeHasBackPaper(String usn, int sem) {
+       
+        int totMark=0;
+        Document doc;
+        String url = "http://results.vtualerts.com/get_res.php?usn=" + usn;
+        
+        try {
+            doc = Jsoup.connect(url).userAgent("Mozilla").timeout(Forms.MainForm.timeout * 1000).get();
+            Element markclass = doc.select("div").select("div").select("table").get(2);
+
+            Element tmtbody = markclass.select("tbody").first();
+            //System.out.println(tmtbody);
+            totalmarks=null;
+            for (int i = 0; i < 8; i++) {
+                String whichTr = "tr:eq(" + (i + 1) + ")";
+                subjects[i] = tmtbody.select(whichTr).first().child(0).text();
+
+                marks[i][0] = Integer.parseInt(tmtbody.select(whichTr).first().child(1).text());
+                marks[i][1] = Integer.parseInt(tmtbody.select(whichTr).first().child(2).text());
+                marks[i][2] = Integer.parseInt(tmtbody.select(whichTr).first().child(3).text());
+                res[i] = tmtbody.select(whichTr).first().child(4).text();
+                System.out.println(subjects[i]+"     "+ marks[i][2]);
+                totMark+=marks[i][2];
+                
+            }   
+            totalmarks=String.valueOf(totMark);
+            mk="NA / Has back paper";
+            MainForm.DF.setStatus(usn, "Success");
+        } catch (Exception e) {
+            MainForm.RetryList.add(usn);
+            System.out.println("usn added for retry !");
+            System.out.println("fetch failed for " + usn);
+            MainForm.DF.setStatus(usn, "failed");
+            return false;
+        }
+
+            return true;
     }
 }

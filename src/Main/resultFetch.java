@@ -28,62 +28,7 @@ public class resultFetch {
     public resultFetch() {
         setProxy();
     }
-/*
-    public boolean fetchSubjectNames(String usn, int sem) {
 
-        //get proxy Settings
-        System.out.println("fetching subject names ! ");
-        setProxy();
-        String url = "http://results.vtualerts.com/get_res.php?usn=" + usn;
-        if (Forms.EnterUsnForm.sem > 0 && Forms.EnterUsnForm.sem < 9) {
-            url = "http://results.vtualerts.com/get_res.php?usn=" + usn + "&sem=" + sem;
-        }
-        Document doc;
-
-        try {
-            doc = Jsoup.connect(url).userAgent("Mozilla").timeout(60 * 1000).get();
-            //System.out.println("Forms.MainForm.timeout * 1000 : "+ Forms.MainForm.timeout * 1000);
-            Element firstTableMarks = doc.select("table:eq(3)").first();
-            Element tmtbody = firstTableMarks.select("tbody").first();
-
-            for (int i = 0; i < 8; i++) {
-                String whichTr = "tr:eq(" + (i + 1) + ")";
-                MainForm.subNamesV.add(tmtbody.select(whichTr).first().child(0).text().trim());
-            }
-        } catch (IOException e) {
-            //MainForm.stopFlag = true;
-            //JOptionPane.showMessageDialog(null, "Error connecting to internet");
-            return false;
-        }
-
-        //Store subject names to database
-        Connection con = DBConnect.connection;
-        String sql = "DELETE from SUBJECTTABLE";
-
-        Statement stmt;
-        try {
-            stmt = con.createStatement();
-            stmt.executeUpdate(sql);
-        } catch (SQLException ex) {
-            Logger.getLogger(resultFetch.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        for (int i = 0; i < MainForm.subNamesV.size(); i++) {
-            String sql1 = "INSERT INTO SUBJECTTABLE VALUES ('" + MainForm.subNamesV.get(i) + "')";
-            try {
-
-                Statement stmt1 = con.createStatement();
-                stmt1.executeUpdate(sql1);
-
-            } catch (SQLException ex) {
-                Logger.getLogger(resultFetch.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        return true;
-
-    }
-*/
-    
     public boolean FetchTheresult(String usn, int sem) {
         Document doc;
         //String url = "http://results.vtualerts.com/get_res.php?usn=" + usn ;
@@ -118,13 +63,14 @@ public class resultFetch {
                 totalmarks = totMks.toString().split(" ")[1];
             }
             MainForm.DF.setStatus(usn, "Success");
+            MainForm.log(usn + " Download : Success");
         } catch (Exception e) {
             return checkIfResultisAvailable(usn, sem);
             /*
-            MainForm.RetryList.add(usn);
-            System.out.println("usn added for retry !");
-            System.out.println("fetch failed for " + usn);
-            MainForm.DF.setStatus(usn, "failed");*/
+             MainForm.RetryList.add(usn);
+             System.out.println("usn added for retry !");
+             System.out.println("fetch failed for " + usn);
+             MainForm.DF.setStatus(usn, "failed");*/
             ///return false;//if result is not found
         }
         return true;//result is found
@@ -137,12 +83,12 @@ public class resultFetch {
             prop.load(new FileInputStream("config.ini"));
 
             if (prop.getProperty("NoProxy").equals("true")) {
-                System.out.println("No proxy is set");
+                MainForm.log("Setting Proxy : No proxy ");
             } else if (prop.getProperty("SysProxy").equals("true")) {
-                System.out.println("Proxy set to system proxy");
+                MainForm.log("Setting Proxy : System Proxy");
                 setSysProx();
             } else {
-                System.out.println("Using selected proxy");
+                MainForm.log("Setting Proxy : User Defined Proxy");
                 ProxyIP = prop.getProperty("HTTPProxy");
                 ProxyPort = prop.getProperty("HTTPPort");
                 SecureIP = prop.getProperty("HTTPSProxy");
@@ -151,16 +97,17 @@ public class resultFetch {
                 System.setProperty("http.proxyPort", ProxyPort);
                 System.setProperty("https.proxyHost", SecureIP);
                 System.setProperty("https.proxyPort", SecurePort);
+                MainForm.log("Proxy Set to : " + ProxyIP + ":" + ProxyPort);
             }
         } catch (IOException ex) {
-            System.out.println("Can not read config file...");
+            MainForm.logError("Can not read configuration file... using System proxy");
             setSysProx();
         }
     }
 
     private void setSysProx() {
         System.setProperty("java.net.useSystemProxies", "true");
-        System.out.println("detecting proxies");
+        MainForm.log("detecting proxies");
         List l = null;
         try {
             l = ProxySelector.getDefault().select(new URI("http://foo/bar"));
@@ -175,20 +122,23 @@ public class resultFetch {
                 InetSocketAddress addr = (InetSocketAddress) proxy.address();
 
                 if (addr == null) {
-                    System.out.println("No Proxy");
+                    MainForm.log("Setting Proxy : No Proxy");
                 } else {
                     System.out.println("proxy hostname : " + addr.getHostName());
                     System.setProperty("http.proxyHost", addr.getHostName());
                     System.out.println("proxy port : " + addr.getPort());
                     System.setProperty("http.proxyPort", Integer.toString(addr.getPort()));
+                    MainForm.log("Proxy Set to : " + addr.getHostName() + ":" + addr.getPort());
                 }
             }
         }
     }
 
     private boolean checkIfResultisAvailable(String usn, int sem) {
-         Document doc;
-         String resultNotAvail="<h3>Sorry Results are not yet available for this university seat number<br />or it might not be a valid university seat number</h3>";
+        Document doc;
+        MainForm.log(usn + " Checking if result is available");
+        System.out.println("Checking if result is available");
+        String resultNotAvail = "<h3>Sorry Results are not yet available for this university seat number<br />or it might not be a valid university seat number</h3>";
         String url = "http://results.vtualerts.com/get_res.php?usn=" + usn;
         if (Forms.EnterUsnForm.sem > 0 && Forms.EnterUsnForm.sem < 9) {
             url = "http://results.vtualerts.com/get_res.php?usn=" + usn + "&sem=" + sem;
@@ -197,57 +147,59 @@ public class resultFetch {
             doc = Jsoup.connect(url).userAgent("Mozilla").timeout(Forms.MainForm.timeout * 1000).get();
             Element StdName = doc.select("center").first().child(0);
             System.out.println(StdName);
-            if(StdName.toString().equals(resultNotAvail)) {
-                MainForm.log("Result not available for " + usn);
+            if (StdName.toString().equals(resultNotAvail)) {
+                MainForm.log(usn + " Download : Result not available");
+                MainForm.DF.setStatus(usn, "Not Available");
             }
-            MainForm.DF.setStatus(usn, "Success");
+
         } catch (Exception e) {
-            return checkIfHeHasBackPaper(usn,sem);
+            return checkIfHeHasBackPaper(usn, sem);
             /*MainForm.RetryList.add(usn);
-            System.out.println("usn added for retry !");
-            System.out.println("fetch failed for " + usn);
-            MainForm.DF.setStatus(usn, "failed");
-            */
+             System.out.println("usn added for retry !");
+             System.out.println("fetch failed for " + usn);
+             MainForm.DF.setStatus(usn, "failed");
+             */
         }
         return false;
     }
 
     private boolean checkIfHeHasBackPaper(String usn, int sem) {
-       
-        int totMark=0;
+
+        System.out.println("Checking IF back paper");
+        MainForm.log(usn + " Checking For back papers");
+        int totMark = 0;
         Document doc;
         String url = "http://results.vtualerts.com/get_res.php?usn=" + usn;
-        
+
         try {
             doc = Jsoup.connect(url).userAgent("Mozilla").timeout(Forms.MainForm.timeout * 1000).get();
             Element markclass = doc.select("div").select("div").select("table").get(2);
 
             Element tmtbody = markclass.select("tbody").first();
             //System.out.println(tmtbody);
-            totalmarks=null;
+            totalmarks = null;
             for (int i = 0; i < 8; i++) {
                 String whichTr = "tr:eq(" + (i + 1) + ")";
                 subjects[i] = tmtbody.select(whichTr).first().child(0).text();
-
                 marks[i][0] = Integer.parseInt(tmtbody.select(whichTr).first().child(1).text());
                 marks[i][1] = Integer.parseInt(tmtbody.select(whichTr).first().child(2).text());
                 marks[i][2] = Integer.parseInt(tmtbody.select(whichTr).first().child(3).text());
                 res[i] = tmtbody.select(whichTr).first().child(4).text();
-                System.out.println(subjects[i]+"     "+ marks[i][2]);
-                totMark+=marks[i][2];
-                
-            }   
-            totalmarks=String.valueOf(totMark);
-            mk="NA / Has back paper";
+                totMark += marks[i][2];
+
+            }
+            totalmarks = String.valueOf(totMark);
+            mk = "NA / Has back paper";
             MainForm.DF.setStatus(usn, "Success");
+            MainForm.log(usn + " Download : Success");
         } catch (Exception e) {
             MainForm.RetryList.add(usn);
-            System.out.println("usn added for retry !");
-            System.out.println("fetch failed for " + usn);
+            System.out.println(usn + " added for retry !");
             MainForm.DF.setStatus(usn, "failed");
+            MainForm.log(usn + " Download : failed");
             return false;
         }
 
-            return true;
+        return true;
     }
 }

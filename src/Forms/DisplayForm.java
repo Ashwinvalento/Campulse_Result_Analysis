@@ -27,9 +27,6 @@ public class DisplayForm extends javax.swing.JFrame implements DBInterface {
     /**
      * Creates new form DisplayForm
      */
-    public DisplayForm(String x) {
-
-    }
 
     public DisplayForm() {
 
@@ -485,8 +482,6 @@ public class DisplayForm extends javax.swing.JFrame implements DBInterface {
 
         if (StdClass.equals("ALL")) {
             query = "select " + ST_NAME + "," + ST_USN + "," + ST_TOTAL + "," + ST_RESULT + " from " + STUDENT_DETAILS + " ORDER BY " + ST_TOTAL + " DESC";
-        } else if (StdClass.equals("SOME")) {
-            query = "select * from " + STUDENT_DETAILS + "," + SUBJECT_DETAILS;
         } else {
             query = "select DISTINCT " + ST_NAME + "," + ST_USN + "," + ST_TOTAL + "," + ST_RESULT + " from " + STUDENT_DETAILS + " WHERE " + ST_RESULT + " = '" + StdClass.trim() + " ' ORDER BY " + ST_TOTAL + " DESC";
         }

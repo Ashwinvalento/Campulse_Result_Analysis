@@ -22,10 +22,11 @@ public class extractUSN {
     /**
      * @param args the command line arguments
      */
-    public static Vector<String> myUsnList = new Vector<String>();
-    /*public extractUSN(String inFile) {
+    public static Vector<String> myUsnList;
 
-     }*/
+    public extractUSN() {
+        myUsnList = new Vector<String>();
+    }
 
     public Vector<String> getUsnFromFile(String inFile) {
         MainForm.log("File selected : " + inFile);

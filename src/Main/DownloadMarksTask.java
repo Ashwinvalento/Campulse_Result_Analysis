@@ -8,11 +8,8 @@ import Forms.EnterUsnForm;
 import Forms.MainForm;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 import run.DBConnect;
 import run.DBInterface;
@@ -20,23 +17,12 @@ import run.DBInterface;
 public class DownloadMarksTask extends SwingWorker<Integer, Integer> implements DBInterface {
 
     PreparedStatement pstmtSub, pstmtStud;
+    Statement stmtStd, stmtSub;
+    Connection con;
 
     public DownloadMarksTask() {
         //initialize 
-        Connection con = DBConnect.connection;
-
-        String subQuery = "Insert into " + SUBJECT_DETAILS + " values (?,?,?,?,?,?)";
-        String stdQuery = "Insert into " + STUDENT_DETAILS + " values (?,?,?,?)";
-        try {
-            pstmtSub = con.prepareStatement(subQuery);
-        } catch (SQLException ex) {
-            Logger.getLogger(DownloadMarksTask.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        try {
-            pstmtStud = con.prepareStatement(stdQuery);
-        } catch (SQLException ex) {
-            Logger.getLogger(DownloadMarksTask.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        con = DBConnect.connection;
 
     }
 
@@ -46,33 +32,31 @@ public class DownloadMarksTask extends SwingWorker<Integer, Integer> implements 
         if (MainForm.stopFlag == true) {
             stopFetching();
         }
-        try {
-            for (int i = 0; i < MainForm.usnList.size() && MainForm.stopFlag == false; i++) {
-                int colCount = 1;
+        for (int i = 0; i < MainForm.usnList.size() && MainForm.stopFlag == false; i++) {
+            try {
+
                 setProgress((i + 1) * 100 / MainForm.usnList.size());
                 System.out.println(MainForm.usnList.get(i));
 
                 if (r.FetchTheresult(MainForm.usnList.get(i), EnterUsnForm.sem)) {
-                    pstmtStud.setString(1, MainForm.usnList.get(i));
-                    pstmtStud.setString(2, r.name);
-                    pstmtStud.setInt(3, Integer.parseInt(r.totalmarks));
-                    pstmtStud.setString(4, r.mk);
-                    pstmtStud.execute();
-                    pstmtSub.setString(1, MainForm.usnList.get(i));
+
+                    String stdQuery = "Insert into " + STUDENT_DETAILS + " values ('" + MainForm.usnList.get(i) + "','" + r.name + "'," + Integer.parseInt(r.totalmarks) + ",'" + r.mk + "')";
+                    stmtStd = con.createStatement();
+                    stmtStd.executeUpdate(stdQuery);
+
                     for (int x = 0; x < 8; x++) {
-                        pstmtSub.setString(2, r.subjects[x]);
-                        pstmtSub.setInt(3, r.marks[x][1]);
-                        pstmtSub.setInt(4, r.marks[x][0]);
-                        pstmtSub.setInt(5, r.marks[x][2]);
-                        pstmtSub.setString(6, r.res[x]);
-                        pstmtSub.execute();
+                        String subQuery = "Insert into " + SUBJECT_DETAILS + " values ('" + MainForm.usnList.get(i) + "','" + r.subjects[x] + "'," + r.marks[x][1] + "," + r.marks[x][0] + "," + r.marks[x][2] + ",'" + r.res[x] + "')";
+                        stmtSub = con.createStatement();
+                        stmtSub.executeUpdate(subQuery);
+
                     }
                 }
-            }
 
-        } catch (Exception e) {
-            System.out.println("Error:" + e);
-            JOptionPane.showMessageDialog(null, e + " Download marks task");
+            } catch (Exception e) {
+                System.out.println("Error:" + e);
+                MainForm.log(MainForm.usnList.get(i) + " : Record already exists");
+                //Logger.getLogger(DownloadMarksTask.class.getName()).log(Level.SEVERE, null, e);
+            }
         }
         return 1;
     }
@@ -84,7 +68,7 @@ public class DownloadMarksTask extends SwingWorker<Integer, Integer> implements 
 
     @Override
     protected void done() {
-        if (MainForm.autoRetry && MainForm.retrylimit>0 && !MainForm.RetryList.isEmpty() && MainForm.stopFlag == false ) {
+        if (MainForm.autoRetry && MainForm.retrylimit > 0 && !MainForm.RetryList.isEmpty() && MainForm.stopFlag == false) {
             MainForm.objCopy.clickRestart();
             MainForm.retrylimit--;
         } else {

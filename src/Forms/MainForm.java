@@ -5,19 +5,23 @@ package Forms;
  * and open the template in the editor.
  */
 import Main.DownloadMarksTask;
+import Main.SaveTable;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Stack;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.DefaultCaret;
 import javax.swing.text.SimpleAttributeSet;
@@ -57,7 +61,6 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
         menuAutoRetry.setSelected(true);
 
         fetchCount = 0;
-        run.DBConnect.getConnection();
     }
 
     /**
@@ -80,9 +83,10 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
         jLabel4 = new javax.swing.JLabel();
         bSubjectWise = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
-        btn_save = new javax.swing.JButton();
+        btn_saveList = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         b_retry = new javax.swing.JButton();
+        btn_saveTables = new javax.swing.JButton();
         usnProgressBar = new javax.swing.JProgressBar(0,100);
         jLabel3 = new javax.swing.JLabel();
         TF_usn = new javax.swing.JTextField();
@@ -160,11 +164,11 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel5.setText("Save results :");
 
-        btn_save.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        btn_save.setText("Save");
-        btn_save.addActionListener(new java.awt.event.ActionListener() {
+        btn_saveList.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        btn_saveList.setText("Save As List");
+        btn_saveList.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_saveActionPerformed(evt);
+                btn_saveListActionPerformed(evt);
             }
         });
 
@@ -180,6 +184,13 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
         b_retry.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 b_retryActionPerformed(evt);
+            }
+        });
+
+        btn_saveTables.setText("Save As Tables");
+        btn_saveTables.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_saveTablesActionPerformed(evt);
             }
         });
 
@@ -202,7 +213,7 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
                                 .addComponent(jLabel5))
                             .addGap(48, 48, 48)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(btn_save)
+                                .addComponent(btn_saveList)
                                 .addComponent(bView, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(B_UsnSelect, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
@@ -212,11 +223,12 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
                         .addComponent(stopbtn)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
                         .addComponent(b_retry))
-                    .addComponent(bSubjectWise, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(bSubjectWise, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btn_saveTables, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(24, 24, 24))
         );
 
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {B_UsnSelect, bView, btn_save, submitButton});
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {B_UsnSelect, bView, btn_saveList, submitButton});
 
         jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {b_retry, stopbtn});
 
@@ -246,7 +258,8 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(btn_save))
+                    .addComponent(btn_saveList)
+                    .addComponent(btn_saveTables))
                 .addContainerGap(64, Short.MAX_VALUE))
         );
 
@@ -276,7 +289,7 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 116, Short.MAX_VALUE)
         );
 
         ToggleMoreLess.setText("Hide <<");
@@ -356,7 +369,7 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
                         .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 3, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(ToggleMoreLess)
@@ -469,11 +482,9 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
         frame.setVisible(true);
     }//GEN-LAST:event_bSubjectWiseActionPerformed
 
-    private void btn_saveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_saveActionPerformed
-        /*int count = 0;
+    private void btn_saveListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_saveListActionPerformed
+        /*     int count = 0;
          DisplayForm df = new DisplayForm("Dummy");
-         //   initComponents();
-         df.retrieveSubjectNames();
          DefaultTableModel model = new DefaultTableModel();
          try {
          model.addColumn("USN");
@@ -505,7 +516,109 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
          JOptionPane.showMessageDialog(this, "Failed to save :  " + ex.getMessage(), "Error!", JOptionPane.ERROR_MESSAGE);
          }
          */
-    }//GEN-LAST:event_btn_saveActionPerformed
+
+        //------------------- nawafs method of saving --------------
+        DefaultTableModel model = new DefaultTableModel();
+
+        // Table Column names 
+        model.addColumn("USN");
+        model.addColumn("NAME");
+        model.addColumn("SUBJECT 1");
+        model.addColumn("INTERNAL");
+        model.addColumn("EXTERNAL");
+        model.addColumn("TOTAL");
+        model.addColumn("RESULT");
+        model.addColumn("SUBJECT 2");
+        model.addColumn("INTERNAL");
+        model.addColumn("EXTERNAL");
+        model.addColumn("TOTAL");
+        model.addColumn("RESULT");
+        model.addColumn("SUBJECT 3");
+        model.addColumn("INTERNAL");
+        model.addColumn("EXTERNAL");
+        model.addColumn("TOTAL");
+        model.addColumn("RESULT");
+        model.addColumn("SUBJECT 4");
+        model.addColumn("INTERNAL");
+        model.addColumn("EXTERNAL");
+        model.addColumn("TOTAL");
+        model.addColumn("RESULT");
+        model.addColumn("SUBJECT 5");
+        model.addColumn("INTERNAL");
+        model.addColumn("EXTERNAL");
+        model.addColumn("TOTAL");
+        model.addColumn("RESULT");
+        model.addColumn("SUBJECT 6");
+        model.addColumn("INTERNAL");
+        model.addColumn("EXTERNAL");
+        model.addColumn("TOTAL");
+        model.addColumn("RESULT");
+        model.addColumn("SUBJECT 7");
+        model.addColumn("INTERNAL");
+        model.addColumn("EXTERNAL");
+        model.addColumn("TOTAL");
+        model.addColumn("RESULT");
+        model.addColumn("SUBJECT 8");
+        model.addColumn("INTERNAL");
+        model.addColumn("EXTERNAL");
+        model.addColumn("TOTAL");
+        model.addColumn("RESULT");
+        model.addColumn("FINAL TOTAL");
+        model.addColumn("CLASS");
+        int count = 0;
+
+        String queryStd = "select " + ST_NAME + "," + ST_USN + "," + ST_TOTAL + "," + ST_RESULT + " from " + STUDENT_DETAILS + " ORDER BY " + ST_USN;
+
+        Statement stmtStd, stmtSub;
+        ResultSet rsStd, rsSub;
+        Vector<String> subNames = new Vector<>();
+        Vector<Integer> Internals = new Vector<>();
+        Vector<Integer> Externals = new Vector<>();
+        Vector<Integer> Total = new Vector<>();
+        Vector<String> Result = new Vector<>();
+        try {
+            stmtStd = connection.createStatement();
+            rsStd = stmtStd.executeQuery(queryStd);
+
+            while (rsStd.next()) { // loop till we find all students details
+                System.out.println("Student is : " + rsStd.getString(ST_USN));
+                String querySub = "select " + SUB_SUBNAME + "," + SUB_INTERNAL + "," + SUB_EXTERNAL + "," + SUB_TOTAL + "," + SUB_RESULT + " FROM " + SUBJECT_DETAILS + " WHERE " + SUB_USN + " = '" + rsStd.getString(ST_USN) + "'";
+                stmtSub = connection.createStatement();
+                rsSub = stmtSub.executeQuery(querySub);
+
+                while (rsSub.next()) {
+                    subNames.add(rsSub.getString(SUB_SUBNAME));
+                    Internals.add(rsSub.getInt(SUB_INTERNAL));
+                    Externals.add(rsSub.getInt(SUB_EXTERNAL));
+                    Total.add(rsSub.getInt(SUB_TOTAL));
+                    Result.add(rsSub.getString(SUB_RESULT));
+                }
+                model.insertRow(count++, new Object[]{rsStd.getString(ST_USN), rsStd.getString(ST_NAME),
+                    subNames.get(0), Internals.get(0), Externals.get(0), Total.get(0), Result.get(0),
+                    subNames.get(1), Internals.get(1), Externals.get(1), Total.get(1), Result.get(1),
+                    subNames.get(2), Internals.get(2), Externals.get(2), Total.get(2), Result.get(2),
+                    subNames.get(3), Internals.get(3), Externals.get(3), Total.get(3), Result.get(3),
+                    subNames.get(4), Internals.get(4), Externals.get(4), Total.get(4), Result.get(4),
+                    subNames.get(5), Internals.get(5), Externals.get(5), Total.get(5), Result.get(5),
+                    subNames.get(6), Internals.get(6), Externals.get(6), Total.get(6), Result.get(6),
+                    subNames.get(7), Internals.get(7), Externals.get(7), Total.get(7), Result.get(7),
+                    rsStd.getInt(ST_TOTAL), rsStd.getString(ST_RESULT)});
+
+                subNames.removeAllElements();
+                Internals.removeAllElements();
+                Externals.removeAllElements();
+                Total.removeAllElements();
+                Result.removeAllElements();
+            }
+
+        } catch (SQLException ex) {
+            //System.out.println("Error : " + ex);
+            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        SaveTable ST = new SaveTable(model);
+
+    }//GEN-LAST:event_btn_saveListActionPerformed
 
     private void menuAboutUsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuAboutUsActionPerformed
         new AboutUs().setVisible(true);
@@ -616,6 +729,43 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
         }
     }//GEN-LAST:event_ToggleMoreLessActionPerformed
 
+    private void btn_saveTablesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_saveTablesActionPerformed
+        DefaultTableModel model = new DefaultTableModel();
+        int count = 0;
+
+        String queryStd = "select " + ST_NAME + "," + ST_USN + "," + ST_TOTAL + "," + ST_RESULT + " from " + STUDENT_DETAILS + " ORDER BY " + ST_USN;
+
+        Statement stmtStd, stmtSub;
+        ResultSet rsStd, rsSub;
+        try {
+         stmtStd = connection.createStatement();
+         rsStd = stmtStd.executeQuery(queryStd);
+         while (rsStd.next()) { // loop till we find all students details
+         model.insertRow(count++, new Object[]{"USN :", rsStd.getString(ST_USN)});
+         model.insertRow(count++, new Object[]{"NAME :", rsStd.getString(ST_NAME)});
+         model.insertRow(count++, new Object[]{"TOTAL :", rsStd.getString(ST_TOTAL), null, "RESULT :", rsStd.getString(ST_RESULT)});
+         model.insertRow(count++, new Object[]{null});
+         model.insertRow(count++, new Object[]{"Subject ", "INTERNALS", "EXTERNALS", "TOTAL", "RESULT"});
+         System.out.println("Student is : " + rsStd.getString(ST_USN));
+         String querySub = "select " + SUB_SUBNAME + "," + SUB_INTERNAL + "," + SUB_EXTERNAL + "," + SUB_TOTAL + "," + SUB_RESULT + " FROM " + SUBJECT_DETAILS + " WHERE " + SUB_USN + " = '" + rsStd.getString(ST_USN) + "'";
+         stmtSub = connection.createStatement();
+         rsSub = stmtSub.executeQuery(querySub);
+
+         while (rsSub.next()) {
+         //                    model.insertRow(count++, new Object[]{rsSub.getString(SUB_SUBNAME), rsSub.getInt(SUB_INTERNAL), rsSub.getInt(SUB_EXTERNAL), rsSub.getInt(SUB_TOTAL), rsSub.getString(SUB_RESULT)});
+         }
+         model.insertRow(count++, new Object[]{null});
+         model.insertRow(count++, new Object[]{null});
+         }
+            
+         } catch (SQLException ex) {
+         //System.out.println("Error : " + ex);
+         Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+         }
+        SaveTable ST = new SaveTable(model);
+
+    }//GEN-LAST:event_btn_saveTablesActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -664,6 +814,8 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
                 objCopy = new MainForm();
                 objCopy.setVisible(true);
                 log("Welcome to Result extractor.");
+                run.DBConnect.getConnection();
+
             }
         });
     }
@@ -676,7 +828,8 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
     private javax.swing.JButton bSubjectWise;
     private javax.swing.JButton bView;
     private javax.swing.JButton b_retry;
-    private javax.swing.JButton btn_save;
+    private javax.swing.JButton btn_saveList;
+    private javax.swing.JButton btn_saveTables;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

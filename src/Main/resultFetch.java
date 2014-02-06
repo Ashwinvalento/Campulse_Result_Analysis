@@ -63,7 +63,7 @@ public class resultFetch {
                 totalmarks = totMks.toString().split(" ")[1];
             }
             MainForm.DF.setStatus(usn, "Success");
-            MainForm.log(usn + " Download : Success");
+            MainForm.log(usn + " Download : Success");            
         } catch (Exception e) {
             return checkIfResultisAvailable(usn, sem);
             /*

@@ -31,7 +31,6 @@ public class EnterUsnForm extends javax.swing.JFrame {
     public static int sem = 0;
     DefaultListModel list = new DefaultListModel();
     extractUSN e;
-    public static String usnMatcher = "";
 
     /**
      * Creates new form EnterUsnForm
@@ -39,9 +38,6 @@ public class EnterUsnForm extends javax.swing.JFrame {
     public EnterUsnForm() {
         initComponents();
         this.setLocationRelativeTo(null);
-        if (MainForm.usnList.size() == 0) {
-            usnMatcher = "";
-        }
 
         list.clear();
         for (int i = 0; i < MainForm.usnList.size(); i++) {
@@ -49,7 +45,6 @@ public class EnterUsnForm extends javax.swing.JFrame {
             list.addElement(MainForm.usnList.get(i));
         }
         List_Usn.setModel(list);
-        System.out.println("usn matcher is " + usnMatcher);
     }
 
     /**
@@ -355,7 +350,6 @@ public class EnterUsnForm extends javax.swing.JFrame {
         Vector<String> localUsnList = new Vector<>();
         String fromUsn = TF_from.getText();
         String toUsn = TF_to.getText();
-
         //Pattern p = Pattern.compile("4[pP][aA][0-9]{2}[a-zA-Z]{2}[0-9]{3}");
         Pattern p = Pattern.compile("4[a-zA-Z][a-zA-Z][0-9]{2}[a-zA-Z]{2}[0-9]{3}");
         Matcher mFr = p.matcher(fromUsn);
@@ -368,14 +362,10 @@ public class EnterUsnForm extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Please Enter The USN Range ");
         } else if (!mFr.matches() || !mTo.matches()) {
             JOptionPane.showMessageDialog(null, "Invalid USN Format");
-        } else if (!trimmedTo.equalsIgnoreCase(trimedFr) || (!usnMatcher.equals("") && !trimmedTo.equalsIgnoreCase(usnMatcher))) {
+        } else if (!trimmedTo.equalsIgnoreCase(trimedFr)) {
             JOptionPane.showMessageDialog(null, "Invalid USN Range");
         } else {
 
-            if (usnMatcher.equals("")) {
-                usnMatcher = fromUsn.substring(5, 7);
-                System.out.println("usn set in multiple");
-            }
             int start = Integer.parseInt(fromUsn.substring(7));
             int stop = Integer.parseInt(toUsn.substring(7));
 
@@ -410,14 +400,7 @@ public class EnterUsnForm extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Please Enter The USN ");
         } else if (!m.matches()) {
             JOptionPane.showMessageDialog(null, "Invalid USN Format");
-        } else if (!usnMatcher.equals("") && !trimmedUsn.substring(5, 7).equalsIgnoreCase(usnMatcher)) {
-            JOptionPane.showMessageDialog(null, "Invalid USN .Make sure all The USN correspond to same branch");
         } else {
-
-            if (usnMatcher.equals("")) {
-                usnMatcher = trimmedUsn.substring(5, 7);
-                System.out.println("usn set in single");
-            }
             list.addElement(Str_singleUsn);
             List_Usn.setModel(list);
             modified = true;
@@ -480,7 +463,6 @@ public class EnterUsnForm extends javax.swing.JFrame {
         list.removeAllElements();
         MainForm.usnList.clear();
         modified = true;
-        usnMatcher = "";
         MainForm.log("All USN cleared");
     }//GEN-LAST:event_bClearAllActionPerformed
 

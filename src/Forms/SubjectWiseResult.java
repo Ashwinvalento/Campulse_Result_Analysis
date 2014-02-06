@@ -274,6 +274,16 @@ public class SubjectWiseResult extends javax.swing.JFrame implements DBInterface
         Statement stmt = null;
         ResultSet rs = null;
         String query = "";
+        String SelectedSubjectName;
+        String RetrieveQuery;
+        String usn;
+        String studentName;
+        int internalMark;
+        int externalMark;
+        int totalMark;
+        String passOrFail;
+        int rowCount = 0;
+        boolean insertflag = false;
         Connection con = DBConnect.connection;
         int lowLimit = Integer.parseInt(firstValue.getValue().toString()) - 1;
         int highLimit = Integer.parseInt(lastValue.getValue().toString()) + 1;
@@ -282,86 +292,60 @@ public class SubjectWiseResult extends javax.swing.JFrame implements DBInterface
 
         model.setRowCount(0);
         studentMarksTable.setModel(model);
+        /*
+         if (subjectCombo.getSelectedIndex() == 8 || subjectCombo.getSelectedIndex() == 9) {
 
-        if (subjectCombo.getSelectedIndex() == 8 || subjectCombo.getSelectedIndex() == 9) {
-
-            studentMarksTable.getColumn("USN").setPreferredWidth(100);
-            studentMarksTable.getColumn("NAME").setPreferredWidth(150);
-            studentMarksTable.getColumn("INTERNAL").setPreferredWidth(10);
-            studentMarksTable.getColumn("EXTERNAL").setPreferredWidth(10);
-            studentMarksTable.getColumn("TOTAL").setPreferredWidth(40);
-            studentMarksTable.getColumn("CLASS").setPreferredWidth(100);
-        } else {
-            studentMarksTable.getColumn("USN").setPreferredWidth(100);
-            studentMarksTable.getColumn("NAME").setPreferredWidth(150);
-            studentMarksTable.getColumn("INTERNAL").setPreferredWidth(50);
-            studentMarksTable.getColumn("EXTERNAL").setPreferredWidth(50);
-            studentMarksTable.getColumn("TOTAL").setPreferredWidth(40);
-            studentMarksTable.getColumn("CLASS").setPreferredWidth(40);
-        }
+         studentMarksTable.getColumn("USN").setPreferredWidth(100);
+         studentMarksTable.getColumn("NAME").setPreferredWidth(150);
+         studentMarksTable.getColumn("INTERNAL").setPreferredWidth(10);
+         studentMarksTable.getColumn("EXTERNAL").setPreferredWidth(10);
+         studentMarksTable.getColumn("TOTAL").setPreferredWidth(40);
+         studentMarksTable.getColumn("CLASS").setPreferredWidth(100);
+         } else {
+         studentMarksTable.getColumn("USN").setPreferredWidth(100);
+         studentMarksTable.getColumn("NAME").setPreferredWidth(150);
+         studentMarksTable.getColumn("INTERNAL").setPreferredWidth(50);
+         studentMarksTable.getColumn("EXTERNAL").setPreferredWidth(50);
+         studentMarksTable.getColumn("TOTAL").setPreferredWidth(40);
+         studentMarksTable.getColumn("CLASS").setPreferredWidth(40);
+         }*/
 
         //query = "select DISTINCT * from RESULTTABLE";
-        query = "select " + ST_NAME + "," + ST_TOTAL + "," + ST_RESULT + "," + SUB_SUBNAME + "," + SUB_INTERNAL + "," + SUB_EXTERNAL + "," + SUB_TOTAL + "," + SUB_RESULT + " from " + SUBJECT_DETAILS + "," + STUDENT_DETAILS + " where " + STUDENT_DETAILS + "." + ST_USN + " = " + SUBJECT_DETAILS + "." + SUB_USN;
+        query = "select DISTINCT " + STUDENT_DETAILS + "." + ST_USN + "," + ST_NAME + "," + ST_TOTAL + "," + ST_RESULT + "," + SUB_INTERNAL + "," + SUB_EXTERNAL + "," + SUB_TOTAL + "," + SUB_RESULT + " from " + SUBJECT_DETAILS + "," + STUDENT_DETAILS + " where " + STUDENT_DETAILS + "." + ST_USN + " = " + SUBJECT_DETAILS + "." + SUB_USN;
 
+        SelectedSubjectName = subjectCombo.getSelectedItem().toString();
+        RetrieveQuery = query + " AND " + SUB_SUBNAME + "= '" + SelectedSubjectName + "'";
+        System.out.println("RetrieveQuery : " + RetrieveQuery);
         try {
             stmt = con.createStatement();
-            rs = stmt.executeQuery(query);
-            int rowCount = 0;
+            rs = stmt.executeQuery(RetrieveQuery);
+        } catch (SQLException ex) {
+            Logger.getLogger(SubjectWiseResult.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
             while (rs.next()) {
-                if (examType.getSelectedIndex() == 3 && subjectCombo.getSelectedIndex() < 8) {
-                    int RowNum = subjectCombo.getSelectedIndex() * 4 + 6;
-                    if (rs.getString(RowNum).equalsIgnoreCase("f")) {
-                        model.insertRow(rowCount++, new Object[]{rs.getString(1), rs.getString(2), Integer.parseInt(rs.getString(RowNum - 3)), Integer.parseInt(rs.getString(RowNum - 2)), Integer.parseInt(rs.getString(RowNum - 1)), rs.getString(RowNum)});
-
-                    }
-                } else if (subjectCombo.getSelectedIndex() == 8) {
-
-                    int flag = 0;
-                    for (int i = 3 + examType.getSelectedIndex(); i < 35; i += 4) {
-                        if (Integer.parseInt(rs.getString(i)) < lowLimit || Integer.parseInt(rs.getString(i)) > highLimit) {
-                            flag = 1;
-                            //           System.out.println("i is " + i + "value at ith row is :  "+rs.getString(i));
-                            break;
-                        }
-                    }
-                    if (flag == 0) {
-                        model.insertRow(rowCount++, new Object[]{rs.getString(1), rs.getString(2), null, null, rs.getString(35), rs.getString(36)});
-                    }
-
-                } else if (subjectCombo.getSelectedIndex() == 9) {
-                    int flag = 0;
-                    for (int i = 3 + examType.getSelectedIndex(); i < 35; i += 4) {
-                        if (Integer.parseInt(rs.getString(i)) > lowLimit && Integer.parseInt(rs.getString(i)) < highLimit) {
-                            flag = 1;
-                            break;
-                        }
-                    }
-                    if (flag == 1) {
-                        model.insertRow(rowCount++, new Object[]{rs.getString(1), rs.getString(2), null, null, rs.getString(35), rs.getString(36)});
-                    }
-                } else {
-                    whichROw = subjectCombo.getSelectedIndex() * 4 + 3;
-                    // System.out.println("whichROw : "+ whichROw );
-                    //System.out.println("typeValue : "+ typeValue);
-                    //System.out.println(rs.getString(1) + "  " + rs.getString(whichROw) + " " + rs.getString(whichROw + 1) + " " + rs.getString(whichROw + 2) + " " + rs.getString(whichROw + 3));
-                    //  System.out.println("lowLimit is : "+lowLimit + " highLimit is : " +highLimit + " total is : " + Integer.parseInt(rs.getString(whichROw+2)));
-                    if (Integer.parseInt(rs.getString(whichROw + typeValue - 1)) > lowLimit) {
-                        if (Integer.parseInt(rs.getString(whichROw + typeValue - 1)) < highLimit) {
-                            model.insertRow(rowCount++, new Object[]{rs.getString(1), rs.getString(2), Integer.parseInt(rs.getString(whichROw)), Integer.parseInt(rs.getString(whichROw + 1)), Integer.parseInt(rs.getString(whichROw + 2)), rs.getString(whichROw + 3)});
-                            //System.out.println(rs.getString(1) + "  " + rs.getString(whichROw) + " " + rs.getString(whichROw + 1) + " " + rs.getString(whichROw + 2) + " " + rs.getString(whichROw + 3));
-                        } else {
-
-                        }
-                    } else {
-                        System.out.println(rs.getString(1) + " is not listed");
-                    }
+                usn = rs.getString(ST_USN);
+                studentName = rs.getString(ST_NAME);
+                internalMark = rs.getInt(SUB_INTERNAL);
+                externalMark = rs.getInt(SUB_EXTERNAL);
+                totalMark = rs.getInt(SUB_TOTAL);
+                passOrFail = rs.getString(SUB_RESULT);
+                if (examType.getSelectedIndex() == 0 && internalMark > lowLimit && internalMark < highLimit) {
+                    model.insertRow(rowCount++, new Object[]{usn, studentName, internalMark, externalMark, totalMark, passOrFail});
+                } else if (examType.getSelectedIndex() == 1 && externalMark > lowLimit && externalMark < highLimit) {
+                    model.insertRow(rowCount++, new Object[]{usn, studentName, internalMark, externalMark, totalMark, passOrFail});
+                } else if (examType.getSelectedIndex() == 2 && totalMark > lowLimit && totalMark < highLimit) {
+                    //insertflag = true;
+                    model.insertRow(rowCount++, new Object[]{usn, studentName, internalMark, externalMark, totalMark, passOrFail});
+                } else if(examType.getSelectedIndex()==3 && passOrFail.equalsIgnoreCase("f")){
+                    model.insertRow(rowCount++, new Object[]{usn, studentName, internalMark, externalMark, totalMark, passOrFail});
                 }
             }
 
+            lcount.setText(Integer.toString(model.getRowCount()) + " scored between " + firstValue.getValue() + " and " + lastValue.getValue() + " in  " + examType.getSelectedItem().toString() + " of " + subjectCombo.getSelectedItem().toString());
         } catch (SQLException ex) {
-            System.out.println("Error : " + ex);
+            Logger.getLogger(SubjectWiseResult.class.getName()).log(Level.SEVERE, null, ex);
         }
-        lcount.setText(Integer.toString(model.getRowCount()) + " of them scored between " + firstValue.getValue() + " and " + lastValue.getValue() + " in  " + examType.getSelectedItem().toString() + " of " + subjectCombo.getSelectedItem().toString());
     }//GEN-LAST:event_bSubmitActionPerformed
 
     private void bCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCloseActionPerformed
@@ -452,8 +436,8 @@ public class SubjectWiseResult extends javax.swing.JFrame implements DBInterface
         for (int i = 0; i < MainForm.subNamesV.size(); i++) {
             comboBoxItems.add(MainForm.subNamesV.get(i));
         }
-        comboBoxItems.add("All thoery sub");
-        comboBoxItems.add("Any theory sub");
+        //comboBoxItems.add("All thoery sub");
+        //comboBoxItems.add("Any theory sub");
         DefaultComboBoxModel model = new DefaultComboBoxModel(comboBoxItems);
 
         subjectCombo.setModel(model);

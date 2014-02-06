@@ -22,29 +22,34 @@ public final class DBConnect implements DBInterface {
         try {
             Class.forName(driver);
             connection = DriverManager.getConnection(DB_URL);
+//            Forms.MainForm.log("Connecting to database : Successfull");
             System.out.println("Connected to database...");
         } catch (SQLException ex) {
             Logger.getLogger(DBConnect.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("Cant connect");
+            //          Forms.MainForm.log("Connecting to database : Failed");
         } catch (ClassNotFoundException ex) {
+            //        Forms.MainForm.log("Connecting to database : Failed - Driver error");
             Logger.getLogger(DBConnect.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         Statement stmt, stmt1;
 
         String query1 = "CREATE TABLE " + SUBJECT_DETAILS + " ('" + SUB_USN + "' VARCHAR NOT NULL , '" + SUB_SUBNAME + "' VARCHAR NOT NULL , '" + SUB_INTERNAL + "' INTEGER, '" + SUB_EXTERNAL + "' INTEGER, '" + SUB_TOTAL + "' INTEGER, '" + SUB_RESULT + "' CHAR, PRIMARY KEY (" + SUB_USN + ", " + SUB_SUBNAME + "))";
-        String query2 = "CREATE TABLE " + STUDENT_DETAILS + " ('" + ST_USN + "' VARCHAR, '" + ST_NAME + "' VARCHAR, '" + ST_TOTAL + "' INTEGER, '" + ST_RESULT + "' VARCHAR)";
+        String query2 = "CREATE TABLE " + STUDENT_DETAILS + " ('" + ST_USN + "' VARCHAR, '" + ST_NAME + "' VARCHAR, '" + ST_TOTAL + "' INTEGER, '" + ST_RESULT + "' VARCHAR, PRIMARY KEY (" + ST_USN + "))";
         try {
             stmt = connection.createStatement();
             stmt1 = connection.createStatement();
 
             stmt.executeUpdate(query1);
-            System.out.println("Result Table created");
+            System.out.println("subject_details created");
             stmt1.executeUpdate(query2);
-            System.out.println("Subject table created");
+            System.out.println("student_details created");
+            //          Forms.MainForm.log("Initializing Database : Successfull");
         } catch (SQLException ex) {
-            // Logger.getLogger(DBConnect.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("Table already exists .");
+             //Logger.getLogger(DBConnect.class.getName()).log(Level.SEVERE, null, ex);
+//            Forms.MainForm.log("Database attributes already exists");
+            System.out.println("Table already exists");
         }
 
     }

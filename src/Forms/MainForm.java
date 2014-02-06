@@ -23,7 +23,20 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import run.DBConnect;
+import static run.DBConnect.connection;
 import run.DBInterface;
+import static run.DBInterface.STUDENT_DETAILS;
+import static run.DBInterface.ST_NAME;
+import static run.DBInterface.ST_RESULT;
+import static run.DBInterface.ST_TOTAL;
+import static run.DBInterface.ST_USN;
+import static run.DBInterface.SUBJECT_DETAILS;
+import static run.DBInterface.SUB_EXTERNAL;
+import static run.DBInterface.SUB_INTERNAL;
+import static run.DBInterface.SUB_RESULT;
+import static run.DBInterface.SUB_SUBNAME;
+import static run.DBInterface.SUB_TOTAL;
+import static run.DBInterface.SUB_USN;
 
 public class MainForm extends javax.swing.JFrame implements DBInterface {
 
@@ -34,7 +47,7 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
     public static Vector<String> subNamesV = new Vector<String>();
     public static Vector<String> RetryList = new Vector<String>();
     public static boolean stopFlag = true;
-    public static DownloadDetailsForm DF = new DownloadDetailsForm();
+    public static DownloadDetailsForm DF ;
     private final int fetchCount;
     public static MainForm objCopy;
     DownloadMarksTask task;
@@ -42,15 +55,17 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
     int subjectFetchTries = 5;  // this value is again initialized in start button action
 
     public MainForm() {
-        run.DBConnect.getConnection();
         initComponents();
+        this.setLocationRelativeTo(null);
         DefaultCaret caret = (DefaultCaret) textAreaLog.getCaret();
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+
         stopbtn.setEnabled(false);
         b_retry.setEnabled(false);
         menuAutoRetry.setSelected(true);
-        this.setLocationRelativeTo(null);
+
         fetchCount = 0;
+        run.DBConnect.getConnection();
     }
 
     /**
@@ -84,10 +99,11 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
         jScrollPane2 = new javax.swing.JScrollPane();
         textAreaLog = new javax.swing.JTextPane();
         jMenuBar1 = new javax.swing.JMenuBar();
-        menuAboutUs = new javax.swing.JMenu();
-        jMenuItem3 = new javax.swing.JMenuItem();
+        menuFile = new javax.swing.JMenu();
+        menuNew = new javax.swing.JMenuItem();
+        menuAboutUs = new javax.swing.JMenuItem();
         menuExit = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
+        menuTools = new javax.swing.JMenu();
         menuAutoRetry = new javax.swing.JCheckBoxMenuItem();
         menuSetProxy = new javax.swing.JMenuItem();
         menuSetTimeOut = new javax.swing.JMenuItem();
@@ -270,15 +286,23 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
             .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
         );
 
-        menuAboutUs.setText("File");
+        menuFile.setText("File");
 
-        jMenuItem3.setText("About Us");
-        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+        menuNew.setText("New");
+        menuNew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem3ActionPerformed(evt);
+                menuNewActionPerformed(evt);
             }
         });
-        menuAboutUs.add(jMenuItem3);
+        menuFile.add(menuNew);
+
+        menuAboutUs.setText("About Us");
+        menuAboutUs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuAboutUsActionPerformed(evt);
+            }
+        });
+        menuFile.add(menuAboutUs);
 
         menuExit.setText("Exit");
         menuExit.addActionListener(new java.awt.event.ActionListener() {
@@ -286,11 +310,11 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
                 menuExitActionPerformed(evt);
             }
         });
-        menuAboutUs.add(menuExit);
+        menuFile.add(menuExit);
 
-        jMenuBar1.add(menuAboutUs);
+        jMenuBar1.add(menuFile);
 
-        jMenu2.setText("Tools");
+        menuTools.setText("Tools");
 
         menuAutoRetry.setSelected(true);
         menuAutoRetry.setText("Auto Retry");
@@ -299,7 +323,7 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
                 menuAutoRetryActionPerformed(evt);
             }
         });
-        jMenu2.add(menuAutoRetry);
+        menuTools.add(menuAutoRetry);
 
         menuSetProxy.setText("Set Proxy");
         menuSetProxy.addActionListener(new java.awt.event.ActionListener() {
@@ -307,7 +331,7 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
                 menuSetProxyActionPerformed(evt);
             }
         });
-        jMenu2.add(menuSetProxy);
+        menuTools.add(menuSetProxy);
 
         menuSetTimeOut.setText("Set Time Out");
         menuSetTimeOut.addActionListener(new java.awt.event.ActionListener() {
@@ -315,9 +339,9 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
                 menuSetTimeOutActionPerformed(evt);
             }
         });
-        jMenu2.add(menuSetTimeOut);
+        menuTools.add(menuSetTimeOut);
 
-        jMenuBar1.add(jMenu2);
+        jMenuBar1.add(menuTools);
 
         setJMenuBar(jMenuBar1);
 
@@ -372,6 +396,7 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
 
     private void stopbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopbtnActionPerformed
         logError("Result Fetching Interrupted");
+        stopbtn.setEnabled(false);
         stopFlag = true;
         clickStop();
     }//GEN-LAST:event_stopbtnActionPerformed
@@ -381,25 +406,11 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
     }//GEN-LAST:event_bViewActionPerformed
 
     private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
-        DF.reset();
-        log("Deleting previous records !");
+        
+        DF = new DownloadDetailsForm();
         log("Result fetching started ...");
         log("Please wait till fetching has compleeted.");
-        Connection con = DBConnect.connection;
-        Statement stmt, stmt1;
-        String query1 = " DELETE from " + STUDENT_DETAILS;
-        String query2 = "DELETE FROM " + SUBJECT_DETAILS;
-        try {
-            stmt = con.createStatement();
-            stmt1 = con.createStatement();
-            stmt.executeUpdate(query1);
-            stmt1.executeUpdate(query2);
 
-        } catch (SQLException ex) {
-            log(ex.getMessage());
-            Logger.getLogger(DownloadMarksTask.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        //*--------------- new code starts here ----------------------*
         usnProgressBar.setValue(usnProgressBar.getMinimum());
 
         if (usnList.size() == 0) {
@@ -490,9 +501,9 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
          */
     }//GEN-LAST:event_btn_saveActionPerformed
 
-    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+    private void menuAboutUsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuAboutUsActionPerformed
         new AboutUs().setVisible(true);
-    }//GEN-LAST:event_jMenuItem3ActionPerformed
+    }//GEN-LAST:event_menuAboutUsActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         DF.setVisible(true);
@@ -547,6 +558,43 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
             log("Auto retry is Disabled. Please Click retry to fetch failed USN list");
         }
     }//GEN-LAST:event_menuAutoRetryActionPerformed
+
+    private void menuNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuNewActionPerformed
+        int x = JOptionPane.showConfirmDialog(null, "This will delete all your previous records\nAre you sure you want to continue ?", "New database", JOptionPane.OK_CANCEL_OPTION);
+        if (x == 0) {
+            log("Deleting previous records !");
+            Connection con = DBConnect.connection;
+            Statement stmtSt, stmtSub;
+            String querySt = " DROP TABLE " + STUDENT_DETAILS;
+            String querySub = "DROP TABLE " + SUBJECT_DETAILS;
+            try {
+                stmtSt = con.createStatement();
+                stmtSub = con.createStatement();
+                stmtSt.executeUpdate(querySt);
+                stmtSub.executeUpdate(querySub);
+
+            } catch (SQLException ex) {
+                log(ex.getMessage());
+                Logger.getLogger(DownloadMarksTask.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            Statement stmt, stmt1;
+
+            String query1 = "CREATE TABLE " + SUBJECT_DETAILS + " ('" + SUB_USN + "' VARCHAR NOT NULL , '" + SUB_SUBNAME + "' VARCHAR NOT NULL , '" + SUB_INTERNAL + "' INTEGER, '" + SUB_EXTERNAL + "' INTEGER, '" + SUB_TOTAL + "' INTEGER, '" + SUB_RESULT + "' CHAR, PRIMARY KEY (" + SUB_USN + ", " + SUB_SUBNAME + "))";
+            String query2 = "CREATE TABLE " + STUDENT_DETAILS + " ('" + ST_USN + "' VARCHAR, '" + ST_NAME + "' VARCHAR, '" + ST_TOTAL + "' INTEGER, '" + ST_RESULT + "' VARCHAR, PRIMARY KEY (" + ST_USN + "))";
+            try {
+                stmt = connection.createStatement();
+                stmt1 = connection.createStatement();
+
+                stmt.executeUpdate(query1);
+                stmt1.executeUpdate(query2);
+                MainForm.log("Initializing Database : Successfull");
+            } catch (SQLException ex) {
+                // Logger.getLogger(DBConnect.class.getName()).log(Level.SEVERE, null, ex);
+                MainForm.log("Table already exists .");
+            }
+        }
+    }//GEN-LAST:event_menuNewActionPerformed
 
     /**
      * @param args the command line arguments
@@ -614,17 +662,18 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JMenu menuAboutUs;
+    private javax.swing.JMenuItem menuAboutUs;
     private javax.swing.JCheckBoxMenuItem menuAutoRetry;
     private javax.swing.JMenuItem menuExit;
+    private javax.swing.JMenu menuFile;
+    private javax.swing.JMenuItem menuNew;
     private javax.swing.JMenuItem menuSetProxy;
     private javax.swing.JMenuItem menuSetTimeOut;
+    private javax.swing.JMenu menuTools;
     private javax.swing.JButton stopbtn;
     private javax.swing.JButton submitButton;
     private javax.swing.JTextPane textAreaLog;

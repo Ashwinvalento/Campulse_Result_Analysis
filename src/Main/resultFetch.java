@@ -39,8 +39,6 @@ public class resultFetch {
         //System.out.println(url);
         try {
             doc = Jsoup.connect(url).userAgent("Mozilla").timeout(Forms.MainForm.timeout * 1000).get();
-            //doc = Jsoup.connect(url).userAgent("Mozilla").timeout(5 * 1000).get();
-            //System.out.println("Forms.MainForm.timeout * 1000 : "+ Forms.MainForm.timeout * 1000);
             Element StdName = doc.select("div").select("B:eq(0)").first();
             name = StdName.toString().split(">")[1].split(Pattern.quote("("))[0];
             System.out.println("name is : " + name);

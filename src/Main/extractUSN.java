@@ -28,7 +28,7 @@ public class extractUSN {
      }*/
 
     public Vector<String> getUsnFromFile(String inFile) {
-        MainForm.log("File selected : "+inFile);
+        MainForm.log("File selected : " + inFile);
         MainForm.log("Extracting USN from input file..\nPlease wait ....");
         BufferedReader br;
         Pattern p = Pattern.compile("4[pP][aA][0-9]{2}[a-zA-Z]{2}[0-9]{3}");

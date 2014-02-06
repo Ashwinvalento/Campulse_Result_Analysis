@@ -434,10 +434,8 @@ public class EnterUsnForm extends javax.swing.JFrame {
 
             System.out.println("FILE USN SIZE : " + FileUsn.size());
             FileUsn = e.getUsnFromFile(inFile);
-            //list.clear();
             System.out.println("FILE USN SIZE : " + FileUsn.size());
             for (int i = 0; i < FileUsn.size(); i++) {
-                //localUsnList.add(FileUsn.get(i));
                 list.addElement(FileUsn.get(i));
             }
             List_Usn.setModel(list);

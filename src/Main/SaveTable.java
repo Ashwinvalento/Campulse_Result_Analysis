@@ -46,7 +46,7 @@ public class SaveTable {
                     }
                 }
 
-                System.out.println("Writing to File" + fileName);
+                Forms.MainForm.log("Writing to File" + fileName);
                 bfw = new BufferedWriter(new FileWriter(fileName + ".csv"));
                 //bfw.write("hello world");
                 for (int i = 0; i < dataModel.getColumnCount(); i++) {

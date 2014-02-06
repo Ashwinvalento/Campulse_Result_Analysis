@@ -69,13 +69,10 @@ public class SaveTable {
                     }
                 }
                 bfw.close();
+                Forms.MainForm.log("Save Complete");
             } catch (IOException ex) {
                 Logger.getLogger(SaveTable.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            try {
-                bfw.close();
-            } catch (IOException ex) {
-                Logger.getLogger(SaveTable.class.getName()).log(Level.SEVERE, null, ex);
+                Forms.MainForm.logError("Error Saving File");
             }
         }
     }

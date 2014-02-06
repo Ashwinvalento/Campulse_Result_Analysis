@@ -6,6 +6,7 @@ package Forms;
  */
 import Main.DownloadMarksTask;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.Connection;
@@ -25,18 +26,6 @@ import javax.swing.text.StyleContext;
 import run.DBConnect;
 import static run.DBConnect.connection;
 import run.DBInterface;
-import static run.DBInterface.STUDENT_DETAILS;
-import static run.DBInterface.ST_NAME;
-import static run.DBInterface.ST_RESULT;
-import static run.DBInterface.ST_TOTAL;
-import static run.DBInterface.ST_USN;
-import static run.DBInterface.SUBJECT_DETAILS;
-import static run.DBInterface.SUB_EXTERNAL;
-import static run.DBInterface.SUB_INTERNAL;
-import static run.DBInterface.SUB_RESULT;
-import static run.DBInterface.SUB_SUBNAME;
-import static run.DBInterface.SUB_TOTAL;
-import static run.DBInterface.SUB_USN;
 
 public class MainForm extends javax.swing.JFrame implements DBInterface {
 
@@ -47,15 +36,18 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
     public static Vector<String> subNamesV = new Vector<String>();
     public static Vector<String> RetryList = new Vector<String>();
     public static boolean stopFlag = true;
-    public static DownloadDetailsForm DF ;
+    public static DownloadDetailsForm DF;
     private final int fetchCount;
     public static MainForm objCopy;
     DownloadMarksTask task;
     boolean subjectFetched = false; // this is again initialized in start button
     int subjectFetchTries = 5;  // this value is again initialized in start button action
+    boolean toggleHide = false;
 
     public MainForm() {
         initComponents();
+        setPreferredSize(new Dimension(470, 570));
+        this.pack();
         this.setLocationRelativeTo(null);
         DefaultCaret caret = (DefaultCaret) textAreaLog.getCaret();
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
@@ -98,6 +90,7 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         textAreaLog = new javax.swing.JTextPane();
+        ToggleMoreLess = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         menuFile = new javax.swing.JMenu();
         menuNew = new javax.swing.JMenuItem();
@@ -110,6 +103,7 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Vtu Marks Downloader");
+        setPreferredSize(new java.awt.Dimension(470, 500));
         setResizable(false);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), "Class Result", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
@@ -283,8 +277,15 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
         );
+
+        ToggleMoreLess.setText("Hide <<");
+        ToggleMoreLess.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ToggleMoreLessActionPerformed(evt);
+            }
+        });
 
         menuFile.setText("File");
 
@@ -353,21 +354,25 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(37, 37, 37)
-                                .addComponent(jLabel3)
-                                .addGap(18, 18, 18)
-                                .addComponent(TF_usn, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(B_GetResult, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(usnProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 419, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(19, 19, 19))
-                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())))
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(ToggleMoreLess)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(usnProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(37, 37, 37)
+                                    .addComponent(jLabel3)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(TF_usn, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(B_GetResult, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(19, 19, 19))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -379,8 +384,10 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
                     .addComponent(jLabel3))
                 .addGap(18, 18, 18)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(usnProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(11, 11, 11)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(usnProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ToggleMoreLess))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -406,7 +413,7 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
     }//GEN-LAST:event_bViewActionPerformed
 
     private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
-        
+
         DF = new DownloadDetailsForm();
         log("Result fetching started ...");
         log("Please wait till fetching has compleeted.");
@@ -596,6 +603,20 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
         }
     }//GEN-LAST:event_menuNewActionPerformed
 
+    private void ToggleMoreLessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ToggleMoreLessActionPerformed
+        if (toggleHide) {
+            toggleHide = false;
+            ToggleMoreLess.setText("Hide <<");
+            setPreferredSize(new Dimension(470, 570));
+            this.pack();
+        } else {
+            toggleHide = true;
+            ToggleMoreLess.setText("More >>");
+            setPreferredSize(new Dimension(470, 420));
+            this.pack();
+        }
+    }//GEN-LAST:event_ToggleMoreLessActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -652,6 +673,7 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
     private javax.swing.JButton B_GetResult;
     private javax.swing.JButton B_UsnSelect;
     private javax.swing.JTextField TF_usn;
+    private javax.swing.JButton ToggleMoreLess;
     private javax.swing.JButton bSubjectWise;
     private javax.swing.JButton bView;
     private javax.swing.JButton b_retry;

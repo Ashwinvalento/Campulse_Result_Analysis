@@ -22,14 +22,14 @@ public final class DBConnect implements DBInterface {
         try {
             Class.forName(driver);
             connection = DriverManager.getConnection(DB_URL);
-//            Forms.MainForm.log("Connecting to database : Successfull");
+            Forms.MainForm.log("Connecting to database : Successfull");
             System.out.println("Connected to database...");
         } catch (SQLException ex) {
             Logger.getLogger(DBConnect.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("Cant connect");
-            //          Forms.MainForm.log("Connecting to database : Failed");
+            Forms.MainForm.log("Connecting to database : Failed");
         } catch (ClassNotFoundException ex) {
-            //        Forms.MainForm.log("Connecting to database : Failed - Driver error");
+            Forms.MainForm.log("Connecting to database : Failed - Driver error");
             Logger.getLogger(DBConnect.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -45,10 +45,10 @@ public final class DBConnect implements DBInterface {
             System.out.println("subject_details created");
             stmt1.executeUpdate(query2);
             System.out.println("student_details created");
-            //          Forms.MainForm.log("Initializing Database : Successfull");
+            Forms.MainForm.log("Initializing Database : Successfull");
         } catch (SQLException ex) {
-             //Logger.getLogger(DBConnect.class.getName()).log(Level.SEVERE, null, ex);
-//            Forms.MainForm.log("Database attributes already exists");
+            //Logger.getLogger(DBConnect.class.getName()).log(Level.SEVERE, null, ex);
+            Forms.MainForm.log("Database attributes already exists");
             System.out.println("Table already exists");
         }
 

@@ -42,7 +42,13 @@ public class resultFetch {
             Element StdName = doc.select("div").select("B:eq(0)").first();
             name = StdName.toString().split(">")[1].split(Pattern.quote("("))[0];
             System.out.println("name is : " + name);
-
+            if (name.equalsIgnoreCase("Semester:</b")) {
+                System.out.println("Year out");
+                MainForm.DF.setStatus(usn, "Year Out");
+                MainForm.log(usn + " Download : Skipped (Year Out Student)");
+                
+                return false;
+            }
             Element markclass = doc.select("table:eq(1)").select("td:eq(3)").select("b:eq(0)").first();
             mk = markclass.toString().split(";")[2].split("<")[0];
             Element firstTableMarks = doc.select("table:eq(3)").first();
@@ -60,8 +66,9 @@ public class resultFetch {
                 Element totMks = doc.select("table:eq(4)").select("td:eq(3)").first();
                 totalmarks = totMks.toString().split(" ")[1];
             }
+
             MainForm.DF.setStatus(usn, "Success");
-            MainForm.log(usn + " Download : Success");            
+            MainForm.log(usn + " Download : Success");
         } catch (Exception e) {
             return checkIfResultisAvailable(usn, sem);
             /*

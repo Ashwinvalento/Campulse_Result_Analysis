@@ -1,9 +1,5 @@
 package Forms;
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 import Main.DownloadMarksTask;
 import Main.SaveTable;
 import java.awt.Color;
@@ -14,7 +10,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Stack;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,9 +31,9 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
     public static int timeout = 25;
     public static boolean autoRetry = true;
     public static int retrylimit = 10;
-    public static Vector<String> usnList = new Vector<String>();
-    public static Vector<String> subNamesV = new Vector<String>();
-    public static Vector<String> RetryList = new Vector<String>();
+    public static Vector<String> usnList = new Vector<>();
+    public static Vector<String> subNamesV = new Vector<>();
+    public static Vector<String> RetryList = new Vector<>();
     public static boolean stopFlag = true;
     public static DownloadDetailsForm DF;
     private final int fetchCount;
@@ -59,7 +54,6 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
         stopbtn.setEnabled(false);
         b_retry.setEnabled(false);
         menuAutoRetry.setSelected(true);
-
         fetchCount = 0;
     }
 
@@ -429,10 +423,8 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
         DF = new DownloadDetailsForm();
         log("Result fetching started ...");
         log("Please wait till fetching has compleeted.");
-
         usnProgressBar.setValue(usnProgressBar.getMinimum());
-
-        if (usnList.size() == 0) {
+        if (usnList.isEmpty()) {
             logError("Please Add atleast 1 USN to fetch result");
             JOptionPane.showMessageDialog(null, "Please Add at least 1 USN");
         } else {
@@ -441,7 +433,6 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
             stopbtn.setEnabled(true);
             updateProgress();
         }
-
     }//GEN-LAST:event_submitButtonActionPerformed
 
     private void menuSetProxyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuSetProxyActionPerformed
@@ -462,14 +453,10 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
         } else if (!m.matches()) {
             JOptionPane.showMessageDialog(null, "Invalid USN Format");
         } else {
-
             resultUrl = "http://results.vtu.ac.in/vitavi.php?submit=true&rid=" + TF_usn.getText();
-
             Runtime rt = Runtime.getRuntime();
             try {
                 Process clientProcess = rt.exec(new String[]{"C:\\Program Files\\Mozilla Firefox\\firefox.exe", "-new-window", resultUrl});
-                //Process clientProcess = rt.exec(new String[]{"START /max iexplore.exe", "-new-window", resultUrl});
-
                 clientProcess.waitFor();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -566,7 +553,6 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
         model.addColumn("FINAL TOTAL");
         model.addColumn("CLASS");
         int count = 0;
-
         String queryStd = "select " + ST_NAME + "," + ST_USN + "," + ST_TOTAL + "," + ST_RESULT + " from " + STUDENT_DETAILS + " ORDER BY " + ST_USN;
 
         Statement stmtStd, stmtSub;
@@ -579,13 +565,11 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
         try {
             stmtStd = connection.createStatement();
             rsStd = stmtStd.executeQuery(queryStd);
-
             while (rsStd.next()) { // loop till we find all students details
                 System.out.println("Student is : " + rsStd.getString(ST_USN));
                 String querySub = "select " + SUB_SUBNAME + "," + SUB_INTERNAL + "," + SUB_EXTERNAL + "," + SUB_TOTAL + "," + SUB_RESULT + " FROM " + SUBJECT_DETAILS + " WHERE " + SUB_USN + " = '" + rsStd.getString(ST_USN) + "'";
                 stmtSub = connection.createStatement();
                 rsSub = stmtSub.executeQuery(querySub);
-
                 while (rsSub.next()) {
                     subNames.add(rsSub.getString(SUB_SUBNAME));
                     Internals.add(rsSub.getInt(SUB_INTERNAL));
@@ -610,14 +594,10 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
                 Total.removeAllElements();
                 Result.removeAllElements();
             }
-
         } catch (SQLException ex) {
-            //System.out.println("Error : " + ex);
             Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
         }
-
         SaveTable ST = new SaveTable(model);
-
     }//GEN-LAST:event_btn_saveListActionPerformed
 
     private void menuAboutUsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuAboutUsActionPerformed
@@ -630,9 +610,7 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
 
     private void menuSetTimeOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuSetTimeOutActionPerformed
         Object[] timeArray = {"5", "10", "15", "20", "25"};
-
         Object str = JOptionPane.showInputDialog(null, "Select the timeout (in seconds) : ", "Set time out", JOptionPane.QUESTION_MESSAGE, null, timeArray, timeArray[4]);
-
         if (str != null) {
             System.out.println("str is : " + str);
             timeout = Integer.parseInt(str.toString());
@@ -649,13 +627,10 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
     }//GEN-LAST:event_b_retryActionPerformed
 
     private void menuAutoRetryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuAutoRetryActionPerformed
-        // TODO add your handling code here:
         if (menuAutoRetry.isSelected()) {
             autoRetry = true;
             Object[] limitArray = {"1", "3", "5", "10", "20", "INF"};
-
             Object str = JOptionPane.showInputDialog(null, "Select Number of retry Attempts : ", "Set Retry Attempts", JOptionPane.QUESTION_MESSAGE, null, limitArray, limitArray[3]);
-
             if (str != null) {
                 MainForm.log("Auto Retry Attempts set to : " + str);
                 if (str.equals("INF")) {
@@ -670,7 +645,6 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
             } else {
                 System.out.println("cancelled");
             }
-
             log("Auto retry is Enabled. USN failed to fetch will be retried automatically");
         } else {
             autoRetry = false;
@@ -698,18 +672,15 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
             }
 
             Statement stmt, stmt1;
-
             String query1 = "CREATE TABLE " + SUBJECT_DETAILS + " ('" + SUB_USN + "' VARCHAR NOT NULL , '" + SUB_SUBNAME + "' VARCHAR NOT NULL , '" + SUB_INTERNAL + "' INTEGER, '" + SUB_EXTERNAL + "' INTEGER, '" + SUB_TOTAL + "' INTEGER, '" + SUB_RESULT + "' CHAR, PRIMARY KEY (" + SUB_USN + ", " + SUB_SUBNAME + "))";
             String query2 = "CREATE TABLE " + STUDENT_DETAILS + " ('" + ST_USN + "' VARCHAR, '" + ST_NAME + "' VARCHAR, '" + ST_TOTAL + "' INTEGER, '" + ST_RESULT + "' VARCHAR, PRIMARY KEY (" + ST_USN + "))";
             try {
                 stmt = connection.createStatement();
                 stmt1 = connection.createStatement();
-
                 stmt.executeUpdate(query1);
                 stmt1.executeUpdate(query2);
                 MainForm.log("Initializing Database : Successfull");
             } catch (SQLException ex) {
-                // Logger.getLogger(DBConnect.class.getName()).log(Level.SEVERE, null, ex);
                 MainForm.log("Table already exists .");
             }
         }
@@ -732,36 +703,33 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
     private void btn_saveTablesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_saveTablesActionPerformed
         DefaultTableModel model = new DefaultTableModel();
         int count = 0;
-
         String queryStd = "select " + ST_NAME + "," + ST_USN + "," + ST_TOTAL + "," + ST_RESULT + " from " + STUDENT_DETAILS + " ORDER BY " + ST_USN;
-
         Statement stmtStd, stmtSub;
         ResultSet rsStd, rsSub;
         try {
-         stmtStd = connection.createStatement();
-         rsStd = stmtStd.executeQuery(queryStd);
-         while (rsStd.next()) { // loop till we find all students details
-         model.insertRow(count++, new Object[]{"USN :", rsStd.getString(ST_USN)});
-         model.insertRow(count++, new Object[]{"NAME :", rsStd.getString(ST_NAME)});
-         model.insertRow(count++, new Object[]{"TOTAL :", rsStd.getString(ST_TOTAL), null, "RESULT :", rsStd.getString(ST_RESULT)});
-         model.insertRow(count++, new Object[]{null});
-         model.insertRow(count++, new Object[]{"Subject ", "INTERNALS", "EXTERNALS", "TOTAL", "RESULT"});
-         System.out.println("Student is : " + rsStd.getString(ST_USN));
-         String querySub = "select " + SUB_SUBNAME + "," + SUB_INTERNAL + "," + SUB_EXTERNAL + "," + SUB_TOTAL + "," + SUB_RESULT + " FROM " + SUBJECT_DETAILS + " WHERE " + SUB_USN + " = '" + rsStd.getString(ST_USN) + "'";
-         stmtSub = connection.createStatement();
-         rsSub = stmtSub.executeQuery(querySub);
+            stmtStd = connection.createStatement();
+            rsStd = stmtStd.executeQuery(queryStd);
+            while (rsStd.next()) { // loop till we find all students details
+                model.insertRow(count++, new Object[]{"USN :", rsStd.getString(ST_USN)});
+                model.insertRow(count++, new Object[]{"NAME :", rsStd.getString(ST_NAME)});
+                model.insertRow(count++, new Object[]{"TOTAL :", rsStd.getString(ST_TOTAL), null, "RESULT :", rsStd.getString(ST_RESULT)});
+                model.insertRow(count++, new Object[]{null});
+                model.insertRow(count++, new Object[]{"Subject ", "INTERNALS", "EXTERNALS", "TOTAL", "RESULT"});
+                System.out.println("Student is : " + rsStd.getString(ST_USN));
+                String querySub = "select " + SUB_SUBNAME + "," + SUB_INTERNAL + "," + SUB_EXTERNAL + "," + SUB_TOTAL + "," + SUB_RESULT + " FROM " + SUBJECT_DETAILS + " WHERE " + SUB_USN + " = '" + rsStd.getString(ST_USN) + "'";
+                stmtSub = connection.createStatement();
+                rsSub = stmtSub.executeQuery(querySub);
+                while (rsSub.next()) {
+                    //                    model.insertRow(count++, new Object[]{rsSub.getString(SUB_SUBNAME), rsSub.getInt(SUB_INTERNAL), rsSub.getInt(SUB_EXTERNAL), rsSub.getInt(SUB_TOTAL), rsSub.getString(SUB_RESULT)});
+                }
+                model.insertRow(count++, new Object[]{null});
+                model.insertRow(count++, new Object[]{null});
+            }
 
-         while (rsSub.next()) {
-         //                    model.insertRow(count++, new Object[]{rsSub.getString(SUB_SUBNAME), rsSub.getInt(SUB_INTERNAL), rsSub.getInt(SUB_EXTERNAL), rsSub.getInt(SUB_TOTAL), rsSub.getString(SUB_RESULT)});
-         }
-         model.insertRow(count++, new Object[]{null});
-         model.insertRow(count++, new Object[]{null});
-         }
-            
-         } catch (SQLException ex) {
-         //System.out.println("Error : " + ex);
-         Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
-         }
+        } catch (SQLException ex) {
+            //System.out.println("Error : " + ex);
+            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
         SaveTable ST = new SaveTable(model);
 
     }//GEN-LAST:event_btn_saveTablesActionPerformed
@@ -861,20 +829,17 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
         task = new Main.DownloadMarksTask();
         task.addPropertyChangeListener(
                 new PropertyChangeListener() {
-
                     public void propertyChange(PropertyChangeEvent evt) {
                         if ("progress".equals(evt.getPropertyName())) {
                             usnProgressBar.setValue((Integer) evt.getNewValue());
                         }
                     }
                 });
-
         task.execute();
     }
 
     public void clickStop() {
         submitButton.setEnabled(true);
-        // stopbtn.setEnabled(false);
         task.stopFetching();
         b_retry.setEnabled(true);
     }

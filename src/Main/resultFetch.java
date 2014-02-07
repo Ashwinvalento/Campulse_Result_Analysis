@@ -174,13 +174,24 @@ public class resultFetch {
         MainForm.log(usn + " Checking For back papers");
         int totMark = 0;
         Document doc;
-        String url = "http://results.vtualerts.com/get_res.php?usn=" + usn;
+        String url = "http://results.vtualerts.com/get_res.php?usn=" + usn+ "&sem=" + sem;
 
         try {
             doc = Jsoup.connect(url).userAgent("Mozilla").timeout(Forms.MainForm.timeout * 1000).get();
-            Element markclass = doc.select("div").select("div").select("table").get(2);
+            
+            
+            Element StdName = doc.select("div").select("B:eq(0)").first();
+            String name = StdName.toString().split(">")[1].split(Pattern.quote("("))[0];
+            System.out.println("name is : " + name);
+                    
+            Element markclass = doc.select("table:eq(1)").select("td:eq(3)").select("b:eq(0)").first();
+            String mk = markclass.toString().split(";")[2].split("<")[0];
+            System.out.println("Class is : "+mk);
+            
+            Element tbl = doc.select("div").select("div").select("table").get(1);
 
-            Element tmtbody = markclass.select("tbody").first();
+            
+            Element tmtbody = tbl.select("tbody").first();
             //System.out.println(tmtbody);
             totalmarks = null;
             for (int i = 0; i < 8; i++) {

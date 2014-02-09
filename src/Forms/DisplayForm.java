@@ -65,13 +65,13 @@ public class DisplayForm extends javax.swing.JFrame implements DBInterface {
                 while (rs.next()) {
                     String temp = rs.getString(4);
                     String ToBEInserted = "Oth";
-                    if (temp.equalsIgnoreCase("FIRST CLASS WITH DISTINCTION ")) {
+                    if (temp.equalsIgnoreCase("FIRST CLASS WITH DISTINCTION")) {
                         ToBEInserted = "FCD";
-                    } else if (temp.equalsIgnoreCase("FIRST CLASS ")) {
+                    } else if (temp.equalsIgnoreCase("FIRST CLASS")) {
                         ToBEInserted = "FC";
-                    } else if (temp.equalsIgnoreCase("SECOND CLASS ")) {
+                    } else if (temp.equalsIgnoreCase("SECOND CLASS")) {
                         ToBEInserted = "SC";
-                    } else if (temp.equalsIgnoreCase("FAIL ")) {
+                    } else if (temp.equalsIgnoreCase("FAIL")) {
                         ToBEInserted = "FAIL";
                     }
                     firstTableModel.insertRow(rowCount++, new Object[]{rowCount, rs.getString(2), rs.getString(1), rs.getString(3), ToBEInserted});
@@ -364,13 +364,13 @@ public class DisplayForm extends javax.swing.JFrame implements DBInterface {
                     set = true;
                     String temp = rs.getString(ST_RESULT);
                     String ToBEInserted = "Oth";
-                    if (temp.equalsIgnoreCase("FIRST CLASS WITH DISTINCTION ")) {
+                    if (temp.equalsIgnoreCase("FIRST CLASS WITH DISTINCTION")) {
                         ToBEInserted = "FCD";
-                    } else if (temp.equalsIgnoreCase("FIRST CLASS ")) {
+                    } else if (temp.equalsIgnoreCase("FIRST CLASS")) {
                         ToBEInserted = "FC";
-                    } else if (temp.equalsIgnoreCase("SECOND CLASS ")) {
+                    } else if (temp.equalsIgnoreCase("SECOND CLASS")) {
                         ToBEInserted = "SC";
-                    } else if (temp.equalsIgnoreCase("FAIL ")) {
+                    } else if (temp.equalsIgnoreCase("FAIL")) {
                         ToBEInserted = "FAIL";
                     }
 
@@ -391,7 +391,7 @@ public class DisplayForm extends javax.swing.JFrame implements DBInterface {
             StudentNumberInfo.setText(StudDetails.getRowCount() + " Student Records found");
         }
         if (set) {
-            // fillMarksTable(StudDetails.getValueAt(0, 1).toString());
+             fillMarksTable(StudDetails.getValueAt(0, 1).toString());
         } else {
             NameLabel.setText("");
             ResultLabel.setText("");
@@ -483,7 +483,7 @@ public class DisplayForm extends javax.swing.JFrame implements DBInterface {
         if (StdClass.equals("ALL")) {
             query = "select " + ST_NAME + "," + ST_USN + "," + ST_TOTAL + "," + ST_RESULT + " from " + STUDENT_DETAILS + " ORDER BY " + ST_TOTAL + " DESC";
         } else {
-            query = "select DISTINCT " + ST_NAME + "," + ST_USN + "," + ST_TOTAL + "," + ST_RESULT + " from " + STUDENT_DETAILS + " WHERE " + ST_RESULT + " = '" + StdClass.trim() + " ' ORDER BY " + ST_TOTAL + " DESC";
+            query = "select DISTINCT " + ST_NAME + "," + ST_USN + "," + ST_TOTAL + "," + ST_RESULT + " from " + STUDENT_DETAILS + " WHERE " + ST_RESULT + " = '" + StdClass.trim() + "' ORDER BY " + ST_TOTAL + " DESC";
         }
 
         try {
@@ -518,23 +518,33 @@ public class DisplayForm extends javax.swing.JFrame implements DBInterface {
     // End of variables declaration//GEN-END:variables
 
     private void fillMarksTable(String usn) {
-        ResultSet res = null;
+        
+        int subjects = 0;
+        ResultSet res = null,rsSubNo=null;
         String query = null;
-        Statement stmt = null;
+        Statement stmt = null,stmtSubNo=null;
         model.setRowCount(0);
         StudentMarksTable.setModel(model);
         //query = "select " + ST_NAME + "," + ST_TOTAL + "," + ST_RESULT + "," + SUB_SUBNAME + "," + SUB_INTERNAL + "," + SUB_EXTERNAL + "," + SUB_TOTAL + "," + SUB_RESULT + " from " + SUBJECT_DETAILS + "," + STUDENT_DETAILS + " where " + STUDENT_DETAILS + "." + ST_USN + " = " + SUBJECT_DETAILS + "." + SUB_USN + " AND " + STUDENT_DETAILS + "." + ST_USN + "='" + usn + "'";
         query = "select * from " + SUBJECT_DETAILS + "," + STUDENT_DETAILS + " where " + STUDENT_DETAILS + "." + ST_USN + " = " + SUBJECT_DETAILS + "." + SUB_USN + " AND " + STUDENT_DETAILS + "." + ST_USN + "='" + usn + "'";
-
+        //query = "select * from " + SUBJECT_DETAILS + " where " + SUB_USN + "='" + usn + "'";
+        
+        String maxSubjectsQuery = "Select count(*) from "+SUBJECT_DETAILS+" where "+SUB_USN+" = '"+usn+"'";
         try {
             stmt = con.createStatement();
+            stmtSubNo = con.createStatement();
+            rsSubNo = stmtSubNo.executeQuery(maxSubjectsQuery);
+            rsSubNo.next();
+            subjects = rsSubNo.getInt(1);
+            
+            
             res = stmt.executeQuery(query);
             res.next();
 
             NameLabel.setText(res.getString(ST_NAME));
             TotalLabel.setText(Integer.toString(res.getInt(ST_TOTAL)));
             ResultLabel.setText(res.getString(ST_RESULT));
-            for (int row = 0; row < 8; row++) {
+            for (int row = 0; row < subjects; row++) {
                 model.insertRow(row, new Object[]{res.getString(SUB_SUBNAME), res.getString(SUB_INTERNAL), res.getString(SUB_EXTERNAL), res.getString(SUB_TOTAL), res.getString(SUB_RESULT)});
                 res.next();
             }

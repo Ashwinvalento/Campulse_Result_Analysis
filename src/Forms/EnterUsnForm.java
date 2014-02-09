@@ -447,14 +447,20 @@ public class EnterUsnForm extends javax.swing.JFrame {
     }//GEN-LAST:event_ipFileButtonActionPerformed
 
     private void B_doneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B_doneActionPerformed
-        if (modified) {
-            MainForm.usnList.clear();
-            sem = Integer.parseInt(Combo_sem.getSelectedItem().toString());
-            for (int i = 0; i < list.size(); i++) {
-                MainForm.usnList.add(list.getElementAt(i).toString());
+
+        if (Combo_sem.getSelectedIndex() == 0) {
+            JOptionPane.showMessageDialog(null, "Select Semester", "Please select a semester", JOptionPane.OK_OPTION);
+        } else {
+            if (modified) {
+                MainForm.usnList.clear();
+                sem = Integer.parseInt(Combo_sem.getSelectedItem().toString());
+                for (int i = 0; i < list.size(); i++) {
+                    MainForm.usnList.add(list.getElementAt(i).toString());
+                }
             }
+            this.dispose();
         }
-        this.dispose();
+
 
     }//GEN-LAST:event_B_doneActionPerformed
 

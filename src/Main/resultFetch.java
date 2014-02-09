@@ -17,7 +17,6 @@ import org.jsoup.nodes.Element;
 
 public class resultFetch {
 
-    String result;
     int marks[][] = new int[8][3];
     String res[] = new String[8];
     String subjects[] = new String[8];
@@ -41,7 +40,11 @@ public class resultFetch {
             doc = Jsoup.connect(url).userAgent("Mozilla").timeout(Forms.MainForm.timeout * 1000).get();
             Element StdName = doc.select("div").select("B:eq(0)").first();
             name = StdName.toString().split(">")[1].split(Pattern.quote("("))[0];
+            
+            Element Stdsem = doc.select("div").get(1).select("B").get(2);
+            System.out.println(Stdsem);
             System.out.println("name is : " + name);
+            
             if (name.equalsIgnoreCase("Semester:</b")) {
                 System.out.println("Year out");
                 MainForm.DF.setStatus(usn, "Year Out");
@@ -54,8 +57,12 @@ public class resultFetch {
             Element firstTableMarks = doc.select("table:eq(3)").first();
 
             Element tmtbody = firstTableMarks.select("tbody").first();
-
-            for (int i = 0; i < 8; i++) {
+            
+            int subs=8;
+            if(sem==8){
+                subs=6;
+            }
+            for (int i = 0; i <subs ; i++) {
                 String whichTr = "tr:eq(" + (i + 1) + ")";
                 subjects[i] = tmtbody.select(whichTr).first().child(0).text();
                 marks[i][0] = Integer.parseInt(tmtbody.select(whichTr).first().child(1).text());
@@ -150,6 +157,7 @@ public class resultFetch {
         }
         try {
             doc = Jsoup.connect(url).userAgent("Mozilla").timeout(Forms.MainForm.timeout * 1000).get();
+            System.out.println("comes to try result available");
             Element StdName = doc.select("center").first().child(0);
             System.out.println(StdName);
             if (StdName.toString().equals(resultNotAvail)) {
@@ -178,7 +186,7 @@ public class resultFetch {
 
         try {
             doc = Jsoup.connect(url).userAgent("Mozilla").timeout(Forms.MainForm.timeout * 1000).get();
-            
+            System.out.println("comes to try back paper");
             
             Element StdName = doc.select("div").select("B:eq(0)").first();
             String name = StdName.toString().split(">")[1].split(Pattern.quote("("))[0];

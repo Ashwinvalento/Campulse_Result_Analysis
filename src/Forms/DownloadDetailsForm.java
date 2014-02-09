@@ -19,8 +19,8 @@ public class DownloadDetailsForm extends javax.swing.JFrame {
      * Creates new form SendDetails
      */
     public DownloadDetailsForm() {
-        this.setTitle("Details");
         initComponents();
+        this.setTitle("Campulse Result analysis ");
         setLocationRelativeTo(null);
         row = 0;
         model = new DefaultTableModel();

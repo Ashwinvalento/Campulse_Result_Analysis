@@ -28,7 +28,9 @@ public class DisplayForm extends javax.swing.JFrame implements DBInterface {
      * Creates new form DisplayForm
      */
     public DisplayForm() {
-
+        initComponents();
+        this.setTitle("Campulse Result analysis");
+        this.setLocationRelativeTo(null);
         int rowCount = 0;
         model = new DefaultTableModel();
 
@@ -50,8 +52,6 @@ public class DisplayForm extends javax.swing.JFrame implements DBInterface {
         model.addColumn("TOTAL");
         model.addColumn("RESULT");
 
-        initComponents();
-        this.setLocationRelativeTo(null);
         if ((rs = getDetails("ALL")) != null) {
 
             firstTableModel.addColumn("Rank");

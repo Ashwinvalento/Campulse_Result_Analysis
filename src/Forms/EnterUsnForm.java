@@ -37,6 +37,7 @@ public class EnterUsnForm extends javax.swing.JFrame {
      */
     public EnterUsnForm() {
         initComponents();
+        this.setTitle("Campulse Result analysis :Enter USN");
         this.setLocationRelativeTo(null);
 
         list.clear();

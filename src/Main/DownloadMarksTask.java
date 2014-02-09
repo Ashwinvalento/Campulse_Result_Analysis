@@ -16,8 +16,7 @@ import run.DBInterface;
 
 public class DownloadMarksTask extends SwingWorker<Integer, Integer> implements DBInterface {
 
-    PreparedStatement pstmtSub, pstmtStud;
-    Statement stmtStd, stmtSub;
+    Statement stmtStd, stmtSub, stmtBackSub;
     Connection con;
 
     public DownloadMarksTask() {
@@ -45,12 +44,20 @@ public class DownloadMarksTask extends SwingWorker<Integer, Integer> implements 
                     stmtStd = con.createStatement();
                     stmtStd.executeUpdate(stdQuery);
 
-                   
+                    int semsubs = 8;
+                    if (EnterUsnForm.sem == 8) {
+                        semsubs = 6;
+                    }
 
-                    for (int x = 0; x < r.subs; x++) {
+                    for (int x = 0; x < semsubs; x++) {
                         String subQuery = "Insert into " + SUBJECT_DETAILS + " values ('" + MainForm.usnList.get(i) + "','" + r.subjects[x] + "'," + r.marks[x][1] + "," + r.marks[x][0] + "," + r.marks[x][2] + ",'" + r.res[x] + "')";
                         stmtSub = con.createStatement();
                         stmtSub.executeUpdate(subQuery);
+                    }
+                    for (int x = semsubs; x < r.subs; x++) {
+                        String subQuery = "Insert into " + BACKSUB_DETAILS + " values ('" + MainForm.usnList.get(i) + "','" + r.subjects[x] + "'," + r.marks[x][1] + "," + r.marks[x][0] + "," + r.marks[x][2] + ",'" + r.res[x] + "')";
+                        stmtBackSub = con.createStatement();
+                        stmtBackSub.executeUpdate(subQuery);
                     }
                 }
 

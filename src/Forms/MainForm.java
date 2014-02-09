@@ -81,6 +81,7 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
         jButton1 = new javax.swing.JButton();
         b_retry = new javax.swing.JButton();
         btn_saveTables = new javax.swing.JButton();
+        bGetReport = new javax.swing.JButton();
         usnProgressBar = new javax.swing.JProgressBar(0,100);
         jLabel3 = new javax.swing.JLabel();
         TF_usn = new javax.swing.JTextField();
@@ -188,6 +189,14 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
             }
         });
 
+        bGetReport.setFont(new java.awt.Font("Ubuntu", 0, 12)); // NOI18N
+        bGetReport.setText("Get Result");
+        bGetReport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bGetReportActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -206,10 +215,11 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
                                 .addComponent(jLabel2)
                                 .addComponent(jLabel5))
                             .addGap(48, 48, 48)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(btn_saveList)
-                                .addComponent(bView, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(B_UsnSelect, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(btn_saveList, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(bView, javax.swing.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE)
+                                .addComponent(B_UsnSelect, javax.swing.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE)
+                                .addComponent(bGetReport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -254,7 +264,9 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
                     .addComponent(jLabel5)
                     .addComponent(btn_saveList)
                     .addComponent(btn_saveTables))
-                .addContainerGap(64, Short.MAX_VALUE))
+                .addGap(20, 20, 20)
+                .addComponent(bGetReport)
+                .addContainerGap(13, Short.MAX_VALUE))
         );
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -283,7 +295,7 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 116, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
         );
 
         ToggleMoreLess.setText("Hide <<");
@@ -734,6 +746,11 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
 
     }//GEN-LAST:event_btn_saveTablesActionPerformed
 
+    private void bGetReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bGetReportActionPerformed
+        GetReportForm getreport=new GetReportForm();
+        getreport.setVisible(true);
+    }//GEN-LAST:event_bGetReportActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -793,6 +810,7 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
     private javax.swing.JButton B_UsnSelect;
     private javax.swing.JTextField TF_usn;
     private javax.swing.JButton ToggleMoreLess;
+    private javax.swing.JButton bGetReport;
     private javax.swing.JButton bSubjectWise;
     private javax.swing.JButton bView;
     private javax.swing.JButton b_retry;

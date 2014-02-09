@@ -23,7 +23,6 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import run.DBConnect;
-import static run.DBConnect.connection;
 import run.DBInterface;
 
 public class MainForm extends javax.swing.JFrame implements DBInterface {
@@ -80,7 +79,6 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
         btn_saveList = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         b_retry = new javax.swing.JButton();
-        btn_saveTables = new javax.swing.JButton();
         bGetReport = new javax.swing.JButton();
         usnProgressBar = new javax.swing.JProgressBar(0,100);
         jLabel3 = new javax.swing.JLabel();
@@ -182,15 +180,8 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
             }
         });
 
-        btn_saveTables.setText("Save As Tables");
-        btn_saveTables.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_saveTablesActionPerformed(evt);
-            }
-        });
-
         bGetReport.setFont(new java.awt.Font("Ubuntu", 0, 12)); // NOI18N
-        bGetReport.setText("Get Result");
+        bGetReport.setText("Report");
         bGetReport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bGetReportActionPerformed(evt);
@@ -227,8 +218,7 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
                         .addComponent(stopbtn)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(b_retry))
-                    .addComponent(bSubjectWise, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btn_saveTables, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(bSubjectWise, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(24, 24, 24))
         );
 
@@ -262,11 +252,10 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(btn_saveList)
-                    .addComponent(btn_saveTables))
-                .addGap(20, 20, 20)
+                    .addComponent(btn_saveList))
+                .addGap(18, 18, 18)
                 .addComponent(bGetReport)
-                .addContainerGap(13, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -431,7 +420,6 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
     }//GEN-LAST:event_bViewActionPerformed
 
     private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
-
         DF = new DownloadDetailsForm();
         log("Result fetching started ...");
         log("Please wait till fetching has compleeted.");
@@ -440,10 +428,15 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
             logError("Please Add atleast 1 USN to fetch result");
             JOptionPane.showMessageDialog(null, "Please Add at least 1 USN");
         } else {
+            int opt = JOptionPane.showConfirmDialog(null, "Do you want to clear pervious fetch results ??", "New", JOptionPane.OK_CANCEL_OPTION);
+            if (opt == 0) {
+                menuNew.doClick();
+            }
             stopFlag = false;
             submitButton.setEnabled(false);
             stopbtn.setEnabled(true);
             updateProgress();
+
         }
     }//GEN-LAST:event_submitButtonActionPerformed
 
@@ -482,6 +475,7 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
     }//GEN-LAST:event_bSubjectWiseActionPerformed
 
     private void btn_saveListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_saveListActionPerformed
+        Connection con = DBConnect.connection;
         /*     int count = 0;
          DisplayForm df = new DisplayForm("Dummy");
          DefaultTableModel model = new DefaultTableModel();
@@ -566,7 +560,6 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
         model.addColumn("CLASS");
         int count = 0;
         String queryStd = "select " + ST_NAME + "," + ST_USN + "," + ST_TOTAL + "," + ST_RESULT + " from " + STUDENT_DETAILS + " ORDER BY " + ST_USN;
-
         Statement stmtStd, stmtSub;
         ResultSet rsStd, rsSub;
         Vector<String> subNames = new Vector<>();
@@ -575,12 +568,12 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
         Vector<Integer> Total = new Vector<>();
         Vector<String> Result = new Vector<>();
         try {
-            stmtStd = connection.createStatement();
+            stmtStd = con.createStatement();
             rsStd = stmtStd.executeQuery(queryStd);
             while (rsStd.next()) { // loop till we find all students details
                 System.out.println("Student is : " + rsStd.getString(ST_USN));
                 String querySub = "select " + SUB_SUBNAME + "," + SUB_INTERNAL + "," + SUB_EXTERNAL + "," + SUB_TOTAL + "," + SUB_RESULT + " FROM " + SUBJECT_DETAILS + " WHERE " + SUB_USN + " = '" + rsStd.getString(ST_USN) + "'";
-                stmtSub = connection.createStatement();
+                stmtSub = con.createStatement();
                 rsSub = stmtSub.executeQuery(querySub);
                 while (rsSub.next()) {
                     subNames.add(rsSub.getString(SUB_SUBNAME));
@@ -665,36 +658,28 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
     }//GEN-LAST:event_menuAutoRetryActionPerformed
 
     private void menuNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuNewActionPerformed
+        Connection con = DBConnect.connection;
         int x = JOptionPane.showConfirmDialog(null, "This will delete all your previous records\nAre you sure you want to continue ?", "New database", JOptionPane.OK_CANCEL_OPTION);
         if (x == 0) {
             log("Deleting previous records !");
-            Connection con = DBConnect.connection;
-            Statement stmtSt, stmtSub;
-            String querySt = " DROP TABLE " + STUDENT_DETAILS;
-            String querySub = "DROP TABLE " + SUBJECT_DETAILS;
+
+            Statement stmtSt = null, stmtSub = null, stmtBack = null;
+            String querySt = " Delete  from " + STUDENT_DETAILS;
+            String querySub = "Delete  from " + SUBJECT_DETAILS;
+            String queryBack = "Delete  from " + BACKSUB_DETAILS;
             try {
                 stmtSt = con.createStatement();
                 stmtSub = con.createStatement();
+                stmtBack = con.createStatement();
                 stmtSt.executeUpdate(querySt);
                 stmtSub.executeUpdate(querySub);
+                stmtBack.executeUpdate(queryBack);
 
             } catch (SQLException ex) {
                 log(ex.getMessage());
                 Logger.getLogger(DownloadMarksTask.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-            Statement stmt, stmt1;
-            String query1 = "CREATE TABLE " + SUBJECT_DETAILS + " ('" + SUB_USN + "' VARCHAR NOT NULL , '" + SUB_SUBNAME + "' VARCHAR NOT NULL , '" + SUB_INTERNAL + "' INTEGER, '" + SUB_EXTERNAL + "' INTEGER, '" + SUB_TOTAL + "' INTEGER, '" + SUB_RESULT + "' CHAR, PRIMARY KEY (" + SUB_USN + ", " + SUB_SUBNAME + "))";
-            String query2 = "CREATE TABLE " + STUDENT_DETAILS + " ('" + ST_USN + "' VARCHAR, '" + ST_NAME + "' VARCHAR, '" + ST_TOTAL + "' INTEGER, '" + ST_RESULT + "' VARCHAR, PRIMARY KEY (" + ST_USN + "))";
-            try {
-                stmt = connection.createStatement();
-                stmt1 = connection.createStatement();
-                stmt.executeUpdate(query1);
-                stmt1.executeUpdate(query2);
-                MainForm.log("Initializing Database : Successfull");
-            } catch (SQLException ex) {
-                MainForm.log("Table already exists .");
-            }
         }
     }//GEN-LAST:event_menuNewActionPerformed
 
@@ -712,42 +697,8 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
         }
     }//GEN-LAST:event_ToggleMoreLessActionPerformed
 
-    private void btn_saveTablesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_saveTablesActionPerformed
-        DefaultTableModel model = new DefaultTableModel();
-        int count = 0;
-        String queryStd = "select " + ST_NAME + "," + ST_USN + "," + ST_TOTAL + "," + ST_RESULT + " from " + STUDENT_DETAILS + " ORDER BY " + ST_USN;
-        Statement stmtStd, stmtSub;
-        ResultSet rsStd, rsSub;
-        try {
-            stmtStd = connection.createStatement();
-            rsStd = stmtStd.executeQuery(queryStd);
-            while (rsStd.next()) { // loop till we find all students details
-                model.insertRow(count++, new Object[]{"USN :", rsStd.getString(ST_USN)});
-                model.insertRow(count++, new Object[]{"NAME :", rsStd.getString(ST_NAME)});
-                model.insertRow(count++, new Object[]{"TOTAL :", rsStd.getString(ST_TOTAL), null, "RESULT :", rsStd.getString(ST_RESULT)});
-                model.insertRow(count++, new Object[]{null});
-                model.insertRow(count++, new Object[]{"Subject ", "INTERNALS", "EXTERNALS", "TOTAL", "RESULT"});
-                System.out.println("Student is : " + rsStd.getString(ST_USN));
-                String querySub = "select " + SUB_SUBNAME + "," + SUB_INTERNAL + "," + SUB_EXTERNAL + "," + SUB_TOTAL + "," + SUB_RESULT + " FROM " + SUBJECT_DETAILS + " WHERE " + SUB_USN + " = '" + rsStd.getString(ST_USN) + "'";
-                stmtSub = connection.createStatement();
-                rsSub = stmtSub.executeQuery(querySub);
-                while (rsSub.next()) {
-                    //                    model.insertRow(count++, new Object[]{rsSub.getString(SUB_SUBNAME), rsSub.getInt(SUB_INTERNAL), rsSub.getInt(SUB_EXTERNAL), rsSub.getInt(SUB_TOTAL), rsSub.getString(SUB_RESULT)});
-                }
-                model.insertRow(count++, new Object[]{null});
-                model.insertRow(count++, new Object[]{null});
-            }
-
-        } catch (SQLException ex) {
-            //System.out.println("Error : " + ex);
-            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        SaveTable ST = new SaveTable(model);
-
-    }//GEN-LAST:event_btn_saveTablesActionPerformed
-
     private void bGetReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bGetReportActionPerformed
-        GetReportForm getreport=new GetReportForm();
+        GetReportForm getreport = new GetReportForm();
         getreport.setVisible(true);
     }//GEN-LAST:event_bGetReportActionPerformed
 
@@ -800,7 +751,6 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
                 objCopy.setVisible(true);
                 log("Welcome to Result extractor.");
                 run.DBConnect.getConnection();
-
             }
         });
     }
@@ -815,7 +765,6 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
     private javax.swing.JButton bView;
     private javax.swing.JButton b_retry;
     private javax.swing.JButton btn_saveList;
-    private javax.swing.JButton btn_saveTables;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

@@ -53,8 +53,6 @@ public class GetReportForm extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(tableReport);
 
-        PACELOGO.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/pacelogo1.png"))); // NOI18N
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -66,7 +64,7 @@ public class GetReportForm extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(136, 136, 136)
                 .addComponent(PACELOGO)
-                .addContainerGap(173, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

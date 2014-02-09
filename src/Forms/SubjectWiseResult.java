@@ -15,17 +15,20 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import run.DBConnect;
 import run.DBInterface;
 
 public class SubjectWiseResult extends javax.swing.JFrame implements DBInterface {
 
+    Connection con;
     private int whichROw;
     DefaultTableModel model;
 
     public SubjectWiseResult() {
         initComponents();
+        con = DBConnect.connection;
         this.setLocationRelativeTo(null);
         retrieveSubjectNames();
         fillSubjectCombo();
@@ -93,7 +96,7 @@ public class SubjectWiseResult extends javax.swing.JFrame implements DBInterface
         label4.setText("in");
 
         subjectCombo.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        subjectCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "All", "Any" }));
+        subjectCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "EMPTY" }));
         subjectCombo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 subjectComboActionPerformed(evt);
@@ -284,7 +287,7 @@ public class SubjectWiseResult extends javax.swing.JFrame implements DBInterface
         String passOrFail;
         int rowCount = 0;
         boolean insertflag = false;
-        Connection con = DBConnect.connection;
+
         int lowLimit = Integer.parseInt(firstValue.getValue().toString()) - 1;
         int highLimit = Integer.parseInt(lastValue.getValue().toString()) + 1;
         int typeValue = examType.getSelectedIndex() + 1;
@@ -312,39 +315,41 @@ public class SubjectWiseResult extends javax.swing.JFrame implements DBInterface
 
         //query = "select DISTINCT * from RESULTTABLE";
         query = "select DISTINCT " + STUDENT_DETAILS + "." + ST_USN + "," + ST_NAME + "," + ST_TOTAL + "," + ST_RESULT + "," + SUB_INTERNAL + "," + SUB_EXTERNAL + "," + SUB_TOTAL + "," + SUB_RESULT + " from " + SUBJECT_DETAILS + "," + STUDENT_DETAILS + " where " + STUDENT_DETAILS + "." + ST_USN + " = " + SUBJECT_DETAILS + "." + SUB_USN;
+        if (subjectCombo.getSelectedItem() != null) {
 
-        SelectedSubjectName = subjectCombo.getSelectedItem().toString();
-        RetrieveQuery = query + " AND " + SUB_SUBNAME + "= '" + SelectedSubjectName + "'";
-        System.out.println("RetrieveQuery : " + RetrieveQuery);
-        try {
-            stmt = con.createStatement();
-            rs = stmt.executeQuery(RetrieveQuery);
-        } catch (SQLException ex) {
-            Logger.getLogger(SubjectWiseResult.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        try {
-            while (rs.next()) {
-                usn = rs.getString(ST_USN);
-                studentName = rs.getString(ST_NAME);
-                internalMark = rs.getInt(SUB_INTERNAL);
-                externalMark = rs.getInt(SUB_EXTERNAL);
-                totalMark = rs.getInt(SUB_TOTAL);
-                passOrFail = rs.getString(SUB_RESULT);
-                if (examType.getSelectedIndex() == 0 && internalMark > lowLimit && internalMark < highLimit) {
-                    model.insertRow(rowCount++, new Object[]{usn, studentName, internalMark, externalMark, totalMark, passOrFail});
-                } else if (examType.getSelectedIndex() == 1 && externalMark > lowLimit && externalMark < highLimit) {
-                    model.insertRow(rowCount++, new Object[]{usn, studentName, internalMark, externalMark, totalMark, passOrFail});
-                } else if (examType.getSelectedIndex() == 2 && totalMark > lowLimit && totalMark < highLimit) {
-                    //insertflag = true;
-                    model.insertRow(rowCount++, new Object[]{usn, studentName, internalMark, externalMark, totalMark, passOrFail});
-                } else if(examType.getSelectedIndex()==3 && passOrFail.equalsIgnoreCase("f")){
-                    model.insertRow(rowCount++, new Object[]{usn, studentName, internalMark, externalMark, totalMark, passOrFail});
-                }
+            SelectedSubjectName = subjectCombo.getSelectedItem().toString();
+            RetrieveQuery = query + " AND " + SUB_SUBNAME + "= '" + SelectedSubjectName + "'";
+            System.out.println("RetrieveQuery : " + RetrieveQuery);
+            try {
+                stmt = con.createStatement();
+                rs = stmt.executeQuery(RetrieveQuery);
+            } catch (SQLException ex) {
+                Logger.getLogger(SubjectWiseResult.class.getName()).log(Level.SEVERE, null, ex);
             }
+            try {
+                while (rs.next()) {
+                    usn = rs.getString(ST_USN);
+                    studentName = rs.getString(ST_NAME);
+                    internalMark = rs.getInt(SUB_INTERNAL);
+                    externalMark = rs.getInt(SUB_EXTERNAL);
+                    totalMark = rs.getInt(SUB_TOTAL);
+                    passOrFail = rs.getString(SUB_RESULT);
+                    if (examType.getSelectedIndex() == 0 && internalMark > lowLimit && internalMark < highLimit) {
+                        model.insertRow(rowCount++, new Object[]{usn, studentName, internalMark, externalMark, totalMark, passOrFail});
+                    } else if (examType.getSelectedIndex() == 1 && externalMark > lowLimit && externalMark < highLimit) {
+                        model.insertRow(rowCount++, new Object[]{usn, studentName, internalMark, externalMark, totalMark, passOrFail});
+                    } else if (examType.getSelectedIndex() == 2 && totalMark > lowLimit && totalMark < highLimit) {
+                        //insertflag = true;
+                        model.insertRow(rowCount++, new Object[]{usn, studentName, internalMark, externalMark, totalMark, passOrFail});
+                    } else if (examType.getSelectedIndex() == 3 && passOrFail.equalsIgnoreCase("f")) {
+                        model.insertRow(rowCount++, new Object[]{usn, studentName, internalMark, externalMark, totalMark, passOrFail});
+                    }
+                }
 
-            lcount.setText(Integer.toString(model.getRowCount()) + " scored between " + firstValue.getValue() + " and " + lastValue.getValue() + " in  " + examType.getSelectedItem().toString() + " of " + subjectCombo.getSelectedItem().toString());
-        } catch (SQLException ex) {
-            Logger.getLogger(SubjectWiseResult.class.getName()).log(Level.SEVERE, null, ex);
+                lcount.setText(Integer.toString(model.getRowCount()) + " scored between " + firstValue.getValue() + " and " + lastValue.getValue() + " in  " + examType.getSelectedItem().toString() + " of " + subjectCombo.getSelectedItem().toString());
+            } catch (SQLException ex) {
+                Logger.getLogger(SubjectWiseResult.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_bSubmitActionPerformed
 
@@ -446,7 +451,7 @@ public class SubjectWiseResult extends javax.swing.JFrame implements DBInterface
 
     public void retrieveSubjectNames() {
         MainForm.subNamesV.clear();
-        Connection con = DBConnect.connection;
+
         ResultSet rs = null;
         String sql = "Select DISTINCT " + SUB_SUBNAME + " From " + SUBJECT_DETAILS;
         try {

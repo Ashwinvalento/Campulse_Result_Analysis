@@ -27,7 +27,6 @@ public class DisplayForm extends javax.swing.JFrame implements DBInterface {
     /**
      * Creates new form DisplayForm
      */
-
     public DisplayForm() {
 
         int rowCount = 0;
@@ -355,9 +354,6 @@ public class DisplayForm extends javax.swing.JFrame implements DBInterface {
         int rowCount = 0;
         boolean set = false;
         firstTableModel.setRowCount(0);
-        if (ClassCombo.getSelectedIndex() == 1) {
-            set = true;
-        }
         if ((rs = getDetails(ClassCombo.getSelectedItem().toString())) != null) {
             try {
                 while (rs.next()) {
@@ -373,9 +369,7 @@ public class DisplayForm extends javax.swing.JFrame implements DBInterface {
                     } else if (temp.equalsIgnoreCase("FAIL")) {
                         ToBEInserted = "FAIL";
                     }
-
                     firstTableModel.insertRow(rowCount++, new Object[]{rowCount, rs.getString(ST_USN), rs.getString(ST_NAME), rs.getString(ST_TOTAL), ToBEInserted});
-
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(DisplayForm.class.getName()).log(Level.SEVERE, null, ex);
@@ -391,7 +385,7 @@ public class DisplayForm extends javax.swing.JFrame implements DBInterface {
             StudentNumberInfo.setText(StudDetails.getRowCount() + " Student Records found");
         }
         if (set) {
-             fillMarksTable(StudDetails.getValueAt(0, 1).toString());
+            fillMarksTable(StudDetails.getValueAt(0, 1).toString());
         } else {
             NameLabel.setText("");
             ResultLabel.setText("");
@@ -518,26 +512,36 @@ public class DisplayForm extends javax.swing.JFrame implements DBInterface {
     // End of variables declaration//GEN-END:variables
 
     private void fillMarksTable(String usn) {
-        
+
         int subjects = 0;
-        ResultSet res = null,rsSubNo=null;
-        String query = null;
-        Statement stmt = null,stmtSubNo=null;
+        ResultSet res = null, rsSubNo = null, rsBackSubNo = null;
+        String query = null, query1;
+        Statement stmt = null, stmtSubNo = null, stmtBackSubNo = null;
         model.setRowCount(0);
         StudentMarksTable.setModel(model);
         //query = "select " + ST_NAME + "," + ST_TOTAL + "," + ST_RESULT + "," + SUB_SUBNAME + "," + SUB_INTERNAL + "," + SUB_EXTERNAL + "," + SUB_TOTAL + "," + SUB_RESULT + " from " + SUBJECT_DETAILS + "," + STUDENT_DETAILS + " where " + STUDENT_DETAILS + "." + ST_USN + " = " + SUBJECT_DETAILS + "." + SUB_USN + " AND " + STUDENT_DETAILS + "." + ST_USN + "='" + usn + "'";
         query = "select * from " + SUBJECT_DETAILS + "," + STUDENT_DETAILS + " where " + STUDENT_DETAILS + "." + ST_USN + " = " + SUBJECT_DETAILS + "." + SUB_USN + " AND " + STUDENT_DETAILS + "." + ST_USN + "='" + usn + "'";
-        //query = "select * from " + SUBJECT_DETAILS + " where " + SUB_USN + "='" + usn + "'";
-        
-        String maxSubjectsQuery = "Select count(*) from "+SUBJECT_DETAILS+" where "+SUB_USN+" = '"+usn+"'";
+        query1 = "select * from " + BACKSUB_DETAILS + " where " + SUB_USN + "='" + usn + "'";
+
+        String maxSubjectsQuery = "Select count(*) from " + SUBJECT_DETAILS + " where " + SUB_USN + " = '" + usn + "'";
+        String maxBackSubjectsQuery = "Select count(*) from " + BACKSUB_DETAILS + " where " + SUB_USN + " = '" + usn + "'";
+
         try {
             stmt = con.createStatement();
             stmtSubNo = con.createStatement();
+            stmtBackSubNo = con.createStatement();
             rsSubNo = stmtSubNo.executeQuery(maxSubjectsQuery);
             rsSubNo.next();
+
+            rsSubNo = stmtBackSubNo.executeQuery(maxSubjectsQuery);
+            rsSubNo.next();
             subjects = rsSubNo.getInt(1);
-            
-            
+
+            rsBackSubNo = stmtBackSubNo.executeQuery(maxBackSubjectsQuery);
+            rsSubNo.next();
+
+            int backSubjects = rsBackSubNo.getInt(1);
+
             res = stmt.executeQuery(query);
             res.next();
 
@@ -548,12 +552,20 @@ public class DisplayForm extends javax.swing.JFrame implements DBInterface {
                 model.insertRow(row, new Object[]{res.getString(SUB_SUBNAME), res.getString(SUB_INTERNAL), res.getString(SUB_EXTERNAL), res.getString(SUB_TOTAL), res.getString(SUB_RESULT)});
                 res.next();
             }
-
+            if (backSubjects > 0) {
+                model.insertRow(subjects, new Object[]{null, null, null, null, null});
+                res = stmt.executeQuery(query1);
+                res.next();
+                for (int row = 1; row <= backSubjects; row++) {
+                    model.insertRow(subjects + row, new Object[]{res.getString(SUB_SUBNAME), res.getString(SUB_INTERNAL), res.getString(SUB_EXTERNAL), res.getString(SUB_TOTAL), res.getString(SUB_RESULT)});
+                    res.next();
+                }
+            }
             StudentMarksTable.getColumn("SUBJECT").setPreferredWidth(300);
-
         } catch (SQLException ex) {
             System.out.println("Error : " + ex);
             MainForm.logError("Error : " + ex);
+            ex.printStackTrace();
         }
     }
 

@@ -13,6 +13,7 @@ public interface DBInterface {
 
     String STUDENT_DETAILS = "student_details";
     String SUBJECT_DETAILS = "subject_details";
+    String BACKSUB_DETAILS = "backpaper_details";
 
     //STUDENT_DETAILS table attributes
     String ST_USN = "usn";

@@ -450,7 +450,7 @@ public class EnterUsnForm extends javax.swing.JFrame {
     private void B_doneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B_doneActionPerformed
 
         if (Combo_sem.getSelectedIndex() == 0) {
-            JOptionPane.showMessageDialog(null, "Select Semester", "Please select a semester", JOptionPane.OK_OPTION);
+            JOptionPane.showMessageDialog(null, "Please select a semester", "select semester", JOptionPane.OK_OPTION);
         } else {
             if (modified) {
                 MainForm.usnList.clear();

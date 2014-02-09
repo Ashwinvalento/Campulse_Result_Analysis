@@ -28,7 +28,8 @@ public class DownloadMarksTask extends SwingWorker<Integer, Integer> implements 
 
     @Override
     public Integer doInBackground() throws InterruptedException {
-        resultFetch r = new resultFetch();
+        resultFetch_1 r = new resultFetch_1();
+        //resultFetchVTU r = new resultFetchVTU();
         if (MainForm.stopFlag == true) {
             stopFetching();
         }
@@ -44,16 +45,18 @@ public class DownloadMarksTask extends SwingWorker<Integer, Integer> implements 
                     stmtStd = con.createStatement();
                     stmtStd.executeUpdate(stdQuery);
 
-                    for (int x = 0; x < 8; x++) {
+                   
+
+                    for (int x = 0; x < r.subs; x++) {
                         String subQuery = "Insert into " + SUBJECT_DETAILS + " values ('" + MainForm.usnList.get(i) + "','" + r.subjects[x] + "'," + r.marks[x][1] + "," + r.marks[x][0] + "," + r.marks[x][2] + ",'" + r.res[x] + "')";
                         stmtSub = con.createStatement();
                         stmtSub.executeUpdate(subQuery);
-
                     }
                 }
 
             } catch (Exception e) {
                 System.out.println("Error:" + e);
+                e.printStackTrace();
                 MainForm.log(MainForm.usnList.get(i) + " : Record already exists");
                 //Logger.getLogger(DownloadMarksTask.class.getName()).log(Level.SEVERE, null, e);
             }

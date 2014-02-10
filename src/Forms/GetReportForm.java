@@ -15,12 +15,15 @@ import javax.swing.table.DefaultTableModel;
 public class GetReportForm extends javax.swing.JFrame {
 
     DefaultTableModel model;
+    GenReport genRprt;
 
     public GetReportForm() {
         initComponents();
         this.setTitle("Campulse Result analysis :Report");
         this.setLocationRelativeTo(null);
-        generateReport();
+        genRprt = new GenReport();
+        generateTableReport();
+        generateClassReport();
     }
 
     /**
@@ -32,15 +35,33 @@ public class GetReportForm extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
+        PACELOGO = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableReport = new javax.swing.JTable();
-        PACELOGO = new javax.swing.JLabel();
+        overallPanel = new javax.swing.JPanel();
+        lFail = new javax.swing.JLabel();
+        lFCDCount = new javax.swing.JLabel();
+        lFirstClass = new javax.swing.JLabel();
+        lSecondClass = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Result Analaysis");
         setResizable(false);
 
-        tableReport.setFont(new java.awt.Font("Ubuntu", 0, 14)); // NOI18N
+        PACELOGO.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/PACE-Logo-high-res-file.jpg"))); // NOI18N
+
+        jLabel2.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(81, 93, 210));
+        jLabel2.setText("NADUPADAV, MANGALORE");
+
+        jLabel1.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(81, 93, 210));
+        jLabel1.setText("P. A. COLLEGE OF ENGINEERING");
+
+        tableReport.setFont(new java.awt.Font("Monospaced", 0, 15)); // NOI18N
         tableReport.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -54,7 +75,86 @@ public class GetReportForm extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(tableReport);
 
-        PACELOGO.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/pacelogo1.png"))); // NOI18N
+        overallPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Class Result", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.ABOVE_TOP));
+
+        lFail.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        lFail.setText("Fail : ");
+
+        lFCDCount.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        lFCDCount.setText("First Class With Distinction : ");
+
+        lFirstClass.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        lFirstClass.setText("First Class : ");
+
+        lSecondClass.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        lSecondClass.setText("Second Class :");
+
+        javax.swing.GroupLayout overallPanelLayout = new javax.swing.GroupLayout(overallPanel);
+        overallPanel.setLayout(overallPanelLayout);
+        overallPanelLayout.setHorizontalGroup(
+            overallPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(overallPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(overallPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lFCDCount)
+                    .addComponent(lFirstClass))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 132, Short.MAX_VALUE)
+                .addGroup(overallPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lSecondClass)
+                    .addComponent(lFail))
+                .addGap(267, 267, 267))
+        );
+        overallPanelLayout.setVerticalGroup(
+            overallPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(overallPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(overallPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lFCDCount)
+                    .addComponent(lSecondClass, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(overallPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lFirstClass)
+                    .addComponent(lFail))
+                .addContainerGap())
+        );
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 832, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(overallPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(107, 107, 107)
+                        .addComponent(PACELOGO)
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2))))
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(PACELOGO)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel2)))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(overallPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -62,21 +162,15 @@ public class GetReportForm extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 686, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(113, 113, 113)
-                .addComponent(PACELOGO, javax.swing.GroupLayout.PREFERRED_SIZE, 409, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(PACELOGO, javax.swing.GroupLayout.PREFERRED_SIZE, 117, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(58, 58, 58))
+                .addGap(19, 19, 19)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -119,14 +213,22 @@ public class GetReportForm extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel PACELOGO;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lFCDCount;
+    private javax.swing.JLabel lFail;
+    private javax.swing.JLabel lFirstClass;
+    private javax.swing.JLabel lSecondClass;
+    private javax.swing.JPanel overallPanel;
     private javax.swing.JTable tableReport;
     // End of variables declaration//GEN-END:variables
 
-    private void generateReport() {
+    private void generateTableReport() {
         model = new DefaultTableModel();
-        GenReport genRprt=new GenReport();
-        model=genRprt.fillReportTable();
+
+        model = genRprt.fillReportTable();
         tableReport.setModel(model);
         tableReport.setAutoCreateRowSorter(true);
         tableReport.getColumn("Subject Names ").setPreferredWidth(350);
@@ -136,5 +238,13 @@ public class GetReportForm extends javax.swing.JFrame {
         tableReport.getColumn("FCD").setPreferredWidth(60);
         tableReport.getColumn("FC").setPreferredWidth(60);
         tableReport.getColumn("SC").setPreferredWidth(60);
+    }
+
+    private void generateClassReport() {
+        genRprt.getAllLabelValues();
+        lFCDCount.setText("FIRST CLASS WITH DISTINCTION : " + genRprt.getClassFCD());
+        lFirstClass.setText("FIRST CLASS : " + genRprt.getClassFC());
+        lSecondClass.setText("SECOND CLASS : " + genRprt.getClassSC());
+        lFail.setText("FAIL : " + genRprt.getClassFail());
     }
 }

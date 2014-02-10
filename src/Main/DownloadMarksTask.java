@@ -7,7 +7,6 @@ package Main;
 import Forms.EnterUsnForm;
 import Forms.MainForm;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 import javax.swing.SwingWorker;
@@ -27,7 +26,7 @@ public class DownloadMarksTask extends SwingWorker<Integer, Integer> implements 
 
     @Override
     public Integer doInBackground() throws InterruptedException {
-        resultFetch_1 r = new resultFetch_1();
+        resultFetch r = new resultFetch();
         //resultFetchVTU r = new resultFetchVTU();
         if (MainForm.stopFlag == true) {
             stopFetching();

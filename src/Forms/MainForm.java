@@ -6,6 +6,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -44,9 +46,11 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
 
     public MainForm() {
         initComponents();
+        this.setTitle("Campulse Result analysis");
         setPreferredSize(new Dimension(470, 570));
         this.pack();
         this.setLocationRelativeTo(null);
+        DF = new DownloadDetailsForm();
         DefaultCaret caret = (DefaultCaret) textAreaLog.getCaret();
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
@@ -158,7 +162,7 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
         jLabel5.setText("Save results :");
 
         btn_saveList.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        btn_saveList.setText("Save As List");
+        btn_saveList.setText("Save");
         btn_saveList.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_saveListActionPerformed(evt);
@@ -206,11 +210,10 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
                                 .addComponent(jLabel2)
                                 .addComponent(jLabel5))
                             .addGap(48, 48, 48)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(btn_saveList, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(bView, javax.swing.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE)
-                                .addComponent(B_UsnSelect, javax.swing.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE)
-                                .addComponent(bGetReport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                                .addComponent(B_UsnSelect, javax.swing.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE)))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -218,7 +221,8 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
                         .addComponent(stopbtn)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(b_retry))
-                    .addComponent(bSubjectWise, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(bSubjectWise, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(bGetReport, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(24, 24, 24))
         );
 
@@ -252,10 +256,9 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(btn_saveList))
-                .addGap(18, 18, 18)
-                .addComponent(bGetReport)
-                .addContainerGap(16, Short.MAX_VALUE))
+                    .addComponent(btn_saveList)
+                    .addComponent(bGetReport))
+                .addContainerGap(59, Short.MAX_VALUE))
         );
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -284,7 +287,7 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE)
         );
 
         ToggleMoreLess.setText("Hide <<");
@@ -364,7 +367,7 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
                         .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 3, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(ToggleMoreLess)
@@ -420,9 +423,8 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
     }//GEN-LAST:event_bViewActionPerformed
 
     private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
-        DF = new DownloadDetailsForm();
         log("Result fetching started ...");
-        log("Please wait till fetching has compleeted.");
+        log("Please wait till fetching has completed.");
         usnProgressBar.setValue(usnProgressBar.getMinimum());
         if (usnList.isEmpty()) {
             logError("Please Add atleast 1 USN to fetch result");
@@ -436,7 +438,6 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
             submitButton.setEnabled(false);
             stopbtn.setEnabled(true);
             updateProgress();
-
         }
     }//GEN-LAST:event_submitButtonActionPerformed
 
@@ -632,6 +633,8 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
     }//GEN-LAST:event_b_retryActionPerformed
 
     private void menuAutoRetryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuAutoRetryActionPerformed
+        BufferedWriter out = null;
+        FileWriter fstream;
         if (menuAutoRetry.isSelected()) {
             autoRetry = true;
             Object[] limitArray = {"1", "3", "5", "10", "20", "INF"};
@@ -643,9 +646,6 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
                 } else {
                     retrylimit = Integer.parseInt(str.toString());
                 }
-                if (retrylimit == 0) {
-                    timeout = 10;
-                }
 
             } else {
                 System.out.println("cancelled");
@@ -655,6 +655,7 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
             autoRetry = false;
             log("Auto retry is Disabled. Please Click retry to fetch failed USN list");
         }
+
     }//GEN-LAST:event_menuAutoRetryActionPerformed
 
     private void menuNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuNewActionPerformed

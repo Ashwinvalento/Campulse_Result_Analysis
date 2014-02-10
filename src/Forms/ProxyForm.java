@@ -22,6 +22,7 @@ public class ProxyForm extends javax.swing.JFrame {
      */
     public ProxyForm() {
         initComponents();
+        this.setTitle("Campulse Result analysis : Set Proxy");
 
         try {
             String ProxyIP, SecureIP;

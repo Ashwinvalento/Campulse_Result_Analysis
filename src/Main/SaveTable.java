@@ -5,8 +5,10 @@
  */
 package Main;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -25,7 +27,11 @@ public class SaveTable {
     public SaveTable(DefaultTableModel dataModel) {
         JFileChooser chooser = null;
         BufferedWriter bfw = null;
-        chooser = new JFileChooser();
+        try {
+            chooser = new JFileChooser(previousDirectory());
+        } catch (IOException ex) {
+            Logger.getLogger(SaveTable.class.getName()).log(Level.SEVERE, null, ex);
+        }
         chooser.setAcceptAllFileFilterUsed(false);
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Excel Sheet", ".CSV", "CSV");
         chooser.setFileFilter(filter);
@@ -34,12 +40,12 @@ public class SaveTable {
 
             try {
                 File fileName = new File(chooser.getSelectedFile().toString());
+                saveCurrentDirectory(fileName.getParentFile().getAbsolutePath());
                 if (fileName == null) {
                     return;
                 }
                 if (fileName.exists()) {
-                    actionDialog = JOptionPane.showConfirmDialog(null,
-                            "Replace existing file?");
+                    actionDialog = JOptionPane.showConfirmDialog(null, "Replace existing file?");
                     // may need to check for cancel option as well
                     if (actionDialog == JOptionPane.NO_OPTION) {
                         return;
@@ -77,4 +83,32 @@ public class SaveTable {
         }
     }
 
+    public String previousDirectory() throws IOException {
+        BufferedReader br = null;
+        String line = "";
+        try {
+            br = new BufferedReader(new FileReader(".previouslySelectedDirectory.txt"));
+            line = br.readLine();
+        } catch (Exception e) {
+
+            System.out.println("Error: " + e);
+        } finally {
+            if (br != null) {
+                br.close();
+            }
+        }
+        return line;
+    }
+
+    private void saveCurrentDirectory(String absolutePath) {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(".previouslySelectedDirectory.txt"));
+            writer.write(absolutePath);
+            writer.close();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+            System.out.println("Error:" + e);
+        }
+    }
 }

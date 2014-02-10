@@ -28,6 +28,7 @@ public class SubjectWiseResult extends javax.swing.JFrame implements DBInterface
 
     public SubjectWiseResult() {
         initComponents();
+        this.setTitle("Campulse Result analysis :Subject Results");
         con = DBConnect.connection;
         this.setLocationRelativeTo(null);
         retrieveSubjectNames();

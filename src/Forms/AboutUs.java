@@ -16,6 +16,7 @@ public class AboutUs extends javax.swing.JFrame {
      */
     public AboutUs() {
         initComponents();
+        this.setTitle("Campulse Result analysis : About us");
         this.setLocationRelativeTo(null);
     }
 

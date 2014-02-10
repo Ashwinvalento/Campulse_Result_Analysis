@@ -19,6 +19,7 @@ public class GetReportForm extends javax.swing.JFrame {
 
     public GetReportForm() {
         initComponents();
+        this.setTitle("Campulse Result analysis :Report");
         this.setLocationRelativeTo(null);
         genRprt = new GenReport();
         generateTableReport();

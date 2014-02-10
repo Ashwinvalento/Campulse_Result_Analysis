@@ -238,7 +238,7 @@ public class GenReport implements DBInterface {
                 MainForm.subNamesV.add(rs.getString(SUB_SUBNAME));
             }
         } catch (SQLException ex) {
-            Logger.getLogger(resultFetch.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GenReport.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }

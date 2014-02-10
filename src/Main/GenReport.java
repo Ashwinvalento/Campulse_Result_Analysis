@@ -70,7 +70,6 @@ public class GenReport implements DBInterface {
     public void setClassFail(int classFail) {
         this.classFail = classFail;
     }
-    
 
     public DefaultTableModel fillReportTable() {
         con = DBConnect.connection;
@@ -105,7 +104,7 @@ public class GenReport implements DBInterface {
 
         for (int i = 0; i < subjectSize; i++) {
             subName = MainForm.subNamesV.get(i);
-            System.out.println("sub name : " + subName);
+            //System.out.println("sub name : " + subName);
             failArray[i] = getFailCount(subName);
             passArray[i] = getPassCount(subName);
             fcdArray[i] = getFCDCount(subName);
@@ -113,12 +112,12 @@ public class GenReport implements DBInterface {
             secondClassArray[i] = getSCCount(subName);
             registeredArray[i] = failArray[i] + passArray[i];
             passPercentArray[i] = ((double) passArray[i] / (double) registeredArray[i]) * 100;
-            System.out.println(subName + " " + failArray[i]);
+            // System.out.println(subName + " " + failArray[i]);
             model.insertRow(slNo++, new Object[]{subName, registeredArray[i], passPercentArray[i], failArray[i], fcdArray[i], firstClassArray[i], secondClassArray[i]});
         }
         return model;
     }
-    
+
     public void getAllLabelValues() {
         setClassFCD(getClassFCDCount());
         setClassFC(getClassFirstCount());
@@ -139,7 +138,7 @@ public class GenReport implements DBInterface {
                 FailCount = rs.getInt(1);
             }
         } catch (SQLException ex) {
-             Logger.getLogger(GenReport.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GenReport.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return FailCount;
@@ -169,7 +168,12 @@ public class GenReport implements DBInterface {
         int fcdCount = 0;
 
         ResultSet rs = null;
-        fcdQuery = "SELECT COUNT(*) FROM " + SUBJECT_DETAILS + " WHERE " + SUB_SUBNAME + "='" + subName + "' AND " + SUB_TOTAL + " BETWEEN 87.5 AND 126";
+        if (islab(subName)) {
+            fcdQuery = "SELECT COUNT(*) FROM " + SUBJECT_DETAILS + " WHERE " + SUB_SUBNAME + "='" + subName + "' AND " + SUB_TOTAL + " BETWEEN 53 AND 76";
+
+        } else {
+            fcdQuery = "SELECT COUNT(*) FROM " + SUBJECT_DETAILS + " WHERE " + SUB_SUBNAME + "='" + subName + "' AND " + SUB_TOTAL + " BETWEEN 88 AND 126";
+        }
         Statement stmt;
         try {
             stmt = con.createStatement();
@@ -189,7 +193,12 @@ public class GenReport implements DBInterface {
         int fcdCount = 0;
 
         ResultSet rs = null;
-        firstClassQuery = "SELECT COUNT(*) FROM " + SUBJECT_DETAILS + " WHERE " + SUB_SUBNAME + "='" + subName + "' AND " + SUB_TOTAL + " BETWEEN 75 AND 87";
+        if (islab(subName)) {
+            firstClassQuery = "SELECT COUNT(*) FROM " + SUBJECT_DETAILS + " WHERE " + SUB_SUBNAME + "='" + subName + "' AND " + SUB_TOTAL + " BETWEEN 45 AND 52";
+
+        } else {
+            firstClassQuery = "SELECT COUNT(*) FROM " + SUBJECT_DETAILS + " WHERE " + SUB_SUBNAME + "='" + subName + "' AND " + SUB_TOTAL + " BETWEEN 75 AND 87";
+        }
         Statement stmt;
         try {
             stmt = con.createStatement();
@@ -207,11 +216,15 @@ public class GenReport implements DBInterface {
 
     private int getSCCount(String subName) {
         int scCount = 0;
-
+        if (islab(subName));
         ResultSet rs = null;
-        secondClassQuery = "SELECT COUNT(*) FROM " + SUBJECT_DETAILS + " WHERE " + SUB_SUBNAME + "='" + subName + "' AND " + SUB_TOTAL + " BETWEEN 62.5 AND 74.5";
-        Statement stmt;
+        if (islab(subName)) {
+            secondClassQuery = "SELECT COUNT(*) FROM " + SUBJECT_DETAILS + " WHERE " + SUB_SUBNAME + "='" + subName + "' AND " + SUB_TOTAL + " BETWEEN 38 AND 44";
+        } else {
+            secondClassQuery = "SELECT COUNT(*) FROM " + SUBJECT_DETAILS + " WHERE " + SUB_SUBNAME + "='" + subName + "' AND " + SUB_TOTAL + " BETWEEN 63 AND 74";
+        }
         try {
+            Statement stmt;
             stmt = con.createStatement();
             rs = stmt.executeQuery(secondClassQuery);
             if (rs.next()) {
@@ -249,7 +262,7 @@ public class GenReport implements DBInterface {
 
         ResultSet rs = null;
         String Query = "SELECT COUNT(*) FROM " + STUDENT_DETAILS + " WHERE " + ST_RESULT + "='FIRST CLASS WITH DISTINCTION'";
-        
+
         Statement stmt;
         try {
             stmt = con.createStatement();
@@ -269,7 +282,7 @@ public class GenReport implements DBInterface {
 
         ResultSet rs = null;
         String Query = "SELECT COUNT(*) FROM " + STUDENT_DETAILS + " WHERE " + ST_RESULT + "='FIRST CLASS'";
-        System.out.println(Query);
+        // System.out.println(Query);
         Statement stmt;
         try {
             stmt = con.createStatement();
@@ -280,11 +293,12 @@ public class GenReport implements DBInterface {
         } catch (SQLException ex) {
             Logger.getLogger(GenReport.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return fcCount;
     }
 
     private int getClassSecondCount() {
+
         int scCount = 0;
 
         ResultSet rs = null;
@@ -301,7 +315,8 @@ public class GenReport implements DBInterface {
             Logger.getLogger(GenReport.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        return scCount;    }
+        return scCount;
+    }
 
     private int getClassFailCount() {
         int failCount = 0;
@@ -323,6 +338,12 @@ public class GenReport implements DBInterface {
         return failCount;
     }
 
-    
+    boolean islab(String sub) {
+        String temp = sub.split("\\(")[1].substring(4, 5);
+        if (temp.equalsIgnoreCase("L")) {
+            return true;
+        }
+        return false;
+    }
 
 }

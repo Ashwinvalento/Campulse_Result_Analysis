@@ -6,6 +6,12 @@
 package Forms;
 
 import Main.GenReport;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.PrintJob;
+import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
+import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -19,6 +25,12 @@ public class GetReportForm extends javax.swing.JFrame {
 
     public GetReportForm() {
         initComponents();
+       // ImageIcon ic = new ImageIcon(getClass().getResource("/resources/PACE.jpg"));
+       // ImageIcon tempIC=create_Thumbnail(ic, 318, 95);
+
+      ///  PACELOGO.setIcon(ic); // NOI18N
+
+        PACELOGO.setSize(320, 95);
         this.setTitle("Campulse Result analysis :Report");
         this.setLocationRelativeTo(null);
         genRprt = new GenReport();
@@ -35,10 +47,8 @@ public class GetReportForm extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        PrintPanel = new javax.swing.JPanel();
         PACELOGO = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableReport = new javax.swing.JTable();
         overallPanel = new javax.swing.JPanel();
@@ -46,20 +56,16 @@ public class GetReportForm extends javax.swing.JFrame {
         lFCDCount = new javax.swing.JLabel();
         lFirstClass = new javax.swing.JLabel();
         lSecondClass = new javax.swing.JLabel();
+        bPrint = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Result Analaysis");
         setResizable(false);
 
-        PACELOGO.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/PACE-Logo-high-res-file.jpg"))); // NOI18N
+        PrintPanel.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel2.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(81, 93, 210));
-        jLabel2.setText("NADUPADAV, MANGALORE");
-
-        jLabel1.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(81, 93, 210));
-        jLabel1.setText("P. A. COLLEGE OF ENGINEERING");
+        PACELOGO.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/pace logo reszed.png"))); // NOI18N
 
         tableReport.setFont(new java.awt.Font("Monospaced", 0, 15)); // NOI18N
         tableReport.setModel(new javax.swing.table.DefaultTableModel(
@@ -73,9 +79,10 @@ public class GetReportForm extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tableReport.setRowHeight(24);
         jScrollPane1.setViewportView(tableReport);
 
-        overallPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Class Result", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.ABOVE_TOP));
+        overallPanel.setBackground(new java.awt.Color(255, 255, 255));
 
         lFail.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
         lFail.setText("Fail : ");
@@ -96,13 +103,13 @@ public class GetReportForm extends javax.swing.JFrame {
             .addGroup(overallPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(overallPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lFCDCount)
-                    .addComponent(lFirstClass))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 132, Short.MAX_VALUE)
+                    .addComponent(lFCDCount, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lFirstClass, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(46, 46, 46)
                 .addGroup(overallPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lSecondClass)
-                    .addComponent(lFail))
-                .addGap(267, 267, 267))
+                    .addComponent(lFail, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lSecondClass, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(62, Short.MAX_VALUE))
         );
         overallPanelLayout.setVerticalGroup(
             overallPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -115,66 +122,99 @@ public class GetReportForm extends javax.swing.JFrame {
                 .addGroup(overallPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lFirstClass)
                     .addComponent(lFail))
-                .addContainerGap())
+                .addContainerGap(31, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 832, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
+        javax.swing.GroupLayout PrintPanelLayout = new javax.swing.GroupLayout(PrintPanel);
+        PrintPanel.setLayout(PrintPanelLayout);
+        PrintPanelLayout.setHorizontalGroup(
+            PrintPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PrintPanelLayout.createSequentialGroup()
+                .addGroup(PrintPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(PrintPanelLayout.createSequentialGroup()
+                        .addGap(161, 161, 161)
                         .addComponent(overallPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(107, 107, 107)
-                        .addComponent(PACELOGO)
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2))))
-                .addContainerGap())
+                    .addGroup(PrintPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 832, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(PrintPanelLayout.createSequentialGroup()
+                        .addGap(264, 264, 264)
+                        .addComponent(PACELOGO)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(PACELOGO)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(jLabel1)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel2)))
+        PrintPanelLayout.setVerticalGroup(
+            PrintPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PrintPanelLayout.createSequentialGroup()
+                .addContainerGap(37, Short.MAX_VALUE)
+                .addComponent(PACELOGO, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(overallPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(overallPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(19, 19, 19))
         );
+
+        bPrint.setText("Print");
+        bPrint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bPrintActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("Close");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(bPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27))
+            .addComponent(PrintPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
+
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {bPrint, jButton2});
+
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(PrintPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(bPrint)
+                    .addComponent(jButton2))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        
+        this.dispose();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void bPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bPrintActionPerformed
+        try {
+
+            Toolkit tkp = PrintPanel.getToolkit();
+            PrintJob pjp = tkp.getPrintJob(this, null, null);
+            Graphics g = pjp.getGraphics();
+            PrintPanel.print(g);
+            g.dispose();
+            pjp.end();
+        } catch (Exception ex) {
+            System.out.println("Error : " + ex.getMessage());
+        }
+    }//GEN-LAST:event_bPrintActionPerformed
 
     /**
      * @param args the command line arguments
@@ -213,9 +253,9 @@ public class GetReportForm extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel PACELOGO;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel PrintPanel;
+    private javax.swing.JButton bPrint;
+    private javax.swing.JButton jButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lFCDCount;
     private javax.swing.JLabel lFail;
@@ -246,5 +286,16 @@ public class GetReportForm extends javax.swing.JFrame {
         lFirstClass.setText("FIRST CLASS : " + genRprt.getClassFC());
         lSecondClass.setText("SECOND CLASS : " + genRprt.getClassSC());
         lFail.setText("FAIL : " + genRprt.getClassFail());
+    }
+
+    public ImageIcon create_Thumbnail(ImageIcon img, int w, int h) {
+        BufferedImage bi;
+        img = new ImageIcon(img.getImage().getScaledInstance(w, h, BufferedImage.SCALE_FAST));
+        bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_BGR);
+        Graphics2D g2 = bi.createGraphics();
+        g2.drawImage(img.getImage(), 0, 0, null);
+        img = null;
+        g2.dispose();
+        return new ImageIcon(bi);
     }
 }

@@ -31,23 +31,89 @@ public class resultFetch {
         subs = 0;
     }
 
+    public boolean FetchTheresultVTU(String usn, int sem) {
+        String temp;
+        Document doc;
+        String url = "http://results.vtu.ac.in/vitavi.php?submit=true&rid=" + usn;
+        int total = 0;
+
+        if (sem == 8) {
+            subs = 6;
+        } else {
+            subs = 8;
+        }
+
+        try {
+
+            doc = Jsoup.connect(url).get();
+
+            Element firstTableMarks = doc.select("table[bgColor=#ffffff]").first();
+            Element tbody = firstTableMarks.select("tbody").first();
+            Element firstTr = tbody.select("tr:eq(1)").first();
+            Element ftrtd = firstTr.select("td:eq(0)").first();
+
+            temp = ftrtd.select("b:eq(0)").first().text();
+            name = temp.split("\\(")[0];
+
+            System.out.println("name :" + name);
+            int parseSem = Integer.parseInt(ftrtd.select("table").first().select("tr:eq(0)").first().select("td:eq(1)").first().text());
+            System.out.println(sem);
+
+            if (parseSem < sem) {
+                System.out.println(" year out");
+                return false;
+            }
+            mk = ftrtd.select("table").first().select("tr:eq(0)").first().select("td:eq(3)").first().text().split(":")[1].replaceAll("[^A-Za-z0-9 ]", "");
+            System.out.println("result :" + mk);
+            Element tmtbody = ftrtd.select("table").get(1).select("tbody:eq(0)").first();
+
+            for (int i = 0; i < 8; i++) {
+                String whichTr = "tr:eq(" + (i + 1) + ")";
+                subjects[i] = tmtbody.select(whichTr).first().child(0).text();
+                marks[i][0] = Integer.parseInt(tmtbody.select(whichTr).first().child(1).text());
+                marks[i][1] = Integer.parseInt(tmtbody.select(whichTr).first().child(2).text());
+                marks[i][2] = Integer.parseInt(tmtbody.select(whichTr).first().child(3).text());
+                res[i] = tmtbody.select(whichTr).first().child(4).text();
+                total += marks[i][2];
+                System.out.println(subjects[i]);
+                System.out.println(marks[i][0]);
+                System.out.println(marks[i][1]);
+                System.out.println(marks[i][2]);
+                System.out.println(res[i]);
+            }
+
+            Element tot = ftrtd.select("table").get(2).select("tbody:eq(0)").select("td:eq(3)").first();
+            totalmarks = tot.text();//.toString().split(">")[1].split("&")[0].trim();
+            if (totalmarks.matches("[0-9][0-9][0-9]")) {
+                System.out.println("inside");
+            } else {
+                System.out.println("outside");
+                totalmarks = Integer.toString(total);
+            }
+            System.out.println(totalmarks);
+            MainForm.DF.setStatus(usn, "Success");
+            MainForm.log(usn + " Download : Success");
+        } catch (Exception e) {
+            MainForm.RetryList.add(usn);
+            MainForm.DF.setStatus(usn, "failed");
+            MainForm.log(usn + " Download : failed");
+            MainForm.log(usn + " --> Added to retry list");
+            return false;//if result is not found
+        }
+        return true;//result is found
+    }
+
     public boolean FetchTheresult(String usn, int sem) {
         Document doc;
         subs = 0;
         //String url = "http://results.vtualerts.com/get_res.php?usn=" + usn ;
         String url = "http://results.vtualerts.com/get_res.php?usn=" + usn + "&sem=" + sem;
-        if (Forms.EnterUsnForm.sem > 0 && Forms.EnterUsnForm.sem < 9) {
-            url = "http://results.vtualerts.com/get_res.php?usn=" + usn + "&sem=" + sem;
-        }
-        //System.out.println(url);
         try {
             doc = Jsoup.connect(url).userAgent("Mozilla").get();
             Element StdName = doc.select("div").select("B:eq(0)").first();
             name = StdName.text().split(Pattern.quote("("))[0];
 
             Element Stdsem = doc.select("div").get(1).select("B").get(2);
-            //    System.out.println(Stdsem.text());
-
             Element markclass = doc.select("table:eq(1)").select("td:eq(3)").select("b:eq(0)").first();
             System.out.println("mark class :" + markclass.text().split("Result:  ")[1] + ":");
             mk = markclass.text().split("Result:  ")[1];
@@ -57,13 +123,13 @@ public class resultFetch {
             }
 
             // Static fetching 
-            /* System.out.println("name is : " + name);
+            /*
              if (name.equalsIgnoreCase("Semester:</b")) {
              System.out.println("Year out");
 
              return false;
-             }*/
-            /* Element markclass = doc.select("table:eq(1)").select("td:eq(3)").select("b:eq(0)").first();
+             }
+             Element markclass = doc.select("table:eq(1)").select("td:eq(3)").select("b:eq(0)").first();
              System.out.println("mark class :" + markclass.text() + ":");
              mk = trimspace(markclass.text().split("Result:  ")[1]);
              Element firstTableMarks = doc.select("table:eq(3)").first();
@@ -145,14 +211,6 @@ public class resultFetch {
             MainForm.log(usn + " Download : Success");
         } catch (Exception e) {
             return checkIfResultisAvailable(usn, sem);
-            /*
-             MainForm.RetryList.add(usn);
-             System.out.println("usn added for retry !");
-             System.out.println("fetch failed for " + usn);
-             MainForm.DF.setStatus(usn, "failed");*/
-            ///return false;//if result is not found
-
-//            e.printStackTrace();
         }
 
         return true;//result is found
@@ -219,7 +277,6 @@ public class resultFetch {
     private boolean checkIfResultisAvailable(String usn, int sem) {
         Document doc;
         MainForm.log(usn + " Checking if result is available");
-        System.out.println("Checking if result is available");
         String resultNotAvail = "<h3>Sorry Results are not yet available for this university seat number<br />or it might not be a valid university seat number</h3>";
         String url = "http://results.vtualerts.com/get_res.php?usn=" + usn;
         if (Forms.EnterUsnForm.sem > 0 && Forms.EnterUsnForm.sem < 9) {
@@ -235,87 +292,13 @@ public class resultFetch {
             }
 
         } catch (Exception e) {
-            // return checkIfHeHasBackPaper(usn, sem);
             MainForm.RetryList.add(usn);
-            System.out.println("usn added for retry !");
-            System.out.println("fetch failed for " + usn);
             MainForm.DF.setStatus(usn, "failed");
+            MainForm.log(usn + " Download : failed");
+            MainForm.log(usn + " --> Added to retry list");
 
         }
         return false;
-    }
-
-    private boolean checkIfHeHasBackPaper(String usn, int sem) {
-        subs = 0;
-        System.out.println("Checking IF back paper");
-        // MainForm.log(usn + " Checking For back papers");
-        int totMark = 0;
-        Document doc;
-        String url = "http://results.vtualerts.com/get_res.php?usn=" + usn + "&sem=" + sem;
-
-        try {
-            doc = Jsoup.connect(url).userAgent("Mozilla").timeout(Forms.MainForm.timeout * 1000).get();
-            System.out.println("comes to try back paper");
-
-            Element StdName = doc.select("div").select("B:eq(0)").first();
-            name = StdName.toString().split(">")[1].split(Pattern.quote("("))[0];
-            System.out.println("name is : " + name);
-
-            Element markclass = doc.select("table:eq(1)").select("td:eq(3)").select("b:eq(0)").first();
-            mk = markclass.toString().split(";")[2].split("<")[0];
-            System.out.println("Class is : " + mk);
-
-            int skipTable = 0, skipRow = 0; // skip the google adds table and name and sem table
-            for (Element table : doc.select("table")) {
-                if (skipTable < 2) {
-                    skipTable++;
-                    System.out.println("skipped");
-                    continue;
-                }
-                System.out.println("--------------------\nNEW TABLE\n");
-                for (Element row : table.select("tr")) {
-                    if (skipRow < 1) {
-                        System.out.println("1 row skipped");
-                        skipRow++;
-                        continue;
-                    }
-                    System.out.println("\nNEW ROW\n");
-                    Elements tds = row.select("td");
-                    if (tds.size() > 0) {
-                        System.out.println("Subject = " + tds.get(0).select("i").text());
-                        subjects[subs] = tds.get(0).select("i").text();
-
-                        System.out.println("Internal = " + tds.get(1).select("td").text());
-                        marks[subs][0] = Integer.parseInt(tds.get(1).select("td").text());
-
-                        System.out.println("External = " + tds.get(2).select("td").text());
-                        marks[subs][1] = Integer.parseInt(tds.get(2).select("td").text());
-
-                        System.out.println("Total = " + tds.get(3).select("td").text());
-                        marks[subs][2] = Integer.parseInt(tds.get(3).select("td").text());
-
-                        System.out.println("Result = " + tds.get(4).select("td").text());
-                        res[subs++] = tds.get(4).select("td").text();
-
-                    }
-                }
-                skipTable = 1;
-                skipRow = 0;
-                System.out.println("--------------------\n");
-            }
-            totalmarks = String.valueOf(totMark);
-
-            //      MainForm.DF.setStatus(usn, "Success");
-            //      MainForm.log(usn + " Download : Success");
-        } catch (Exception e) {
-            //    MainForm.RetryList.add(usn);
-            System.out.println(usn + " added for retry !");
-            //   MainForm.DF.setStatus(usn, "failed");
-            //  MainForm.log(usn + " Download : failed");
-            return false;
-        }
-
-        return true;
     }
 
     public static void main(String[] args) {

@@ -15,7 +15,6 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import run.DBConnect;
 import run.DBInterface;
@@ -320,7 +319,7 @@ public class SubjectWiseResult extends javax.swing.JFrame implements DBInterface
 
             SelectedSubjectName = subjectCombo.getSelectedItem().toString();
             RetrieveQuery = query + " AND " + SUB_SUBNAME + "= '" + SelectedSubjectName + "'";
-            System.out.println("RetrieveQuery : " + RetrieveQuery);
+            // System.out.println("RetrieveQuery : " + RetrieveQuery);
             try {
                 stmt = con.createStatement();
                 rs = stmt.executeQuery(RetrieveQuery);
@@ -347,7 +346,11 @@ public class SubjectWiseResult extends javax.swing.JFrame implements DBInterface
                     }
                 }
 
-                lcount.setText(Integer.toString(model.getRowCount()) + " scored between " + firstValue.getValue() + " and " + lastValue.getValue() + " in  " + examType.getSelectedItem().toString() + " of " + subjectCombo.getSelectedItem().toString());
+                if (examType.getSelectedIndex() == 3) {
+                    lcount.setText(Integer.toString(model.getRowCount()) + " Students failed in " + subjectCombo.getSelectedItem().toString());
+                } else {
+                    lcount.setText(Integer.toString(model.getRowCount()) + " Students scored between " + firstValue.getValue() + " and " + lastValue.getValue() + " in  " + examType.getSelectedItem().toString() + " of " + subjectCombo.getSelectedItem().toString());
+                }
             } catch (SQLException ex) {
                 Logger.getLogger(SubjectWiseResult.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -442,8 +445,6 @@ public class SubjectWiseResult extends javax.swing.JFrame implements DBInterface
         for (int i = 0; i < MainForm.subNamesV.size(); i++) {
             comboBoxItems.add(MainForm.subNamesV.get(i));
         }
-        //comboBoxItems.add("All thoery sub");
-        //comboBoxItems.add("Any theory sub");
         DefaultComboBoxModel model = new DefaultComboBoxModel(comboBoxItems);
 
         subjectCombo.setModel(model);

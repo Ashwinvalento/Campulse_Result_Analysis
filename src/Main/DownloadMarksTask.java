@@ -27,19 +27,28 @@ public class DownloadMarksTask extends SwingWorker<Integer, Integer> implements 
     @Override
     public Integer doInBackground() throws InterruptedException {
         resultFetch r = new resultFetch();
-        //resultFetchVTU r = new resultFetchVTU();
+
         if (MainForm.stopFlag == true) {
             stopFetching();
         }
         for (int i = 0; i < MainForm.usnList.size() && MainForm.stopFlag == false; i++) {
+            boolean resSuccess = false;
             try {
 
                 setProgress((i + 1) * 100 / MainForm.usnList.size());
                 System.out.println(MainForm.usnList.get(i));
 
-                if (r.FetchTheresult(MainForm.usnList.get(i), EnterUsnForm.sem)) {
+                
+                //check the selected download server and fetch result accordingly
+                if (MainForm.DownloadServer == 0) {
+                    resSuccess = r.FetchTheresult(MainForm.usnList.get(i), EnterUsnForm.sem);
+                } else {
+                    resSuccess = r.FetchTheresultVTU(MainForm.usnList.get(i), EnterUsnForm.sem);
+                }
 
-                    String stdQuery = "Insert into " + STUDENT_DETAILS + " values ('" + MainForm.usnList.get(i) + "','" + r.name + "'," + Integer.parseInt(r.totalmarks) + ",'" + r.mk + "')";
+                if (resSuccess) {
+
+                    String stdQuery = "Insert into " + STUDENT_DETAILS + " values ('" + MainForm.usnList.get(i) + "',\"" + r.name + "\"," + Integer.parseInt(r.totalmarks) + ",'" + r.mk + "')";
                     stmtStd = con.createStatement();
                     stmtStd.executeUpdate(stdQuery);
 

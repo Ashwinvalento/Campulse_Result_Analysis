@@ -462,7 +462,6 @@ public class EnterUsnForm extends javax.swing.JFrame {
             this.dispose();
         }
 
-
     }//GEN-LAST:event_B_doneActionPerformed
 
     private void B_cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B_cancelActionPerformed

@@ -25,12 +25,6 @@ public class GetReportForm extends javax.swing.JFrame {
 
     public GetReportForm() {
         initComponents();
-       // ImageIcon ic = new ImageIcon(getClass().getResource("/resources/PACE.jpg"));
-       // ImageIcon tempIC=create_Thumbnail(ic, 318, 95);
-
-      ///  PACELOGO.setIcon(ic); // NOI18N
-
-        PACELOGO.setSize(320, 95);
         this.setTitle("Campulse Result analysis :Report");
         this.setLocationRelativeTo(null);
         genRprt = new GenReport();
@@ -122,7 +116,7 @@ public class GetReportForm extends javax.swing.JFrame {
                 .addGroup(overallPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lFirstClass)
                     .addComponent(lFail))
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout PrintPanelLayout = new javax.swing.GroupLayout(PrintPanel);
@@ -147,8 +141,8 @@ public class GetReportForm extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PrintPanelLayout.createSequentialGroup()
                 .addContainerGap(37, Short.MAX_VALUE)
                 .addComponent(PACELOGO, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(overallPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(19, 19, 19))
@@ -198,7 +192,6 @@ public class GetReportForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 

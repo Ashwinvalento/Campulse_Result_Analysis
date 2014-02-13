@@ -43,6 +43,7 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
     boolean subjectFetched = false; // this is again initialized in start button
     int subjectFetchTries = 5;  // this value is again initialized in start button action
     boolean toggleHide = false;
+    public static int DownloadServer = 0;
 
     public MainForm() {
         initComponents();
@@ -757,7 +758,10 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
     private void ComboServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComboServerActionPerformed
         log("Server Selected : " + ComboServer.getSelectedItem());
         if (ComboServer.getSelectedIndex() == 1) {
-            log("Only latest results can be fetched from VTU RESULTS server");
+            DownloadServer = 1;
+            logError("Only latest results can be fetched from VTU RESULTS server");
+        } else {
+            DownloadServer = 0;
         }
     }//GEN-LAST:event_ComboServerActionPerformed
 

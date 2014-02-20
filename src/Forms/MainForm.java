@@ -48,7 +48,7 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
     public MainForm() {
         initComponents();
         this.setTitle("Campulse Result analysis");
-        setPreferredSize(new Dimension(470, 570));
+        setPreferredSize(new Dimension(470, 515));
         this.pack();
         this.setLocationRelativeTo(null);
         DF = new DownloadDetailsForm();
@@ -88,9 +88,6 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
         jLabel6 = new javax.swing.JLabel();
         ComboServer = new javax.swing.JComboBox();
         usnProgressBar = new javax.swing.JProgressBar(0,100);
-        jLabel3 = new javax.swing.JLabel();
-        TF_usn = new javax.swing.JTextField();
-        B_GetResult = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         textAreaLog = new javax.swing.JTextPane();
@@ -107,14 +104,14 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Vtu Marks Downloader");
-        setPreferredSize(new java.awt.Dimension(470, 500));
+        setPreferredSize(new java.awt.Dimension(470, 515));
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosed(java.awt.event.WindowEvent evt) {
-                formWindowClosed(evt);
-            }
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
+            }
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
             }
         });
 
@@ -205,7 +202,7 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
 
         jLabel6.setText("Select  Server :");
 
-        ComboServer.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "VTU RESULTS", "RESULTS.VTU.AC.IN" }));
+        ComboServer.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "VTU Alerts", "VTU Main" }));
         ComboServer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ComboServerActionPerformed(evt);
@@ -299,19 +296,6 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
                     .addComponent(bGetReport))
                 .addContainerGap(19, Short.MAX_VALUE))
         );
-
-        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabel3.setText("Enter USN :");
-
-        TF_usn.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-
-        B_GetResult.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        B_GetResult.setText("Get Result");
-        B_GetResult.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                B_GetResultActionPerformed(evt);
-            }
-        });
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), "Details ", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
 
@@ -409,37 +393,23 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
                         .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addGap(18, 18, 18)
-                                .addComponent(TF_usn, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(B_GetResult, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(15, 15, 15))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(ToggleMoreLess)
-                                .addGap(18, 18, 18)
-                                .addComponent(usnProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(ToggleMoreLess)
+                        .addGap(18, 18, 18)
+                        .addComponent(usnProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(19, 19, 19))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(TF_usn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(B_GetResult)
-                    .addComponent(jLabel3))
-                .addGap(20, 20, 20)
+                .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(8, 8, 8)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(usnProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ToggleMoreLess))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(10, 10, 10))
         );
 
         pack();
@@ -487,27 +457,6 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
     private void menuExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuExitActionPerformed
         System.exit(0);
     }//GEN-LAST:event_menuExitActionPerformed
-
-    private void B_GetResultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_B_GetResultActionPerformed
-        String resultUrl = "http://results.vtu.ac.in";
-        Pattern p = Pattern.compile("4[a-zA-Z][a-zA-Z][0-9]{2}[a-zA-Z]{2}[0-9]{3}");
-        String Str_singleUsn = TF_usn.getText();
-        Matcher m = p.matcher(Str_singleUsn);
-        if (Str_singleUsn.equals("")) {
-            JOptionPane.showMessageDialog(null, "Please Enter The USN ");
-        } else if (!m.matches()) {
-            JOptionPane.showMessageDialog(null, "Invalid USN Format");
-        } else {
-            resultUrl = "http://results.vtu.ac.in/vitavi.php?submit=true&rid=" + TF_usn.getText();
-            Runtime rt = Runtime.getRuntime();
-            try {
-                Process clientProcess = rt.exec(new String[]{"C:\\Program Files\\Mozilla Firefox\\firefox.exe", "-new-window", resultUrl});
-                clientProcess.waitFor();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }//GEN-LAST:event_B_GetResultActionPerformed
 
     private void bSubjectWiseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSubjectWiseActionPerformed
         SubjectWiseResult frame = new SubjectWiseResult();
@@ -727,12 +676,12 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
         if (toggleHide) {
             toggleHide = false;
             ToggleMoreLess.setText("Hide <<");
-            setPreferredSize(new Dimension(470, 570));
+            setPreferredSize(new Dimension(470, 515));
             this.pack();
         } else {
             toggleHide = true;
             ToggleMoreLess.setText("More >>");
-            setPreferredSize(new Dimension(470, 420));
+            setPreferredSize(new Dimension(470, 365));
             this.pack();
         }
     }//GEN-LAST:event_ToggleMoreLessActionPerformed
@@ -819,10 +768,8 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup BGinput;
-    private javax.swing.JButton B_GetResult;
     private javax.swing.JButton B_UsnSelect;
     private javax.swing.JComboBox ComboServer;
-    private javax.swing.JTextField TF_usn;
     private javax.swing.JButton ToggleMoreLess;
     private javax.swing.JButton bGetReport;
     private javax.swing.JButton bSubjectWise;
@@ -832,7 +779,6 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;

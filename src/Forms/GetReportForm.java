@@ -8,9 +8,16 @@ package Forms;
 import Main.GenReport;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.JobAttributes;
+import java.awt.PageAttributes;
 import java.awt.PrintJob;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.awt.print.PageFormat;
+import java.awt.print.Paper;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
 
@@ -195,54 +202,26 @@ public class GetReportForm extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
+
     private void bPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bPrintActionPerformed
+
         try {
 
             Toolkit tkp = PrintPanel.getToolkit();
-            PrintJob pjp = tkp.getPrintJob(this, null, null);
+            PageAttributes pa = new PageAttributes();
+            pa.setMedia(PageAttributes.MediaType.A4);
+            pa.setOrientationRequested(PageAttributes.OrientationRequestedType.LANDSCAPE);
+            PrintJob pjp = tkp.getPrintJob(this, null, null, pa);
             Graphics g = pjp.getGraphics();
             PrintPanel.print(g);
             g.dispose();
             pjp.end();
         } catch (Exception ex) {
             System.out.println("Error : " + ex.getMessage());
+            MainForm.logError("Error while Printing");
         }
+
     }//GEN-LAST:event_bPrintActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(GetReportForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(GetReportForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(GetReportForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(GetReportForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new GetReportForm().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel PACELOGO;
@@ -264,13 +243,13 @@ public class GetReportForm extends javax.swing.JFrame {
         model = genRprt.fillReportTable();
         tableReport.setModel(model);
         tableReport.setAutoCreateRowSorter(true);
-        tableReport.getColumn("Subject Names ").setPreferredWidth(350);
+        tableReport.getColumn("Subject Names ").setPreferredWidth(380);
         tableReport.getColumn("Registered").setPreferredWidth(90);
         tableReport.getColumn("Pass %").setPreferredWidth(80);
-        tableReport.getColumn("Fail").setPreferredWidth(60);
-        tableReport.getColumn("FCD").setPreferredWidth(60);
-        tableReport.getColumn("FC").setPreferredWidth(60);
-        tableReport.getColumn("SC").setPreferredWidth(60);
+        tableReport.getColumn("Fail").setPreferredWidth(50);
+        tableReport.getColumn("FCD").setPreferredWidth(50);
+        tableReport.getColumn("FC").setPreferredWidth(50);
+        tableReport.getColumn("SC").setPreferredWidth(50);
     }
 
     private void generateClassReport() {

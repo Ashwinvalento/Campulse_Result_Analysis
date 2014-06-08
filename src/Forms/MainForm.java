@@ -15,8 +15,6 @@ import java.sql.Statement;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.AttributeSet;
@@ -71,6 +69,7 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
     private void initComponents() {
 
         BGinput = new javax.swing.ButtonGroup();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jPanel1 = new javax.swing.JPanel();
         submitButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
@@ -95,12 +94,15 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
         jMenuBar1 = new javax.swing.JMenuBar();
         menuFile = new javax.swing.JMenu();
         menuNew = new javax.swing.JMenuItem();
-        menuAboutUs = new javax.swing.JMenuItem();
         menuExit = new javax.swing.JMenuItem();
         menuTools = new javax.swing.JMenu();
         menuAutoRetry = new javax.swing.JCheckBoxMenuItem();
         menuSetProxy = new javax.swing.JMenuItem();
         menuSetTimeOut = new javax.swing.JMenuItem();
+        menu_help = new javax.swing.JMenu();
+        menuAboutUs = new javax.swing.JMenuItem();
+
+        jMenuItem1.setText("jMenuItem1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Vtu Marks Downloader");
@@ -330,14 +332,6 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
         });
         menuFile.add(menuNew);
 
-        menuAboutUs.setText("About Us");
-        menuAboutUs.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuAboutUsActionPerformed(evt);
-            }
-        });
-        menuFile.add(menuAboutUs);
-
         menuExit.setText("Exit");
         menuExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -376,6 +370,18 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
         menuTools.add(menuSetTimeOut);
 
         jMenuBar1.add(menuTools);
+
+        menu_help.setText("Help");
+
+        menuAboutUs.setText("About Us");
+        menuAboutUs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuAboutUsActionPerformed(evt);
+            }
+        });
+        menu_help.add(menuAboutUs);
+
+        jMenuBar1.add(menu_help);
 
         setJMenuBar(jMenuBar1);
 
@@ -465,41 +471,6 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
 
     private void btn_saveListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_saveListActionPerformed
         Connection con = DBConnect.connection;
-        /*     int count = 0;
-         DisplayForm df = new DisplayForm("Dummy");
-         DefaultTableModel model = new DefaultTableModel();
-         try {
-         model.addColumn("USN");
-         model.addColumn("NAME");
-         model.addColumn(MainForm.subNamesV.get(0));
-         model.addColumn(MainForm.subNamesV.get(1));
-         model.addColumn(MainForm.subNamesV.get(2));
-         model.addColumn(MainForm.subNamesV.get(3));
-         model.addColumn(MainForm.subNamesV.get(4));
-         model.addColumn(MainForm.subNamesV.get(5));
-         model.addColumn(MainForm.subNamesV.get(6));
-         model.addColumn(MainForm.subNamesV.get(7));
-         model.addColumn("TOTAL");
-         model.addColumn("RESULT");
-         ResultSet r = df.getDetails("SOME");
-
-         while (r.next()) {
-         model.insertRow(count++, new Object[]{r.getString(1), r.getString(2), r.getInt(5), r.getInt(9), r.getInt(13), r.getInt(17), r.getInt(21), r.getInt(25), r.getInt(29), r.getInt(33), r.getInt(35), r.getString(36)});
-
-         }
-         SaveTable ST = new SaveTable(model);
-         } catch (SQLException ex) {
-         //  Logger.getLogger(MainForm.class
-         //          .getName()).log(Level.SEVERE, null, ex);
-         JOptionPane.showMessageDialog(this, "Couldn't save any data ", "Error!", JOptionPane.ERROR_MESSAGE);
-         } catch (Exception ex) {
-         //  Logger.getLogger(MainForm.class
-         //          .getName()).log(Level.SEVERE, null, ex);
-         JOptionPane.showMessageDialog(this, "Failed to save :  " + ex.getMessage(), "Error!", JOptionPane.ERROR_MESSAGE);
-         }
-         */
-
-        //------------------- nawafs method of saving --------------
         DefaultTableModel model = new DefaultTableModel();
 
         // Table Column names 
@@ -560,7 +531,7 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
             stmtStd = con.createStatement();
             rsStd = stmtStd.executeQuery(queryStd);
             while (rsStd.next()) { // loop till we find all students details
-                System.out.println("Student is : " + rsStd.getString(ST_USN));
+               // System.out.println("Student is : " + rsStd.getString(ST_USN));
                 String querySub = "select " + SUB_SUBNAME + "," + SUB_INTERNAL + "," + SUB_EXTERNAL + "," + SUB_TOTAL + "," + SUB_RESULT + " FROM " + SUBJECT_DETAILS + " WHERE " + SUB_USN + " = '" + rsStd.getString(ST_USN) + "'";
                 stmtSub = con.createStatement();
                 rsSub = stmtSub.executeQuery(querySub);
@@ -783,6 +754,7 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane2;
@@ -794,6 +766,7 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
     private javax.swing.JMenuItem menuSetProxy;
     private javax.swing.JMenuItem menuSetTimeOut;
     private javax.swing.JMenu menuTools;
+    private javax.swing.JMenu menu_help;
     private javax.swing.JButton stopbtn;
     private javax.swing.JButton submitButton;
     private javax.swing.JTextPane textAreaLog;

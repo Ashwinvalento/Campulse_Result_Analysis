@@ -301,10 +301,4 @@ public class resultFetch {
         return false;
     }
 
-    public static void main(String[] args) {
-        resultFetch rs = new resultFetch();
-        rs.FetchTheresult("4PA12is001", 3);
-        // rs.FetchTheresult("4PA10CS013", 7);
-    }
-
 }

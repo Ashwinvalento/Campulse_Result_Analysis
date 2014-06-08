@@ -39,6 +39,7 @@ public class SaveTable {
         if (actionDialog == JFileChooser.APPROVE_OPTION) {
 
             try {
+                
                 File fileName = new File(chooser.getSelectedFile().toString());
                 saveCurrentDirectory(fileName.getParentFile().getAbsolutePath());
                 if (fileName == null) {
@@ -51,10 +52,13 @@ public class SaveTable {
                         return;
                     }
                 }
-
+                if(fileName.toString().contains(".csv")){
+                    bfw = new BufferedWriter(new FileWriter(fileName));
+                }else{
+                    bfw = new BufferedWriter(new FileWriter(fileName + ".csv"));
+                }
                 Forms.MainForm.log("Writing to File" + fileName);
-                bfw = new BufferedWriter(new FileWriter(fileName + ".csv"));
-                //bfw.write("hello world");
+                
                 for (int i = 0; i < dataModel.getColumnCount(); i++) {
                     try {
                         bfw.write(dataModel.getColumnName(i));

@@ -285,6 +285,11 @@ public class EnterUsnForm extends javax.swing.JFrame {
         Combo_sem.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         Combo_sem.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5", "6", "7", "8" }));
         Combo_sem.setToolTipText(") is default. Recommened to mention semester");
+        Combo_sem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Combo_semActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -482,6 +487,12 @@ public class EnterUsnForm extends javax.swing.JFrame {
             modified = true;
         }
     }//GEN-LAST:event_bDeleteActionPerformed
+
+    private void Combo_semActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Combo_semActionPerformed
+        sem = Integer.parseInt(Combo_sem.getSelectedItem().toString());
+        System.out.println("sem = "+MainForm.sem);
+        MainForm.setSem(sem);
+    }//GEN-LAST:event_Combo_semActionPerformed
 
     private void saveCurrentDirectory(String absolutePath) {
         try {

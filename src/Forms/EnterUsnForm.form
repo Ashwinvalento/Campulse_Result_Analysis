@@ -438,6 +438,9 @@
         </Property>
         <Property name="toolTipText" type="java.lang.String" value=") is default. Recommened to mention semester"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="Combo_semActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

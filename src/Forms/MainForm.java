@@ -27,6 +27,7 @@ import run.DBInterface;
 
 public class MainForm extends javax.swing.JFrame implements DBInterface {
 
+    public static int sem;
     public static int timeout = 25;
     public static boolean autoRetry = true;
     public static int retrylimit = 10;
@@ -86,6 +87,8 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
         bGetReport = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         ComboServer = new javax.swing.JComboBox();
+        Combo_sem = new javax.swing.JComboBox();
+        jLabel3 = new javax.swing.JLabel();
         usnProgressBar = new javax.swing.JProgressBar(0,100);
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -211,6 +214,18 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
             }
         });
 
+        Combo_sem.setEditable(true);
+        Combo_sem.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        Combo_sem.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5", "6", "7", "8" }));
+        Combo_sem.setToolTipText(") is default. Recommened to mention semester");
+        Combo_sem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Combo_semActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setText("Sem :");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -240,7 +255,11 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
                                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(48, 48, 48)
-                                .addComponent(ComboServer, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(ComboServer, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(37, 37, 37)
+                                .addComponent(jLabel3)
+                                .addGap(18, 18, 18)
+                                .addComponent(Combo_sem, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1)
@@ -258,10 +277,12 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(14, 14, 14)
+                .addGap(13, 13, 13)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(ComboServer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ComboServer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Combo_sem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -301,7 +322,6 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), "Details ", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
 
-        textAreaLog.setBackground(new java.awt.Color(0, 0, 0));
         jScrollPane2.setViewportView(textAreaLog);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -506,16 +526,18 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
         model.addColumn("EXTERNAL");
         model.addColumn("TOTAL");
         model.addColumn("RESULT");
-        model.addColumn("SUBJECT 7");
-        model.addColumn("INTERNAL");
-        model.addColumn("EXTERNAL");
-        model.addColumn("TOTAL");
-        model.addColumn("RESULT");
-        model.addColumn("SUBJECT 8");
-        model.addColumn("INTERNAL");
-        model.addColumn("EXTERNAL");
-        model.addColumn("TOTAL");
-        model.addColumn("RESULT");
+        if (sem < 8) {
+            model.addColumn("SUBJECT 7");
+            model.addColumn("INTERNAL");
+            model.addColumn("EXTERNAL");
+            model.addColumn("TOTAL");
+            model.addColumn("RESULT");
+            model.addColumn("SUBJECT 8");
+            model.addColumn("INTERNAL");
+            model.addColumn("EXTERNAL");
+            model.addColumn("TOTAL");
+            model.addColumn("RESULT");
+        }
         model.addColumn("FINAL TOTAL");
         model.addColumn("CLASS");
         int count = 0;
@@ -531,7 +553,7 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
             stmtStd = con.createStatement();
             rsStd = stmtStd.executeQuery(queryStd);
             while (rsStd.next()) { // loop till we find all students details
-               // System.out.println("Student is : " + rsStd.getString(ST_USN));
+                // System.out.println("Student is : " + rsStd.getString(ST_USN));
                 String querySub = "select " + SUB_SUBNAME + "," + SUB_INTERNAL + "," + SUB_EXTERNAL + "," + SUB_TOTAL + "," + SUB_RESULT + " FROM " + SUBJECT_DETAILS + " WHERE " + SUB_USN + " = '" + rsStd.getString(ST_USN) + "'";
                 stmtSub = con.createStatement();
                 rsSub = stmtSub.executeQuery(querySub);
@@ -542,16 +564,27 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
                     Total.add(rsSub.getInt(SUB_TOTAL));
                     Result.add(rsSub.getString(SUB_RESULT));
                 }
-                model.insertRow(count++, new Object[]{rsStd.getString(ST_USN), rsStd.getString(ST_NAME),
-                    subNames.get(0), Internals.get(0), Externals.get(0), Total.get(0), Result.get(0),
-                    subNames.get(1), Internals.get(1), Externals.get(1), Total.get(1), Result.get(1),
-                    subNames.get(2), Internals.get(2), Externals.get(2), Total.get(2), Result.get(2),
-                    subNames.get(3), Internals.get(3), Externals.get(3), Total.get(3), Result.get(3),
-                    subNames.get(4), Internals.get(4), Externals.get(4), Total.get(4), Result.get(4),
-                    subNames.get(5), Internals.get(5), Externals.get(5), Total.get(5), Result.get(5),
-                    subNames.get(6), Internals.get(6), Externals.get(6), Total.get(6), Result.get(6),
-                    subNames.get(7), Internals.get(7), Externals.get(7), Total.get(7), Result.get(7),
-                    rsStd.getInt(ST_TOTAL), rsStd.getString(ST_RESULT)});
+                if (sem < 8) {
+                    model.insertRow(count++, new Object[]{rsStd.getString(ST_USN), rsStd.getString(ST_NAME),
+                        subNames.get(0), Internals.get(0), Externals.get(0), Total.get(0), Result.get(0),
+                        subNames.get(1), Internals.get(1), Externals.get(1), Total.get(1), Result.get(1),
+                        subNames.get(2), Internals.get(2), Externals.get(2), Total.get(2), Result.get(2),
+                        subNames.get(3), Internals.get(3), Externals.get(3), Total.get(3), Result.get(3),
+                        subNames.get(4), Internals.get(4), Externals.get(4), Total.get(4), Result.get(4),
+                        subNames.get(5), Internals.get(5), Externals.get(5), Total.get(5), Result.get(5),
+                        subNames.get(6), Internals.get(6), Externals.get(6), Total.get(6), Result.get(6),
+                        subNames.get(7), Internals.get(7), Externals.get(7), Total.get(7), Result.get(7),
+                        rsStd.getInt(ST_TOTAL), rsStd.getString(ST_RESULT)});
+                } else {
+                    model.insertRow(count++, new Object[]{rsStd.getString(ST_USN), rsStd.getString(ST_NAME),
+                        subNames.get(0), Internals.get(0), Externals.get(0), Total.get(0), Result.get(0),
+                        subNames.get(1), Internals.get(1), Externals.get(1), Total.get(1), Result.get(1),
+                        subNames.get(2), Internals.get(2), Externals.get(2), Total.get(2), Result.get(2),
+                        subNames.get(3), Internals.get(3), Externals.get(3), Total.get(3), Result.get(3),
+                        subNames.get(4), Internals.get(4), Externals.get(4), Total.get(4), Result.get(4),
+                        subNames.get(5), Internals.get(5), Externals.get(5), Total.get(5), Result.get(5),
+                        rsStd.getInt(ST_TOTAL), rsStd.getString(ST_RESULT)});
+                }
 
                 subNames.removeAllElements();
                 Internals.removeAllElements();
@@ -561,6 +594,10 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
             }
         } catch (SQLException ex) {
             Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+
+        } catch (Exception e) {
+            MainForm.logError("Make sure you have selected the correct semester");
+            return;
         }
         SaveTable ST = new SaveTable(model);
     }//GEN-LAST:event_btn_saveListActionPerformed
@@ -652,7 +689,7 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
         } else {
             toggleHide = true;
             ToggleMoreLess.setText("More >>");
-            setPreferredSize(new Dimension(470, 365));
+            setPreferredSize(new Dimension(470, 340));
             this.pack();
         }
     }//GEN-LAST:event_ToggleMoreLessActionPerformed
@@ -685,6 +722,14 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
         }
     }//GEN-LAST:event_ComboServerActionPerformed
 
+    private void Combo_semActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Combo_semActionPerformed
+        sem = Integer.parseInt(Combo_sem.getSelectedItem().toString());
+    }//GEN-LAST:event_Combo_semActionPerformed
+
+    public static void setSem(int sem) {
+        Combo_sem.setSelectedItem(sem);
+    }
+
     /**
      * @param args the command line arguments
      */
@@ -700,7 +745,7 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -741,6 +786,7 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
     private javax.swing.ButtonGroup BGinput;
     private javax.swing.JButton B_UsnSelect;
     private javax.swing.JComboBox ComboServer;
+    private static javax.swing.JComboBox Combo_sem;
     private javax.swing.JButton ToggleMoreLess;
     private javax.swing.JButton bGetReport;
     private javax.swing.JButton bSubjectWise;
@@ -750,6 +796,7 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;

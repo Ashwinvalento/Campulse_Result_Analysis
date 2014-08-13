@@ -45,8 +45,7 @@ public class resultFetch {
 
         try {
 
-            doc = Jsoup.connect(url).get();
-
+            doc = Jsoup.connect(url).userAgent("Mozilla").get();
             Element firstTableMarks = doc.select("table[bgColor=#ffffff]").first();
             Element tbody = firstTableMarks.select("tbody").first();
             Element firstTr = tbody.select("tr:eq(1)").first();
@@ -111,11 +110,11 @@ public class resultFetch {
         try {
             doc = Jsoup.connect(url).userAgent("Mozilla").get();
             Element StdName = doc.select("div").select("B:eq(0)").first();
-            name = StdName.text().split(Pattern.quote("("))[0];
-
+            name = StdName.text().split(Pattern.quote("("))[0].trim();
+            System.out.println("name :" + name);
             Element Stdsem = doc.select("div").get(1).select("B").get(2);
             Element markclass = doc.select("table:eq(1)").select("td:eq(3)").select("b:eq(0)").first();
-            System.out.println("mark class :" + markclass.text().split("Result:  ")[1] + ":");
+            // System.out.println("mark class :" + markclass.text().split("Result:  ")[1] + ":");
             mk = markclass.text().split("Result:  ")[1];
             if (sem < Integer.parseInt(Stdsem.text())) {
                 System.out.println("Year out");
@@ -155,7 +154,7 @@ public class resultFetch {
              }
              */
 // dynamic result 
-            System.out.println("Dynameic result");
+            System.out.println("------------------");
             int TableNo = 0, skipTable = 0, skipRow = 0; // skip the google adds table and name and sem table
             for (Element table : doc.select("table")) {
                 TableNo++;
@@ -179,7 +178,7 @@ public class resultFetch {
                 //System.out.println("--------------------\nNEW TABLE\n");
                 for (Element row : table.select("tr")) {
                     if (skipRow < 1) {
-                        System.out.println("1 row skipped");
+                        //     System.out.println("1 row skipped");
                         skipRow++;
                         continue;
                     }
@@ -205,7 +204,7 @@ public class resultFetch {
                 }
                 skipTable = 1;
                 skipRow = 0;
-                System.out.println("--------------------\n");
+                //System.out.println("--------------------\n");
             }
             MainForm.DF.setStatus(usn, "Success");
             MainForm.log(usn + " Download : Success");
@@ -285,7 +284,7 @@ public class resultFetch {
         try {
             doc = Jsoup.connect(url).userAgent("Mozilla").timeout(Forms.MainForm.timeout * 1000).get();
             Element StdName = doc.select("center").first().child(0);
-            System.out.println(StdName);
+            System.out.println("Result not available");
             if (StdName.toString().equals(resultNotAvail)) {
                 MainForm.log(usn + " Download : Result not available");
                 MainForm.DF.setStatus(usn, "Not Available");

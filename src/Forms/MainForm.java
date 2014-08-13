@@ -2,6 +2,7 @@ package Forms;
 
 import Main.DownloadMarksTask;
 import Main.SaveTable;
+import com.blink9.util.OTAUpdateCheck;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.beans.PropertyChangeEvent;
@@ -27,6 +28,10 @@ import run.DBInterface;
 
 public class MainForm extends javax.swing.JFrame implements DBInterface {
 
+    public static final double VERSION = 2.0;
+    private static final String UPDATE_LINK = "https://889020c3998fcd81f04ce8776ae93c6062ea5d7c.googledrive.com/host/0B4eiq8kAgqmyTl80TDZFdk9zMVE/CampulseResultAnalysis.html";
+    OTAUpdateCheck update = new OTAUpdateCheck();
+
     public static int sem;
     public static int timeout = 25;
     public static boolean autoRetry = true;
@@ -46,6 +51,7 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
 
     public MainForm() {
         initComponents();
+
         this.setTitle("Campulse Result analysis");
         setPreferredSize(new Dimension(470, 515));
         this.pack();
@@ -58,6 +64,28 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
         b_retry.setEnabled(false);
         menuAutoRetry.setSelected(true);
         fetchCount = 0;
+
+        //OTA UPDATE SETTINGS
+        update.setAppName("Campulse Result Analysis");
+        update.setCurrentAppVersion(VERSION);
+        update.setUpdateCheckUrl(UPDATE_LINK);
+        update.showUpdateDialog(true);
+        new Thread() {
+            public void run() {
+                try {
+                    Thread.sleep(5000);
+                    log("Checking for Updates");
+                    if (update.checkForUpdates()) {
+                        logError("An important update is available.");
+                    }
+
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (Exception ex) {
+                    Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }.start();
     }
 
     /**
@@ -103,6 +131,7 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
         menuSetProxy = new javax.swing.JMenuItem();
         menuSetTimeOut = new javax.swing.JMenuItem();
         menu_help = new javax.swing.JMenu();
+        btn_update = new javax.swing.JMenuItem();
         menuAboutUs = new javax.swing.JMenuItem();
 
         jMenuItem1.setText("jMenuItem1");
@@ -392,6 +421,14 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
         jMenuBar1.add(menuTools);
 
         menu_help.setText("Help");
+
+        btn_update.setText("Update");
+        btn_update.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_updateActionPerformed(evt);
+            }
+        });
+        menu_help.add(btn_update);
 
         menuAboutUs.setText("About Us");
         menuAboutUs.addActionListener(new java.awt.event.ActionListener() {
@@ -726,6 +763,22 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
         sem = Integer.parseInt(Combo_sem.getSelectedItem().toString());
     }//GEN-LAST:event_Combo_semActionPerformed
 
+    private void btn_updateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_updateActionPerformed
+        boolean ret = false;
+        try {
+            log("Checking for Updates");
+            ret = update.checkForUpdates();
+        } catch (Exception ex) {
+            System.out.println("Update exception");
+        }
+
+        if (!ret) {
+            JOptionPane.showMessageDialog(null, "No Updates found", "Information", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            logError("An important update is available.");
+        }
+    }//GEN-LAST:event_btn_updateActionPerformed
+
     public static void setSem(int sem) {
         Combo_sem.setSelectedItem(sem);
     }
@@ -793,6 +846,7 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
     private javax.swing.JButton bView;
     private javax.swing.JButton b_retry;
     private javax.swing.JButton btn_saveList;
+    private javax.swing.JMenuItem btn_update;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

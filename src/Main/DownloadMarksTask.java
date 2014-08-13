@@ -36,7 +36,7 @@ public class DownloadMarksTask extends SwingWorker<Integer, Integer> implements 
             try {
 
                 setProgress((i + 1) * 100 / MainForm.usnList.size());
-                System.out.println(MainForm.usnList.get(i));
+                //System.out.println(MainForm.usnList.get(i));
 
                 
                 //check the selected download server and fetch result accordingly

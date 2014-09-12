@@ -28,8 +28,8 @@ import run.DBInterface;
 
 public class MainForm extends javax.swing.JFrame implements DBInterface {
 
-    public static final double VERSION = 2.0;
-    private static final String UPDATE_LINK = "https://889020c3998fcd81f04ce8776ae93c6062ea5d7c.googledrive.com/host/0B4eiq8kAgqmyTl80TDZFdk9zMVE/CampulseResultAnalysis.html";
+    public static final double VERSION = 1.0;
+    private static final String UPDATE_LINK = "https://889020c3998fcd81f04ce8776ae93c6062ea5d7c.googledrive.com/host/0B4eiq8kAgqmyTl80TDZFdk9zMVE/CampulseResultAnalysis.xml";
     OTAUpdateCheck update = new OTAUpdateCheck();
 
     public static int sem;
@@ -52,7 +52,7 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
     public MainForm() {
         initComponents();
 
-        this.setTitle("Campulse Result analysis");
+        this.setTitle("Campulse Result analysis - V" + VERSION);
         setPreferredSize(new Dimension(470, 515));
         this.pack();
         this.setLocationRelativeTo(null);
@@ -77,11 +77,15 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
                     log("Checking for Updates");
                     if (update.checkForUpdates()) {
                         logError("An important update is available.");
+                    } else {
+                        log("No updates Available");
                     }
 
                 } catch (InterruptedException ex) {
+                    logError("Error Checking for updates");
                     Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (Exception ex) {
+                    logError("Error Checking for updates");
                     Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }

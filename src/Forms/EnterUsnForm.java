@@ -97,7 +97,6 @@ public class EnterUsnForm extends javax.swing.JFrame {
         });
 
         TF_from.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        TF_from.setText("4PA10CS001");
         TF_from.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 TF_fromActionPerformed(evt);
@@ -111,7 +110,11 @@ public class EnterUsnForm extends javax.swing.JFrame {
         jLabel4.setText("Add a range of USN :");
 
         TF_to.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        TF_to.setText("4PA10CS085");
+        TF_to.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TF_toActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("USN :");
 
@@ -493,6 +496,10 @@ public class EnterUsnForm extends javax.swing.JFrame {
         System.out.println("sem = "+MainForm.sem);
         MainForm.setSem(sem);
     }//GEN-LAST:event_Combo_semActionPerformed
+
+    private void TF_toActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TF_toActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TF_toActionPerformed
 
     private void saveCurrentDirectory(String absolutePath) {
         try {

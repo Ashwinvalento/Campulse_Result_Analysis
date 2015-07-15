@@ -30,6 +30,7 @@ public class MainForm extends javax.swing.JFrame implements DBInterface {
 
     public static final double VERSION = 1.0;
     private static final String UPDATE_LINK = "https://889020c3998fcd81f04ce8776ae93c6062ea5d7c.googledrive.com/host/0B4eiq8kAgqmyTl80TDZFdk9zMVE/CampulseResultAnalysis.xml";
+    //private static final String UPDATE_LINK = "http://192.168.1.14/campulseResultAnalysis.xml";
     OTAUpdateCheck update = new OTAUpdateCheck();
 
     public static int sem;
